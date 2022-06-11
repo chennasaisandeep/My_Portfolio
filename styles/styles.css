@@ -78,8 +78,9 @@ body {
 
 .potrait {
     position: absolute;
-    height: 75vh;
+    height: 40vw;
     bottom: 0;
+    right: 5vw;
 }
 
 .wrapabout {
@@ -93,7 +94,7 @@ body {
 
 .anim {
     transform-origin: 0% 100%;
-    animation: rin 2s ease;
+    animation: rin 1s ease;
 }
 
 .animclose {
@@ -113,15 +114,20 @@ body {
     display: flex;
     justify-content: space-around;
     z-index: 15;
-    /* backdrop-filter: blur(5px); */
     background-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgb(0, 0, 0, 0.5), rgb(0, 0, 0, 0));
-    color: white;
     top: 110vh;
     width: 100vw;
     line-height: 4vh;
 }
+.sm{
+    margin-top: 20px;
+    width : 100vw;
+    display: flex;
+    justify-content:space-around;
+    text-align:center;
+}
 
-.nav div, .sm a {
+.nav a, .sm a {
     padding: 0.5vw;
     border: 2px solid white;
     border-radius: 2vh;
@@ -129,7 +135,7 @@ body {
     cursor: pointer;
 }
 
-.nav div:hover, .sm a:hover {
+.nav a:hover, .sm a:hover {
     box-shadow: 1px 1px 1px 1px black inset, -1px -1px 1px 1px black inset;
 }
 
@@ -151,11 +157,6 @@ a.insta, a.ana{
     display: flex;
     flex-flow: column;
 }
-.Ed, .Pr, .Co, .Ce, .Ho, .Ph{
-    background-color:black;
-}
-
-
 .education,
 .projects,
 .cp,
@@ -217,13 +218,7 @@ h2, p{
     margin-left: 20px;
     margin-right: 20px;
 }
-.sm{
-    margin-top: 20px;
-    width : 100vw;
-    display: flex;
-    justify-content:space-around;
-    text-align:center;
-}
+
 
 
 
@@ -394,17 +389,4 @@ h2, p{
 
 .hcg-slide-dot.dot-active {
     background-color: #717171;
-}
-
-
-
-/* classes need to be added using jquery */
-
-.highlight{
-    background-color: white;
-    box-shadow: 1px 1px 1px 1px black inset,-1px -1px 1px 1px black inset;
-}
-
-.a-col{
-    color: black;
 }
