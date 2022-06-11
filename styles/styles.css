@@ -1,0 +1,410 @@
+body {
+    background-color: black;
+    color: white;
+    margin: 0;
+    box-sizing: border-box;
+    border: 0;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.container, .wrapper {
+    z-index: 0;
+    width: 100vw;
+    height: 8400px;
+    overflow: hidden;
+}
+
+.arrow {
+    opacity: 0;
+    position: fixed;
+    z-index: 100;
+    width: 3vw;
+    left: 50%;
+    top: 90vh;
+    animation-name: fadeinout;
+    animation-duration: 3s;
+    animation-delay: 1s;
+    animation-iteration-count: 2;
+    animation-timing-function: ease;
+}
+
+.wrapper {
+    position: fixed;
+}
+
+.subcontainer {
+    position: absolute;
+    color: white;
+    width: 100vw;
+    height: 100vh;
+}
+
+.child1 {
+    z-index: 10;
+    color: black;
+    background-color: white;
+    overflow: hidden;
+}
+
+.child2 {
+    z-index: 5;
+    color: white;
+    background-color: black;
+    overflow: hidden;
+}
+
+.textholder {
+    position: absolute;
+    width: 50vw;
+    right: 20px;
+    top: 20vh;
+}
+
+.textholder1 {
+    z-index: 7;
+    right: 20px;
+}
+
+.text {
+    margin-right: 40px;
+    font-size: 7vw;
+    transform-origin: 0% 100%;
+    animation: rin 1s ease;
+}
+
+.intro {
+    width: 100vw;
+}
+
+.potrait {
+    position: absolute;
+    height: 75vh;
+    bottom: 0;
+}
+
+.wrapabout {
+    position: absolute;
+    bottom: 10%;
+    left: 15%;
+    text-align: center;
+    font-size: 2.5vw;
+    width: 30vw;
+}
+
+.anim {
+    transform-origin: 0% 100%;
+    animation: rin 2s ease;
+}
+
+.animclose {
+    transform-origin: 0% 100%;
+    animation: rout 1s ease;
+}
+
+.static-text {
+    margin-left: 0.3vw;
+    font-size: 5vw;
+    animation: fadein 2s ease
+}
+
+.nav {
+    visibility: hidden;
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    z-index: 15;
+    /* backdrop-filter: blur(5px); */
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgb(0, 0, 0, 0.5), rgb(0, 0, 0, 0));
+    color: white;
+    top: 110vh;
+    width: 100vw;
+    line-height: 4vh;
+}
+
+.nav div, .sm a {
+    padding: 0.5vw;
+    border: 2px solid white;
+    border-radius: 2vh;
+    background-color:black;
+    cursor: pointer;
+}
+
+.nav div:hover, .sm a:hover {
+    box-shadow: 1px 1px 1px 1px black inset, -1px -1px 1px 1px black inset;
+}
+
+a {
+    font-size: 2.2vw;
+    color: white;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: bold;
+    text-decoration: none;
+}
+a.insta, a.ana{
+    color: rgb(255, 200, 0)
+}
+
+.aboutwrapper {
+    margin: 7px;
+    top: 125vh;
+    position: absolute;
+    display: flex;
+    flex-flow: column;
+}
+.Ed, .Pr, .Co, .Ce, .Ho, .Ph{
+    background-color:black;
+}
+
+
+.education,
+.projects,
+.cp,
+.certificates,
+.hobbies{
+    visibility: hidden;
+    margin: 2px;
+    color: white;
+    font-size: 4vh;
+    margin-top: 100px;
+}
+.education {
+    margin-top: 0px;
+}
+
+.certificates {
+    width: 100vw;
+}
+
+.photos{
+    margin-top:50px
+}
+
+
+
+table.one {
+    width: 99vw;
+    border-collapse: separate;
+    border-spacing: 3px;
+    table-layout: auto;
+}
+
+table,
+td,
+th {
+    border: 2px solid white;
+}
+
+td {
+    padding: 20px
+}
+
+.year {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold
+}
+
+.details {
+    font-size: 20px
+}
+
+.active {
+    background-color: White;
+    color: black;
+    box-shadow: 1px 1px 1px 1px black inset, -1px -1px 1px 1px black inset;
+}
+h2, p{
+    margin-left: 20px;
+    margin-right: 20px;
+}
+.sm{
+    margin-top: 20px;
+    width : 100vw;
+    display: flex;
+    justify-content:space-around;
+    text-align:center;
+}
+
+
+
+@keyframes rin {
+    from {
+        transform: rotateX(-90deg)
+    }
+
+    to {
+        transform: rotateX(0deg)
+    }
+}
+
+@keyframes rout {
+    from {
+        transform: rotateX(0deg)
+    }
+
+    to {
+        transform: rotateX(-90deg)
+    }
+}
+
+@keyframes fadein {
+    0% {
+        opacity: 0
+    }
+
+    75% {
+        opacity: 0
+    }
+
+    100% {
+        opacity: 1
+    }
+}
+
+@keyframes fadeinout {
+    0% {
+        opacity: 0
+    }
+
+    50% {
+        opacity: 1
+    }
+
+    100% {
+        opacity: 0
+    }
+}
+
+
+
+
+
+
+
+
+
+/* custom scrollbar */
+
+/* width */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 0px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 1px grey;
+    border-radius: 1px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: white;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: white;
+}
+
+
+/* corousal */
+.hcg-slider {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.hcg-slide-container {
+    max-width: 100%;
+    display: inline-block;
+    position: relative;
+}
+
+.hcg-slides {
+    display: none;
+    text-align: center;
+    overflow: hidden;
+}
+
+.hcg-slides img {
+    max-width: 100%;
+    max-height: 80vh;
+    display: inline-block;
+    border-radius: 5px;
+    border: solid 1px #a0a0a0;
+    vertical-align: middle;
+}
+#hcg-slider-2 .hcg-slides img, #hcg-slider-3 .hcg-slides img, #hcg-slider-4 .hcg-slides img{max-height: 60vh;}
+
+.hcg-slide-prev,
+.hcg-slide-next {
+    cursor: pointer;
+    position: absolute;
+    top: 35vh;
+    width: auto;
+    padding: 16px;
+    color: white;
+    background-color: rgba(189, 189, 189, 0.525);
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    text-decoration: none;
+}
+#hcg-slider-2 .hcg-slide-prev,
+#hcg-slider-2 .hcg-slide-next,
+#hcg-slider-3 .hcg-slide-prev,
+#hcg-slider-3 .hcg-slide-next,
+#hcg-slider-4 .hcg-slide-prev,
+#hcg-slider-4 .hcg-slide-next{
+    top: 26vh
+}
+
+
+.hcg-slide-next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+.hcg-slide-prev {
+    left: 0;
+    border-radius: 0 3px 3px 0;
+}
+
+.hcg-slide-prev:hover,
+.hcg-slide-next:hover {
+    background-color: #000c;
+}
+
+.hcg-slide-dot-control {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.hcg-slide-dot {
+    cursor: pointer;
+    height: 13px;
+    width: 13px;
+    margin: 0 2px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.hcg-slide-dot.dot-active {
+    background-color: #717171;
+}
+
+
+
+/* classes need to be added using jquery */
+
+.highlight{
+    background-color: white;
+    box-shadow: 1px 1px 1px 1px black inset,-1px -1px 1px 1px black inset;
+}
+
+.a-col{
+    color: black;
+}
