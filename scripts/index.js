@@ -301,32 +301,32 @@ $(".nav div").click(function () {
     //If you want to include more images, add the link name and URL of the image in the array list below.
     let images_list = [
       {
-        url: "/images/photography/1.jpg",
+        url: "images/photography/1.jpg",
         name: "image 1",
         link: "",
       },
       {
-        url: "/images/photography/2.jpg",
+        url: "images/photography/2.jpg",
         name: "image 2",
         link: "",
       },
       {
-        url: "/images/photography/3.jpg",
+        url: "images/photography/3.jpg",
         name: "image 3",
         link: "",
       },
       {
-        url: "/images/photography/4.jpg",
+        url: "images/photography/4.jpg",
         name: "image 4",
         link: "",
       },
       {
-        url: "/images/photography/5.jpg",
+        url: "images/photography/5.jpg",
         name: "image 5",
         link: "",
       },
       {
-        url: "/images/photography/6.jpg",
+        url: "images/photography/6.jpg",
         name: "image 6",
         link: "",
       },
@@ -421,27 +421,27 @@ $(".nav div").click(function () {
     //If you want to include more images, add the link name and URL of the image in the array list below.
     let images_list = [
       {
-        url: "/images/renders/7.jpg",
+        url: "images/renders/7.jpg",
         name: "image 1",
         link: "",
       },
       {
-        url: "/images/renders/8.jpg",
+        url: "images/renders/8.jpg",
         name: "image 2",
         link: "",
       },
       {
-        url: "/images/renders/9.jpg",
+        url: "images/renders/9.jpg",
         name: "image 3",
         link: "",
       },
       {
-        url: "/images/renders/10.jpg",
+        url: "images/renders/10.jpg",
         name: "image 4",
         link: "",
       },
       {
-        url: "/images/renders/11.jpg",
+        url: "images/renders/11.jpg",
         name: "image 5",
         link: "",
       },
@@ -536,27 +536,27 @@ $(".nav div").click(function () {
     //If you want to include more images, add the link name and URL of the image in the array list below.
     let images_list = [
       {
-        url: "/images/drawings/12.jpg",
+        url: "images/drawings/12.jpg",
         name: "image 1",
         link: "",
       },
       {
-        url: "/images/drawings/13.jpg",
+        url: "images/drawings/13.jpg",
         name: "image 2",
         link: "",
       },
       {
-        url: "/images/drawings/14.jpg",
+        url: "images/drawings/14.jpg",
         name: "image 3",
         link: "",
       },
       {
-        url: "/images/drawings/15.jpg",
+        url: "images/drawings/15.jpg",
         name: "image 4",
         link: "",
       },
       {
-        url: "/images/drawings/16.jpg",
+        url: "images/drawings/16.jpg",
         name: "image 5",
         link: "",
       },
