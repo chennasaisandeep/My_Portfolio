@@ -1,3 +1,6 @@
+html {
+	scroll-behavior: smooth;
+}
 body {
     background-color: black;
     color: white;
@@ -5,15 +8,29 @@ body {
     box-sizing: border-box;
     border: 0;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    width: 100vw;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    
 }
 
-.container, .wrapper {
-    z-index: 0;
+/* wrapper hierarchy */
+.wrapper {
+    height: 2625px;
     width: 100vw;
-    height: 8400px;
     overflow: hidden;
 }
+/* child1 */
+.introwrap{
+    height: 100vh;
+    width: 100vw;
+}
 
+/* child1.1 */
 .arrow {
     opacity: 0;
     position: fixed;
@@ -28,10 +45,7 @@ body {
     animation-timing-function: ease;
 }
 
-.wrapper {
-    position: fixed;
-}
-
+/* child1.2 */
 .subcontainer {
     position: absolute;
     color: white;
@@ -46,13 +60,7 @@ body {
     overflow: hidden;
 }
 
-.child2 {
-    z-index: 5;
-    color: white;
-    background-color: black;
-    overflow: hidden;
-}
-
+/* child1.2.1 */
 .textholder {
     position: absolute;
     width: 50vw;
@@ -65,22 +73,16 @@ body {
     right: 20px;
 }
 
-.text {
-    margin-right: 40px;
-    font-size: 7vw;
-    transform-origin: 0% 100%;
-    animation: rin 1s ease;
+/* child1.3 */
+.child2 {
+    z-index: 5;
+    color: white;
+    background-color: black;
+    overflow: hidden;
 }
-
+/* child1.3.1 */
 .intro {
     width: 100vw;
-}
-
-.potrait {
-    position: absolute;
-    height: 40vw;
-    bottom: 0;
-    right: 5vw;
 }
 
 .wrapabout {
@@ -91,10 +93,43 @@ body {
     font-size: 2.5vw;
     width: 30vw;
 }
+.potrait {
+    position: absolute;
+    height: 40vw;
+    bottom: 0;
+    right: 5vw;
+}
+.text {
+    margin-right: 40px;
+    font-size: 7vw;
+    transform-origin: 0% 100%;
+    animation: rin 1s ease;
+}
+
+
+/* end */
+
+#nav {
+    position: sticky;
+    top: 0px;
+    display: flex;
+    justify-content: space-around;
+    z-index: 15;
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgb(0, 0, 0, 0.5), rgb(0, 0, 0, 0));
+    width: 100vw;
+    line-height: 4vh;
+}
+
+/* aboutwrapper hierarchy */
+.aboutwrapper {
+    display: flex;
+    flex-flow: column;
+}
+/* end */
 
 .anim {
     transform-origin: 0% 100%;
-    animation: rin 1s ease;
+    animation: rin 2s ease;
 }
 
 .animclose {
@@ -108,17 +143,7 @@ body {
     animation: fadein 2s ease
 }
 
-.nav {
-    visibility: hidden;
-    position: relative;
-    display: flex;
-    justify-content: space-around;
-    z-index: 15;
-    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgb(0, 0, 0, 0.5), rgb(0, 0, 0, 0));
-    top: 110vh;
-    width: 100vw;
-    line-height: 4vh;
-}
+
 .sm{
     margin-top: 20px;
     width : 100vw;
@@ -137,6 +162,8 @@ body {
 
 .nav a:hover, .sm a:hover {
     box-shadow: 1px 1px 1px 1px black inset, -1px -1px 1px 1px black inset;
+    color: black;
+    background-color:white;
 }
 
 a {
@@ -150,13 +177,7 @@ a.insta, a.ana{
     color: rgb(255, 200, 0)
 }
 
-.aboutwrapper {
-    margin: 7px;
-    top: 125vh;
-    position: absolute;
-    display: flex;
-    flex-flow: column;
-}
+
 .education,
 .projects,
 .cp,
@@ -166,10 +187,7 @@ a.insta, a.ana{
     margin: 2px;
     color: white;
     font-size: 4vh;
-    margin-top: 100px;
-}
-.education {
-    margin-top: 0px;
+    padding-top: 100px;
 }
 
 .certificates {

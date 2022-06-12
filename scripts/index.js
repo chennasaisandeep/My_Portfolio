@@ -1,7 +1,10 @@
 $(window).scroll(function () {
-  if ($(window).scrollTop() >= 2625) {
-    $(".nav").css("transform", `translateY(${$(window).scrollTop() - 2625}px)`);
-  } else {
+  if($(window).scrollTop() <= 1700){
+      $(".introwrap").css("transform", "translateY("+ $(window).scrollTop() +"px)")
+  } else{
+    $(".introwrap").css("transform", "translateY(1700px)")
+  }
+
     $(".child1").css(
       "transform",
       "translateX(" + 0.0625 * $(window).scrollTop() + "vw)"
@@ -10,7 +13,6 @@ $(window).scroll(function () {
       "transform",
       "translateX(-" + 0.125 * $(window).scrollTop() + "vw)"
     );
-  }
 
   //initial sidescroll animation and stuff
   if ($(window).scrollTop() <= 700) {
@@ -39,17 +41,11 @@ $(window).scroll(function () {
   if ($(window).scrollTop() >= 1400) {
     $(".intro div").fadeIn("slow");
   }
-  if ($(window).scrollTop() >= 1800) {
-    $(".wrapper").css(
-      "transform",
-      `translateY(-${$(window).scrollTop() - 1800}px)`
-    );
-  }
 
   //end
 
   //   flip animation
-  if ($(window).scrollTop() >= 2000) {
+  if ($(window).scrollTop() >= 1875) {
     $(".nav").addClass("anim").css("visibility", "visible");
     $(".education").addClass("anim").css("visibility", "visible");
   }
@@ -68,14 +64,14 @@ $(window).scroll(function () {
   // end
 
   // On hover change
-  $(".nav a, .sm a").hover(
-    function () {
-      $(this).css({ "background-color": "white", color: "black" });
-    },
-    function () {
-      $(this).css({ "background-color": "black", color: "white" });
-    }
-  );
+  // $(".nav a, .sm a").hover(
+  //   function () {
+  //     $(this).css({ "background-color": "white", color: "black" });
+  //   },
+  //   function () {
+  //     $(this).css({ "background-color": "black", color: "white" });
+  //   }
+  // );
   // end
 
   //section highlight
@@ -115,7 +111,7 @@ $(window).scroll(function () {
   } else {
     $("#Ce").css({ "background-color": "black", color: "white" });
   }
-  if ($(window).scrollTop() <= 7640 && $(window).scrollTop() > 5250) {
+  if ($(window).scrollTop() <= 7560 && $(window).scrollTop() > 5250) {
     $("#Ho").css({
       "background-color": "white",
       "box-shadow": "1px 1px 1px 1px black inset,-1px -1px 1px 1px black inset",
@@ -124,7 +120,7 @@ $(window).scroll(function () {
   } else {
     $("#Ho").css({ "background-color": "black", color: "white" });
   }
-  if ($(window).scrollTop() <= 7800 && $(window).scrollTop() > 7640) {
+  if ($(window).scrollTop() <= 7800 && $(window).scrollTop() > 7560) {
     $("#Ph").css({
       "background-color": "white",
       "box-shadow": "1px 1px 1px 1px black inset,-1px -1px 1px 1px black inset",
@@ -134,27 +130,6 @@ $(window).scroll(function () {
     $("#Ph").css({ "background-color": "black", color: "white" });
   }
   //   end
-});
-
-$(".nav a").click(function () {
-  if ($(this).text() == "Education") {
-    $("html, body").animate({ scrollTop: "2660" }, 1000);
-  }
-  if ($(this).text() == "Projects") {
-    $("html, body").animate({ scrollTop: "3108" }, 1000);
-  }
-  if ($(this).text() == "Computer proficiency") {
-    $("html, body").animate({ scrollTop: "3700" }, 1000);
-  }
-  if ($(this).text() == "Certificates") {
-    $("html, body").animate({ scrollTop: "4570" }, 1000);
-  }
-  if ($(this).text() == "Hobbies") {
-    $("html, body").animate({ scrollTop: "5380" }, 1000);
-  }
-  if ($(this).text() == "Contact") {
-    $("html, body").animate({ scrollTop: "7650" }, 1000);
-  }
 });
 
 // corousal
