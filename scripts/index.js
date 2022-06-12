@@ -1,38 +1,48 @@
 $(window).scroll(function () {
-  if($(window).scrollTop() <= 1700){
-      $(".introwrap").css("transform", "translateY("+ $(window).scrollTop() +"px)")
-  } else{
-    $(".introwrap").css("transform", "translateY(1700px)")
-  }
-
-    $(".child1").css(
-      "transform",
-      "translateX(" + 0.0625 * $(window).scrollTop() + "vw)"
-    );
-    $(".textholder1").css(
-      "transform",
-      "translateX(-" + 0.125 * $(window).scrollTop() + "vw)"
-    );
-
-  //initial sidescroll animation and stuff
-  if ($(window).scrollTop() <= 700) {
+  if( document.documentElement.clientWidth <= 768){
     $(".textholder2").css(
       "transform",
       "translateX(-" + 0.0625 * $(window).scrollTop() + "vw)"
     );
-    $(".text1").css(
-      "transform",
-      "translateX(" + 0.03 * $(window).scrollTop() + "vw)"
-    );
-  } else if ($(window).scrollTop() <= 1400 && $(window).scrollTop() >= 948) {
-    $(".textholder2").css(
-      "transform",
-      `translate(-43.75vw,-${
-        4 * (($(window).scrollTop() * 0.0625) / 15 - 4)
-      }vw)`
-    );
+  } else{
+    if ($(window).scrollTop() <= 700) {
+      $(".textholder2").css(
+        "transform",
+        "translateX(-" + 0.0625 * $(window).scrollTop() + "vw)"
+      );
+      $(".text1").css(
+        "transform",
+        "translateX(" + 0.03 * $(window).scrollTop() + "vw)"
+      );
+    } else if ($(window).scrollTop() <= 1400 && $(window).scrollTop() >= 948) {
+      $(".textholder2").css(
+        "transform",
+        `translate(-43.75vw,-${
+          4 * (($(window).scrollTop() * 0.0625) / 15 - 4)
+        }vw)`
+      );
+    }
   }
-  //end
+
+
+  if ($(window).scrollTop() <= 1700) {
+    $(".introwrap").css(
+      "transform",
+      "translateY(" + $(window).scrollTop() + "px)"
+    );
+  } else {
+    $(".introwrap").css("transform", "translateY(1700px)");
+  }
+
+  $(".child1").css(
+    "transform",
+    "translateX(" + 0.0625 * $(window).scrollTop() + "vw)"
+  );
+  $(".textholder1").css(
+    "transform",
+    "translateX(-" + 0.125 * $(window).scrollTop() + "vw)"
+  );
+
 
   //first about fadein and out animation
   if ($(window).scrollTop() <= 1300) {
@@ -43,6 +53,16 @@ $(window).scroll(function () {
   }
 
   //end
+
+  //hover
+
+  $( "#nav a" ).hover(
+    function() {
+      $( this ).css({"color":"black","background-color":"white"});
+    }, function() {
+      $( this ).css({"color":"white","background-color":"black"});
+    }
+  );
 
   //   flip animation
   if ($(window).scrollTop() >= 1875) {
@@ -63,19 +83,8 @@ $(window).scroll(function () {
   }
   // end
 
-  // On hover change
-  // $(".nav a, .sm a").hover(
-  //   function () {
-  //     $(this).css({ "background-color": "white", color: "black" });
-  //   },
-  //   function () {
-  //     $(this).css({ "background-color": "black", color: "white" });
-  //   }
-  // );
-  // end
-
   //section highlight
-  if ($(window).scrollTop() <= 3050 && $(window).scrollTop() > 2600) {
+  if ($(window).scrollTop() <= 3204 && $(window).scrollTop() > 2600) {
     $("#Ed").css({
       "background-color": "white",
       "box-shadow": "1px 1px 1px 1px black inset,-1px -1px 1px 1px black inset",
@@ -84,7 +93,7 @@ $(window).scroll(function () {
   } else {
     $("#Ed").css({ "background-color": "black", color: "white" });
   }
-  if ($(window).scrollTop() <= 3600 && $(window).scrollTop() > 3050) {
+  if ($(window).scrollTop() <= 3863 && $(window).scrollTop() > 3204) {
     $("#Pr").css({
       "background-color": "white",
       "box-shadow": "1px 1px 1px 1px black inset,-1px -1px 1px 1px black inset",
@@ -93,7 +102,7 @@ $(window).scroll(function () {
   } else {
     $("#Pr").css({ "background-color": "black", color: "white" });
   }
-  if ($(window).scrollTop() <= 4500 && $(window).scrollTop() > 3600) {
+  if ($(window).scrollTop() <= 4824 && $(window).scrollTop() > 3863) {
     $("#Co").css({
       "background-color": "white",
       "box-shadow": "1px 1px 1px 1px black inset,-1px -1px 1px 1px black inset",
@@ -102,7 +111,7 @@ $(window).scroll(function () {
   } else {
     $("#Co").css({ "background-color": "black", color: "white" });
   }
-  if ($(window).scrollTop() <= 5250 && $(window).scrollTop() > 4500) {
+  if ($(window).scrollTop() <= 5540 && $(window).scrollTop() > 4824) {
     $("#Ce").css({
       "background-color": "white",
       "box-shadow": "1px 1px 1px 1px black inset,-1px -1px 1px 1px black inset",
@@ -111,7 +120,7 @@ $(window).scroll(function () {
   } else {
     $("#Ce").css({ "background-color": "black", color: "white" });
   }
-  if ($(window).scrollTop() <= 7560 && $(window).scrollTop() > 5250) {
+  if ($(window).scrollTop() <= 8160 && $(window).scrollTop() > 5540) {
     $("#Ho").css({
       "background-color": "white",
       "box-shadow": "1px 1px 1px 1px black inset,-1px -1px 1px 1px black inset",
@@ -120,7 +129,7 @@ $(window).scroll(function () {
   } else {
     $("#Ho").css({ "background-color": "black", color: "white" });
   }
-  if ($(window).scrollTop() <= 7800 && $(window).scrollTop() > 7560) {
+  if ( $(window).scrollTop() > 8160) {
     $("#Ph").css({
       "background-color": "white",
       "box-shadow": "1px 1px 1px 1px black inset,-1px -1px 1px 1px black inset",
