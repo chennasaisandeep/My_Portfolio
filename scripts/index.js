@@ -21,48 +21,9 @@ $(window).scroll(function () {
           4 * (($(window).scrollTop() * 0.0625) / 15 - 4)
         }vw)`
       );
-    }
-  }
+    };
 
-
-  if ($(window).scrollTop() <= 1700) {
-    $(".introwrap").css(
-      "transform",
-      "translateY(" + $(window).scrollTop() + "px)"
-    );
-  } else {
-    $(".introwrap").css("transform", "translateY(1700px)");
-  }
-
-  $(".child1").css(
-    "transform",
-    "translateX(" + 0.0625 * $(window).scrollTop() + "vw)"
-  );
-  $(".textholder1").css(
-    "transform",
-    "translateX(-" + 0.125 * $(window).scrollTop() + "vw)"
-  );
-
-
-  //first about fadein and out animation
-  if ($(window).scrollTop() <= 1300) {
-    $(".intro div").fadeOut("slow");
-  }
-  if ($(window).scrollTop() >= 1400) {
-    $(".intro div").fadeIn("slow");
-  }
-
-  //end
-
-  //hover
-
-  $( "#nav a" ).hover(
-    function() {
-      $( this ).css({"color":"black","background-color":"white"});
-    }, function() {
-      $( this ).css({"color":"white","background-color":"black"});
-    }
-  );
+ 
 
   //   flip animation
   if ($(window).scrollTop() >= 1875) {
@@ -139,6 +100,41 @@ $(window).scroll(function () {
     $("#Ph").css({ "background-color": "black", color: "white" });
   }
   //   end
+
+
+  }
+
+  //first about fadein and out animation
+  if ($(window).scrollTop() <= 1300) {
+    $(".intro div").fadeOut("slow");
+  }
+  if ($(window).scrollTop() >= 1400) {
+    $(".intro div").fadeIn("slow");
+  }
+
+  //end
+
+
+  if ($(window).scrollTop() <= 1700) {
+    $(".introwrap").css(
+      "transform",
+      "translateY(" + $(window).scrollTop() + "px)"
+    );
+  } else {
+    $(".introwrap").css("transform", "translateY(1700px)");
+  }
+
+  $(".child1").css(
+    "transform",
+    "translateX(" + 0.0625 * $(window).scrollTop() + "vw)"
+  );
+  $(".textholder1").css(
+    "transform",
+    "translateX(-" + 0.125 * $(window).scrollTop() + "vw)"
+  );
+
+
+  
 });
 
 // corousal
@@ -351,3 +347,29 @@ corousal(images_list_1, id_1);
 corousal(images_list_2, id_2);
 corousal(images_list_3, id_3);
 corousal(images_list_4, id_4);
+
+ //hover
+
+ $( "#nav a" ).hover(
+  function() {
+    $( this ).css({"color":"black","background-color":"white","box-shadow": "1px 1px 1px 1px black inset, -1px -1px 1px 1px black inset"});
+  }, function() {
+    $( this ).css({"color":"white","background-color":"black"});
+  }
+);
+
+
+if( document.documentElement.clientWidth <= 768){
+  $('.nav a').click(function() {
+
+    $(this).animate({
+      backgroundColor: "white"
+    }, 1000).delay(2000).queue(function() {
+      $(this).animate({
+        backgroundColor: "black"
+      }, 1000).dequeue();
+    });
+
+  });
+
+}
