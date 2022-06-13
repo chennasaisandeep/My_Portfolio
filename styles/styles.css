@@ -124,7 +124,7 @@ a {
     top: 0px;
     display: flex;
     justify-content: space-around;
-    z-index: 15;
+    z-index: 150;
     background-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgb(0, 0, 0, 0.5), rgb(0, 0, 0, 0));
     width: 100vw;
     line-height: 4vh;
@@ -429,6 +429,9 @@ b{
 }
 
 @media only screen and (max-width: 768px) {
+    .introwrap{
+        position:fixed;
+    }
 .text {
         font-size: 35px;
     }
@@ -459,13 +462,17 @@ b{
         left: 5%;
     }
     .nav {
+        z-index: 150;
         margin-right: 5px;
         margin-left: 5px;
         max-width:95vw;
         left:2.5%;
         top: 0px;
-        z-index: 15;
         line-height: 4vh;
+    }
+    .aboutwrapper{
+        z-index: 100;
+        background:black;
     }
 
 a {
@@ -497,9 +504,11 @@ a {
     font-size: 25px;
 }
 h2 {
+    z-index: 100;
     font-size: 24px;
 }
 p {
+    z-index: 100;
     font-size: 16px;
 }
 .hcg-slide-container {
@@ -514,6 +523,7 @@ p {
     font-size: 16px;
 }
 table{
+    z-index: 100;
     max-width: 95vw;
     left:1%;
 }

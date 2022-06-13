@@ -5,6 +5,15 @@ $(window).scroll(function () {
       "translateX(-" + 0.0625 * $(window).scrollTop() + "vw)"
     );
   } else{
+    if ($(window).scrollTop() <= 1700) {
+      $(".introwrap").css(
+        "transform",
+        "translateY(" + $(window).scrollTop() + "px)"
+      );
+    } else {
+      $(".introwrap").css("transform", "translateY(1700px)");
+    }
+    
     if ($(window).scrollTop() <= 700) {
       $(".textholder2").css(
         "transform",
@@ -115,14 +124,7 @@ $(window).scroll(function () {
   //end
 
 
-  if ($(window).scrollTop() <= 1700) {
-    $(".introwrap").css(
-      "transform",
-      "translateY(" + $(window).scrollTop() + "px)"
-    );
-  } else {
-    $(".introwrap").css("transform", "translateY(1700px)");
-  }
+
 
   $(".child1").css(
     "transform",
@@ -357,19 +359,3 @@ corousal(images_list_4, id_4);
     $( this ).css({"color":"white","background-color":"black"});
   }
 );
-
-
-if( document.documentElement.clientWidth <= 768){
-  $('.nav a').click(function() {
-
-    $(this).animate({
-      backgroundColor: "white"
-    }, 1000).delay(2000).queue(function() {
-      $(this).animate({
-        backgroundColor: "black"
-      }, 1000).dequeue();
-    });
-
-  });
-
-}
