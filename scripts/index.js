@@ -54,7 +54,7 @@ $(window).scroll(function () {
   // end
 
   //section highlight
-  if ($(window).scrollTop() <= 3204 && $(window).scrollTop() > 2600) {
+  if ($(window).scrollTop() <= 3256 && $(window).scrollTop() > 2600) {
     $("#Ed").css({
       "background-color": "white",
       "box-shadow": "1px 1px 1px 1px black inset,-1px -1px 1px 1px black inset",
@@ -63,7 +63,7 @@ $(window).scroll(function () {
   } else {
     $("#Ed").css({ "background-color": "black", color: "white" });
   }
-  if ($(window).scrollTop() <= 3863 && $(window).scrollTop() > 3204) {
+  if ($(window).scrollTop() <= 4076 && $(window).scrollTop() > 3256) {
     $("#Pr").css({
       "background-color": "white",
       "box-shadow": "1px 1px 1px 1px black inset,-1px -1px 1px 1px black inset",
@@ -72,7 +72,7 @@ $(window).scroll(function () {
   } else {
     $("#Pr").css({ "background-color": "black", color: "white" });
   }
-  if ($(window).scrollTop() <= 4824 && $(window).scrollTop() > 3863) {
+  if ($(window).scrollTop() <= 5140 && $(window).scrollTop() > 4076) {
     $("#Co").css({
       "background-color": "white",
       "box-shadow": "1px 1px 1px 1px black inset,-1px -1px 1px 1px black inset",
@@ -81,7 +81,7 @@ $(window).scroll(function () {
   } else {
     $("#Co").css({ "background-color": "black", color: "white" });
   }
-  if ($(window).scrollTop() <= 5540 && $(window).scrollTop() > 4824) {
+  if ($(window).scrollTop() <= 5868 && $(window).scrollTop() > 5140) {
     $("#Ce").css({
       "background-color": "white",
       "box-shadow": "1px 1px 1px 1px black inset,-1px -1px 1px 1px black inset",
@@ -90,7 +90,7 @@ $(window).scroll(function () {
   } else {
     $("#Ce").css({ "background-color": "black", color: "white" });
   }
-  if ($(window).scrollTop() <= 8160 && $(window).scrollTop() > 5540) {
+  if ($(window).scrollTop() <= 8572 && $(window).scrollTop() > 5868) {
     $("#Ho").css({
       "background-color": "white",
       "box-shadow": "1px 1px 1px 1px black inset,-1px -1px 1px 1px black inset",
@@ -99,7 +99,7 @@ $(window).scroll(function () {
   } else {
     $("#Ho").css({ "background-color": "black", color: "white" });
   }
-  if ( $(window).scrollTop() > 8160) {
+  if ( $(window).scrollTop() > 8572) {
     $("#Ph").css({
       "background-color": "white",
       "box-shadow": "1px 1px 1px 1px black inset,-1px -1px 1px 1px black inset",
