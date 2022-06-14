@@ -8,7 +8,8 @@ body {
     margin: 0;
     box-sizing: border-box;
     border: 0;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    /* font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; */
+    font-family: 'Manrope', sans-serif;
     display: flex;
     flex-direction: column;
     align-self: flex-start;
@@ -28,6 +29,7 @@ body {
 
 /* child1 */
 .introwrap {
+    position: relative;
     height: 100vh;
     width: 100vw;
 }
@@ -105,7 +107,7 @@ body {
 
 .text {
     margin-right: 40px;
-    font-size: 7vw;
+    font-size: 6.5vw;
     transform-origin: 0% 100%;
     animation: rin 1s ease;
 }
@@ -115,7 +117,7 @@ body {
 a {
     font-size: 32px;
     color: white;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-family: 'Manrope', sans-serif;
     font-weight: bold;
     text-decoration: none;
 }
@@ -433,13 +435,14 @@ b{
         position:fixed;
     }
 .text {
-        font-size: 35px;
+        font-size: 38px;
     }
     .textholder {
         width: 60vw;
         top: 20vh;
     }
     .static-text {
+        padding-top: 5px;
         font-size: 20px;
     }
     .arrow {
@@ -449,7 +452,8 @@ b{
     }
     .wrapabout {
         z-index: 50;
-        font-size: 20px;
+        font-size: 25px;
+        font-weight: bold;
         width: 90vw;
         left: 5%;
         top: 50px;
@@ -469,6 +473,7 @@ b{
         left:2.5%;
         top: 0px;
         line-height: 4vh;
+        background-color: black;
     }
     .aboutwrapper{
         z-index: 100;
@@ -485,7 +490,8 @@ a {
         text-decoration: underline;
         text-align: center;
         position: relative;
-        font-size:25px;
+        font-size:27px;
+        font-weight: bold;
     }
 .education,
 .projects,
@@ -493,12 +499,12 @@ a {
 .certificates,
 .hobbies {
     visibility:visible;
-    font-size: 16px;
+    font-size: 18px;
     padding-top: 30px;
 }
 .details {
     color:rgb(255, 255, 255);
-    font-size: 12px
+    font-size: 15px
 }
 .year {
     font-size: 25px;
@@ -506,6 +512,7 @@ a {
 h2 {
     z-index: 100;
     font-size: 24px;
+    font-weight: normal;
 }
 p {
     z-index: 100;
