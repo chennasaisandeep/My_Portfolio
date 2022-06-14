@@ -5,15 +5,6 @@ $(window).scroll(function () {
       "translateX(-" + 0.0625 * $(window).scrollTop() + "vw)"
     );
   } else{
-    if ($(window).scrollTop() <= 1700) {
-      $(".introwrap").css(
-        "transform",
-        "translateY(" + $(window).scrollTop() + "px)"
-      );
-    } else {
-      $(".introwrap").css("transform", "translateY(1700px)");
-    }
-    
     if ($(window).scrollTop() <= 700) {
       $(".textholder2").css(
         "transform",

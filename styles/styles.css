@@ -29,7 +29,7 @@ body {
 
 /* child1 */
 .introwrap {
-    position: relative;
+    position: fixed;
     height: 100vh;
     width: 100vw;
 }
@@ -127,6 +127,7 @@ a {
     display: flex;
     justify-content: space-around;
     z-index: 150;
+    backdrop-filter: blur(5px);
     background-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgb(0, 0, 0, 0.5), rgb(0, 0, 0, 0));
     width: 100vw;
     line-height: 4vh;
@@ -136,6 +137,8 @@ a {
 .aboutwrapper {
     display: flex;
     flex-flow: column;
+    z-index: 100;
+    background:black;
 }
 
 /* end */
