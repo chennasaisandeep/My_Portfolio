@@ -1,7 +1,7 @@
 window.portfolioData = {
     "site": {
         "title": "Saisandeep Chenna",
-        "logo": "SC",
+        "logo": "SS",
         "nav": [
             { "label": "Work", "id": "work" },
             { "label": "Experience", "id": "experience" },
@@ -27,7 +27,7 @@ window.portfolioData = {
         ],
         "metrics": [
             { "label": "Months Experience", "value": "6+" },
-            { "label": "Projects Delivered", "value": "2+" },
+            { "label": "Projects Delivered", "value": "3" },
             { "label": "GPA (CMI)", "value": "9.18" }
         ]
     },
@@ -179,8 +179,7 @@ window.portfolioData = {
             "issuer": "Google (Coursera)",
             "description": "Comprehensive program covering data fundamentals, preparation, processing, and analysis.",
             "icon": "fab fa-google",
-            "images": ["https://coursera.org/share/019cc91aa11d244568c6e36f9cdcf0d9"],
-            "link": "https://www.coursera.org/account/accomplishments/specialization/certificate/PJDUC7GM2YW7"
+            "link": "https://www.coursera.org/account/accomplishments/professional-cert/PJDUC7GM2YW7"
         },
         {
             "name": "Complete Data Science Bootcamp",
@@ -196,7 +195,7 @@ window.portfolioData = {
             "name": "Tensorflow for Deep Learning Bootcamp",
             "issuer": "Udemy",
             "description": "Comprehensive TensorFlow 2 mastery covering Neural Networks, CNNs, RNNs, NLP, Computer Vision, Transfer Learning, and Time Series.",
-            "icon": "fas fa-certificate",
+            "icon": "fas fa-brain",
             "images": [
                 "https://udemy-certificate.s3.amazonaws.com/image/UC-e6b0542b-58a1-4ea7-8ef0-80f58ddb8ac1.jpg?v=1765541464000"
             ],

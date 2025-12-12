@@ -69,16 +69,16 @@ const HobbyModal = ({ hobby, onClose }) => {
             </button>
 
             <div className="bg-white rounded-2xl w-full max-w-4xl overflow-hidden shadow-2xl relative flex flex-col max-h-[90vh]">
-                <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-blue-600 to-blue-700">
+                <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-blue-600 to-blue-700 flex-shrink-0">
                     <h3 className="text-xl font-bold flex items-center gap-2 text-white">
                         <i className={`fas ${hobby.icon}`}></i> {hobby.name}
                     </h3>
                     {hasGallery && <span className="text-sm text-blue-100">{currentIndex + 1} / {hobby.gallery.length}</span>}
                 </div>
 
-                <div className="flex-1 overflow-hidden">
+                <div className="flex-1 overflow-hidden min-h-0">
                     {hasGallery ? (
-                        <div className="h-full bg-black relative flex items-center justify-center p-4">
+                        <div className="h-full bg-black relative flex items-center justify-center p-8">
                             <img 
                                 src={hobby.gallery[currentIndex]} 
                                 alt={`${hobby.name} Gallery ${currentIndex + 1}`} 
@@ -87,17 +87,17 @@ const HobbyModal = ({ hobby, onClose }) => {
                             />
                             {hobby.gallery.length > 1 && (
                                 <>
-                                    <button onClick={prevImage} className="absolute left-4 bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/80 transition-all">
+                                    <button onClick={prevImage} className="absolute left-4 bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/80 transition-all z-10">
                                         <i className="fas fa-chevron-left"></i>
                                     </button>
-                                    <button onClick={nextImage} className="absolute right-4 bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/80 transition-all">
+                                    <button onClick={nextImage} className="absolute right-4 bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/80 transition-all z-10">
                                         <i className="fas fa-chevron-right"></i>
                                     </button>
                                 </>
                             )}
                         </div>
                     ) : hasCert ? (
-                        <div className="h-full bg-black relative flex items-center justify-center p-4">
+                        <div className="h-full bg-black relative flex items-center justify-center p-8">
                             <img 
                                 src={hobby.certificate} 
                                 alt="Certificate" 
@@ -105,10 +105,10 @@ const HobbyModal = ({ hobby, onClose }) => {
                             />
                         </div>
                     ) : hasPlaylists ? (
-                        <div className="h-full bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 overflow-y-auto" style={{maxHeight: '60vh'}}>
-                            <div className="p-6">
-                                {/* Playlist Tabs */}
-                                <div className="flex gap-2 mb-6 flex-wrap">
+                        <div className="h-full bg-gradient-to-br from-slate-800 via-blue-800 to-slate-800 overflow-y-auto flex flex-col" style={{maxHeight: '60vh'}}>
+                            {/* Playlist Tabs - Sticky */}
+                            <div className="sticky top-0 z-10 pt-4 px-6 pb-3 backdrop-blur-md bg-slate-1000/40 mb-2">
+                                <div className="flex gap-2 flex-wrap">
                                     {Object.keys(hobby.playlists).map((playlistName) => (
                                         <button
                                             key={playlistName}
@@ -123,9 +123,11 @@ const HobbyModal = ({ hobby, onClose }) => {
                                         </button>
                                     ))}
                                 </div>
+                            </div>
 
-                                {/* Song List */}
-                                <div className="space-y-2 pb-4">
+                            {/* Song List */}
+                            <div className="px-6 pb-6">
+                                <div className="space-y-2">
                                     {selectedPlaylist && hobby.playlists[selectedPlaylist].map((song, idx) => (
                                         <a 
                                             key={idx}
@@ -162,7 +164,7 @@ const HobbyModal = ({ hobby, onClose }) => {
                     )}
                 </div>
                 
-                <div className="p-6 bg-white border-t border-gray-100">
+                <div className="p-6 bg-white border-t border-gray-100 flex-shrink-0">
                     <p className="text-gray-600">{hobby.description}</p>
                 </div>
             </div>
@@ -242,6 +244,7 @@ const App = () => {
     const [selectedCertificate, setSelectedCertificate] = useState(null);
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [scrollPosition, setScrollPosition] = useState(0);
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -261,8 +264,16 @@ const App = () => {
         }
     };
 
+    const handleProjectClick = (projectId) => {
+        setScrollPosition(window.scrollY);
+        setSelectedId(projectId);
+    };
+
     if (selectedId && activeProject) {
-        return <ProjectDetail project={activeProject} onBack={() => setSelectedId(null)} />;
+        return <ProjectDetail project={activeProject} onBack={() => {
+            setSelectedId(null);
+            setTimeout(() => window.scrollTo(0, scrollPosition), 0);
+        }} />;
     }
 
     return (
@@ -333,7 +344,7 @@ const App = () => {
                 </div>
                 <div className="grid md:grid-cols-2 gap-8">
                     {content.projects.map(project => (
-                        <div key={project.id} onClick={() => setSelectedId(project.id)} className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col h-full">
+                        <div key={project.id} onClick={() => handleProjectClick(project.id)} className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col h-full">
                             <div className={`h-48 w-full bg-gradient-to-br ${project.gradient} relative p-6 flex flex-col justify-end`}>
                                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-all"></div>
                                 <h3 className="relative text-white text-xl font-bold shadow-sm">{project.title}</h3>
@@ -453,20 +464,26 @@ const App = () => {
                             {content.certificates.map((cert, i) => (
                                 <div 
                                     key={i} 
-                                    onClick={() => cert.images && cert.images.length > 0 && setSelectedCertificate(cert)}
+                                    onClick={() => {
+                                        if (cert.images && cert.images.length > 0) {
+                                            setSelectedCertificate(cert);
+                                        } else if (cert.link) {
+                                            window.open(cert.link, '_blank');
+                                        }
+                                    }}
                                     className={`bg-white border border-gray-100 p-6 rounded-xl shadow-sm flex items-start gap-4 transition-all hover:shadow-md ${
-                                        cert.images && cert.images.length > 0 ? 'cursor-pointer group' : ''
+                                        (cert.images && cert.images.length > 0) || cert.link ? 'cursor-pointer group' : ''
                                     }`}
                                 >
                                     <div className={`w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0 text-blue-600 ${
-                                        cert.images && cert.images.length > 0 ? 'group-hover:bg-blue-600 group-hover:text-white' : ''
+                                        (cert.images && cert.images.length > 0) || cert.link ? 'group-hover:bg-blue-600 group-hover:text-white' : ''
                                     } transition-colors`}>
                                         <i className={`${cert.icon || 'fas fa-certificate'} text-lg`}></i>
                                     </div>
                                     <div className="flex-1">
                                         <h3 className="font-bold text-gray-900 flex items-center gap-2">
                                             {cert.name}
-                                            {cert.images && cert.images.length > 0 && <i className="fas fa-external-link-alt text-xs text-gray-400 group-hover:text-blue-600 transition-colors"></i>}
+                                            {((cert.images && cert.images.length > 0) || cert.link) && <i className="fas fa-external-link-alt text-xs text-gray-400 group-hover:text-blue-600 transition-colors"></i>}
                                         </h3>
                                         <div className="text-sm text-blue-600 mb-2 font-medium">{cert.issuer}</div>
                                         <p className="text-sm text-gray-500">{cert.description}</p>
