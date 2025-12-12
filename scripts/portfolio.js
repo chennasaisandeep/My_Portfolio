@@ -22,7 +22,6 @@ window.portfolioData = {
         "subheadline": "Transforming data into insights. I specialize in building impactful ML solutions, from anomaly detection to web content extraction.",
         "ctas": [
             { "label": "View Projects", "action": "work", "primary": true },
-            { "label": "Contact Me", "action": "contact", "primary": false },
             { "label": "Resume", "action": "resume", "primary": false, "href": "data/pdf/Saisandeep Chenna.pdf" }
         ],
         "metrics": [

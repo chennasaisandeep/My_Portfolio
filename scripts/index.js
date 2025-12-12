@@ -23,7 +23,7 @@ const Button = ({ children, primary, onClick, href, icon }) => {
 };
 
 const Section = ({ id, className = "", children }) => (
-    <section id={id} className={`py-12 px-6 md:px-12 max-w-7xl mx-auto ${className}`}>
+    <section id={id} className={`px-6 md:px-12 max-w-7xl mx-auto ${className}`}>
         {children}
     </section>
 );
@@ -68,7 +68,7 @@ const HobbyModal = ({ hobby, onClose }) => {
                 <i className="fas fa-times text-3xl"></i>
             </button>
 
-            <div className="bg-white rounded-2xl w-full max-w-4xl shadow-2xl relative flex flex-col max-h-[90vh] h-[90vh] overflow-hidden">
+            <div className="bg-white rounded-2xl w-full max-w-4xl shadow-2xl relative flex flex-col max-h-[90vh] md:h-[90vh] overflow-hidden">
                 <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-blue-600 to-blue-700 flex-shrink-0 rounded-t-2xl">
                     <h3 className="text-xl font-bold flex items-center gap-2 text-white">
                         <i className={`fas ${hobby.icon}`}></i> {hobby.name}
@@ -78,7 +78,7 @@ const HobbyModal = ({ hobby, onClose }) => {
 
                 <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
                     {hasGallery ? (
-                        <div className="flex-1 bg-black relative min-h-0 overflow-hidden">
+                        <div className="bg-black relative overflow-hidden h-[50vh] md:flex-1 md:min-h-0">
                             <div className="absolute inset-0 flex items-center justify-center p-4">
                                 <img 
                                     src={hobby.gallery[currentIndex]} 
@@ -99,7 +99,7 @@ const HobbyModal = ({ hobby, onClose }) => {
                             )}
                         </div>
                     ) : hasCert ? (
-                        <div className="flex-1 bg-black relative min-h-0 overflow-hidden">
+                        <div className="bg-black relative overflow-hidden h-[50vh] md:flex-1 md:min-h-0">
                             <div className="absolute inset-0 flex items-center justify-center p-4">
                                 <img 
                                     src={hobby.certificate} 
@@ -112,7 +112,7 @@ const HobbyModal = ({ hobby, onClose }) => {
                         <div className="flex-1 bg-gradient-to-br from-slate-800 via-blue-800 to-slate-800 overflow-y-auto flex flex-col min-h-0 scrollbar-hide" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
                             {/* Playlist Tabs - Sticky */}
                             <div className="sticky top-0 z-10 pt-4 px-6 pb-3 backdrop-blur-md bg-slate-1000/40 mb-2">
-                                <div className="flex gap-2 flex-wrap">
+                                <div className="flex md:flex-wrap gap-2 overflow-x-auto scrollbar-hide pb-2" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
                                     {Object.keys(hobby.playlists).map((playlistName) => (
                                         <button
                                             key={playlistName}
@@ -168,7 +168,7 @@ const HobbyModal = ({ hobby, onClose }) => {
                     )}
                 </div>
                 
-                <div className={`bg-white border-t border-gray-100 flex-shrink-0 rounded-b-2xl ${hasPlaylists ? 'p-3' : 'p-6'}`}>
+                <div className={`bg-white border-t border-gray-100 flex-shrink-0 rounded-b-2xl ${hasPlaylists ? 'p-3' : 'p-4 md:p-6'}`}>
                     <p className="text-gray-600 text-sm">{hobby.description}</p>
                 </div>
             </div>
@@ -181,7 +181,7 @@ const ProjectDetail = ({ project, onBack }) => {
     
     return (
         <div className="min-h-screen bg-white animate-fade-in">
-            <div className={`relative h-80 w-full bg-gradient-to-br ${project.gradient} flex items-end p-8 md:p-12`}>
+            <div className={`relative h-60 w-full bg-gradient-to-br ${project.gradient} flex items-end p-8 md:p-12`}>
                 <button onClick={onBack} className="absolute top-6 left-6 bg-black/20 hover:bg-black/40 text-white px-4 py-2 rounded-full backdrop-blur-sm transition-all flex items-center">
                     <i className="fas fa-arrow-left mr-2"></i> Back
                 </button>
@@ -320,11 +320,11 @@ const App = () => {
             </nav>
 
             {/* Hero */}
-            <header className="pt-32 pb-20 px-6 md:px-12 md:pt-48 md:pb-32 max-w-7xl mx-auto">
+            <header className="pt-24 pb-16 px-6 md:px-12 md:pt-32 md:pb-24 max-w-7xl mx-auto">
                 <div className="max-w-3xl">
-                    <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 text-slate-900">{content.hero.headline}</h1>
+                    <h1 className="text-4xl md:text-7xl font-bold tracking-tight mb-6 text-slate-900">{content.hero.headline}</h1>
                     <p className="text-xl text-slate-500 mb-10 leading-relaxed max-w-2xl">{content.hero.subheadline}</p>
-                    <div className="flex gap-4 mb-16">
+                    <div className="flex flex-wrap gap-4 mb-16">
                         {content.hero.ctas.map((cta, i) => (
                             <Button key={i} primary={cta.primary} onClick={() => cta.action === 'resume' ? window.open(cta.href, '_blank') : handleNav(cta.action)} href={cta.href}>{cta.label}</Button>
                         ))}
@@ -341,15 +341,15 @@ const App = () => {
             </header>
 
             {/* Work Grid */}
-            <Section id="work" className="bg-slate-50/50">
-                <div className="mb-12">
+            <Section id="work" className="py-6 bg-slate-50/50">
+                <div className="mb-8">
                     <h2 className="text-3xl font-bold mb-3">Selected Work</h2>
                     <p className="text-gray-500">Highlighting projects in ML and Data Analysis.</p>
                 </div>
-                <div className="grid md:grid-cols-2 gap-8">
+                <div className="grid md:grid-cols-2 gap-6">
                     {content.projects.map(project => (
                         <div key={project.id} onClick={() => handleProjectClick(project.id)} className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col h-full">
-                            <div className={`h-48 w-full bg-gradient-to-br ${project.gradient} relative p-6 flex flex-col justify-end`}>
+                            <div className={`h-24 w-full bg-gradient-to-br ${project.gradient} relative p-6 flex flex-col justify-end`}>
                                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-all"></div>
                                 <h3 className="relative text-white text-xl font-bold shadow-sm">{project.title}</h3>
                             </div>
@@ -368,9 +368,9 @@ const App = () => {
             </Section>
 
             {/* Experience */}
-            <Section id="experience">
-                <h2 className="text-3xl font-bold mb-12">Experience</h2>
-                <div className="space-y-8">
+            <Section id="experience" className="py-6">
+                <h2 className="text-3xl font-bold mb-8">Experience</h2>
+                <div className="space-y-4">
                     {content.experience.map((exp, i) => (
                         <div key={i} className="flex flex-col md:flex-row gap-4 md:gap-12">
                             <div className="md:w-1/4 pt-1">
@@ -395,8 +395,8 @@ const App = () => {
             </Section>
 
             {/* Education */}
-            <Section id="education" className="bg-white">
-                <div className="mb-12">
+            <Section id="education" className="py-6">
+                <div className="mb-8">
                     <h2 className="text-3xl font-bold mb-3">Education</h2>
                     <p className="text-gray-500">Academic background and qualifications.</p>
                 </div>
@@ -410,12 +410,12 @@ const App = () => {
                                 <div className="flex-1">
                                     <h3 className="font-bold text-xl text-gray-900 mb-1">{edu.school}</h3>
                                     <p className="text-blue-600 font-semibold mb-2">{edu.degree}</p>
-                                    <div className="flex items-center gap-3 text-sm text-gray-600">
+                                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 text-sm text-gray-600">
                                         <span className="flex items-center gap-1">
                                             <i className="fas fa-calendar text-gray-400"></i>
                                             {edu.year}
                                         </span>
-                                        <span className="text-gray-300">•</span>
+                                        <span className="text-gray-300 hidden sm:inline">•</span>
                                         <span className="flex items-center gap-1">
                                             <i className="fas fa-star text-yellow-500"></i>
                                             {edu.grade}
@@ -429,12 +429,12 @@ const App = () => {
             </Section>
 
             {/* Skills */}
-            <Section id="skills" className="bg-slate-50">
-                <div className="mb-12">
+            <Section id="skills" className="py-6 bg-slate-50">
+                <div className="mb-8">
                     <h2 className="text-3xl font-bold mb-3">Skills & Technologies</h2>
                     <p className="text-gray-500">Technical expertise across multiple domains.</p>
                 </div>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
                     {Object.entries(content.skills.reduce((acc, skill) => {
                         (acc[skill.category] = acc[skill.category] || []).push(skill);
                         return acc;
@@ -458,13 +458,13 @@ const App = () => {
             </Section>
 
             {/* Certificates & Hobbies */}
-            <Section id="certificates">
+            <Section id="certificates" className="py-6">
                 <div className="grid lg:grid-cols-2 gap-16">
                     
                     {/* Certificates Column */}
                     <div>
                         <h2 className="text-3xl font-bold mb-8">Certificates</h2>
-                        <div className="space-y-6">
+                        <div className="space-y-3">
                             {content.certificates.map((cert, i) => (
                                 <div 
                                     key={i} 
@@ -498,9 +498,9 @@ const App = () => {
                     </div>
 
                     {/* Hobbies Column */}
-                    <div id="hobbies" style={{scrollMarginTop: '60px'}}>
+                    <div id="hobbies" style={{scrollMarginTop: '25px'}}>
                         <h2 className="text-3xl font-bold mb-8">Interests & Hobbies</h2>
-                        <div className="space-y-6">
+                        <div className="space-y-3">
                             {content.hobbies.map((hobby, i) => (
                                 <div 
                                     key={i} 
@@ -528,7 +528,7 @@ const App = () => {
             </Section>
 
             {/* Footer / Contact */}
-            <Section id="contact" className="text-center pb-20 bg-gradient-to-t from-gray-50 to-white">
+            <Section id="contact" className="py-12 text-center pb-20 bg-gradient-to-t from-gray-50 to-white">
                 <h2 className="text-4xl font-bold mb-6">Let's Connect</h2>
                 <p className="text-gray-500 max-w-xl mx-auto mb-10">
                     Looking for opportunities? I'm just an email away.
