@@ -68,44 +68,48 @@ const HobbyModal = ({ hobby, onClose }) => {
                 <i className="fas fa-times text-3xl"></i>
             </button>
 
-            <div className="bg-white rounded-2xl w-full max-w-4xl overflow-hidden shadow-2xl relative flex flex-col max-h-[90vh]">
-                <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-blue-600 to-blue-700 flex-shrink-0">
+            <div className="bg-white rounded-2xl w-full max-w-4xl shadow-2xl relative flex flex-col max-h-[90vh] h-[90vh] overflow-hidden">
+                <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-blue-600 to-blue-700 flex-shrink-0 rounded-t-2xl">
                     <h3 className="text-xl font-bold flex items-center gap-2 text-white">
                         <i className={`fas ${hobby.icon}`}></i> {hobby.name}
                     </h3>
                     {hasGallery && <span className="text-sm text-blue-100">{currentIndex + 1} / {hobby.gallery.length}</span>}
                 </div>
 
-                <div className="flex-1 overflow-hidden min-h-0">
+                <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
                     {hasGallery ? (
-                        <div className="h-full bg-black relative flex items-center justify-center p-8">
-                            <img 
-                                src={hobby.gallery[currentIndex]} 
-                                alt={`${hobby.name} Gallery ${currentIndex + 1}`} 
-                                className="max-h-full max-w-full object-contain"
-                                onError={(e) => {console.error('Image failed to load:', e.target.src); e.target.src='https://via.placeholder.com/800x600?text=Image+Not+Found'}}
-                            />
+                        <div className="flex-1 bg-black relative min-h-0 overflow-hidden">
+                            <div className="absolute inset-0 flex items-center justify-center p-4">
+                                <img 
+                                    src={hobby.gallery[currentIndex]} 
+                                    alt={`${hobby.name} Gallery ${currentIndex + 1}`} 
+                                    className="max-w-full max-h-full object-contain"
+                                    onError={(e) => {console.error('Image failed to load:', e.target.src); e.target.src='https://via.placeholder.com/800x600?text=Image+Not+Found'}}
+                                />
+                            </div>
                             {hobby.gallery.length > 1 && (
                                 <>
-                                    <button onClick={prevImage} className="absolute left-4 bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/80 transition-all z-10">
+                                    <button onClick={prevImage} className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/80 transition-all z-10">
                                         <i className="fas fa-chevron-left"></i>
                                     </button>
-                                    <button onClick={nextImage} className="absolute right-4 bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/80 transition-all z-10">
+                                    <button onClick={nextImage} className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/80 transition-all z-10">
                                         <i className="fas fa-chevron-right"></i>
                                     </button>
                                 </>
                             )}
                         </div>
                     ) : hasCert ? (
-                        <div className="h-full bg-black relative flex items-center justify-center p-8">
-                            <img 
-                                src={hobby.certificate} 
-                                alt="Certificate" 
-                                className="max-h-full max-w-full object-contain"
-                            />
+                        <div className="flex-1 bg-black relative min-h-0 overflow-hidden">
+                            <div className="absolute inset-0 flex items-center justify-center p-4">
+                                <img 
+                                    src={hobby.certificate} 
+                                    alt="Certificate" 
+                                    className="max-w-full max-h-full object-contain"
+                                />
+                            </div>
                         </div>
                     ) : hasPlaylists ? (
-                        <div className="h-full bg-gradient-to-br from-slate-800 via-blue-800 to-slate-800 overflow-y-auto flex flex-col" style={{maxHeight: '60vh'}}>
+                        <div className="flex-1 bg-gradient-to-br from-slate-800 via-blue-800 to-slate-800 overflow-y-auto flex flex-col min-h-0 scrollbar-hide" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
                             {/* Playlist Tabs - Sticky */}
                             <div className="sticky top-0 z-10 pt-4 px-6 pb-3 backdrop-blur-md bg-slate-1000/40 mb-2">
                                 <div className="flex gap-2 flex-wrap">
@@ -164,8 +168,8 @@ const HobbyModal = ({ hobby, onClose }) => {
                     )}
                 </div>
                 
-                <div className="p-6 bg-white border-t border-gray-100 flex-shrink-0">
-                    <p className="text-gray-600">{hobby.description}</p>
+                <div className={`bg-white border-t border-gray-100 flex-shrink-0 rounded-b-2xl ${hasPlaylists ? 'p-3' : 'p-6'}`}>
+                    <p className="text-gray-600 text-sm">{hobby.description}</p>
                 </div>
             </div>
         </div>
@@ -494,14 +498,16 @@ const App = () => {
                     </div>
 
                     {/* Hobbies Column */}
-                    <div id="hobbies">
+                    <div id="hobbies" style={{scrollMarginTop: '60px'}}>
                         <h2 className="text-3xl font-bold mb-8">Interests & Hobbies</h2>
                         <div className="space-y-6">
                             {content.hobbies.map((hobby, i) => (
                                 <div 
                                     key={i} 
-                                    onClick={() => setSelectedHobby(hobby)}
-                                    className="bg-white border border-gray-100 p-6 rounded-xl shadow-sm flex items-start gap-4 transition-all hover:shadow-md cursor-pointer group"
+                                    onClick={() => (hobby.gallery || hobby.certificate || hobby.playlists) && setSelectedHobby(hobby)}
+                                    className={`bg-white border border-gray-100 p-6 rounded-xl shadow-sm flex items-start gap-4 transition-all ${
+                                        (hobby.gallery || hobby.certificate || hobby.playlists) ? 'hover:shadow-md cursor-pointer group' : ''
+                                    }`}
                                 >
                                     <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                                         <i className={`fas ${hobby.icon} text-lg`}></i>

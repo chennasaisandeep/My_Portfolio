@@ -241,12 +241,6 @@ window.portfolioData = {
             ]
         },
         {
-            "name": "Fast Typing",
-            "description": "Achieved typing speed of 67 WPM to boost coding productivity.",
-            "icon": "fa-keyboard",
-            "certificate": "https://via.placeholder.com/800x600?text=Typing+Certificate+Placeholder"
-        },
-        {
             "name": "Music",
             "description": "Music is my stress buster. I enjoy exploring different genres and discovering new artists.",
             "icon": "fa-music",
@@ -279,6 +273,11 @@ window.portfolioData = {
                     { "title": "Con Altura", "artist": "ROSALÍA & J Balvin", "link": "https://www.youtube.com/watch?v=p7bfOZek9t4" }
                 ]
             }
+        },
+        {
+            "name": "Fast Typing",
+            "description": "Achieved typing speed of 67 WPM to boost coding productivity.",
+            "icon": "fa-keyboard"
         }
     ]
 };
