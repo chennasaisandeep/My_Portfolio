@@ -1,247 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portfolio</title>
-    <link rel="shortcut icon" href="icons/favicon-32x32.png" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Merienda:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="styles/styles.css">
+    <title>Saisandeep Chenna | Machine Learning Engineer</title>
+    
+    <!-- 1. Tailwind CSS (Styling) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. FontAwesome (Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 3. React & ReactDOM (Core Framework) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- 4. Babel (To understand JSX in the browser) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Custom Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        html { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Animation Classes */
+        .fade-in-up { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; transform: translateY(20px); }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        
+        /* Modal Animation */
+        .modal-enter { opacity: 0; transform: scale(0.95); }
+        .modal-enter-active { opacity: 1; transform: scale(1); transition: opacity 300ms, transform 300ms; }
+    </style>
 </head>
+<body class="bg-slate-50 text-slate-900">
 
-<body>
-    <div class="wrapper">
-        <div class="introwrap">
-            <img class="arrow" src="icons/down-filled-triangular-arrow.png" alt="arrow down">
-            <div class="subcontainer child1">
-                <div class="textholder textholder1">
-                    <div class="text text1">Hi</div>
-                    <div class="text text2">I'm Saisandeep</div>
-                    <div class="static-text">I'm <span class="animate"></span></div>
-                </div>
-            </div>
-            <div class="subcontainer child2">
-                <div class="about">
-                    <div class="intro">
-                        <div class="wrapabout">
-                            <div>Aspiring Data Scientist.</div>
-                            <div>Coding enthusiast.</div>
-                            <div>I like to build things that contribute to a better, more equitable, and pleasant
-                                future.
-                            </div>
-                        </div>
-                        <img class="potrait" src="images/1654675907500.png" alt="My potrait">
-                    </div>
-                </div>
-                <div class="textholder textholder2">
-                    <div class="text text1">Hi</div>
-                    <div class="text text2">I'm Saisandeep</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="nav" class="nav">
-        <a id="Ed" class="Ed" href="#education">Education</a>
-        <a id="Pr" class="Pr" href="#projects">Projects</a>
-        <a id="Co" class="Co" href="#cp">Computeracy</a>
-        <a id="Ce" class="Ce" href="#certificates">Certificates</a>
-        <a id="Ho" class="Ho" href="#hobbies">Hobbies</a>
-        <a id="Ph" class="Ph" href="#contact">Contact</a>
-    </div>
-    <div class="aboutwrapper"><div class="headings">Educational background</div>
-        <div class="education" id="education">
-            <table class="one">
-                <tr>
-                    <td class="year" style="width:25%">2019-2022</td>
-                    <td>Bachelor of Mathematics<br>
-                        <span class="details">I graduated from <b>Indian Statistical Institute</b> Bangalore
-                            with <b>First division (honors) Degree</b> in <b>Mathematics.</b></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="year" style="width:25%">2017-2019</td>
-                    <td>Senior Secondary(XI-XII)<br>
-                        <span class="details">I completed my intermediate at <b>Sri Chaitanya Jr college</b>
-                            Hyderabad with <b>981/1000</b> score in <b>MPC Inter exam</b>. I got <b>AIR 18</b>
-                            in <b>ISI exam.</b></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="year" style="width:25%">2016-2017</td>
-                    <td>Secondary(X)<br>
-                        <span class="details">I completed my 10th at <b>Sri Chaitanya High School</b> Kurnool
-                            with <b>9.8/10 CGPA</b> and <b>NTSE aspirant.</b></span>
-                    </td>
-                </tr>
-            </table>
-        </div><div class="headings">Projects</div>
-        <div class="projects" id="projects">
-            <table class="one">
-                <tr>
-                    <td class="year" style="width:15%">2020</td>
-                    <td>Impact of COVID-19 on the air quality of Eastern Province, Saudi Arabia<br><span
-                            class="details">Statistical analysis of atmospheric pollutant concentrations before,
-                            during and after lockdown in Saudi Arabia</span></td>
-                </tr>
-                <tr>
-                    <td class="year" style="width:15%">2021</td>
-                    <td>Tensorflow Projects<br>
-                        <span class="details">Food vision (Transfer learning)<br> SkimLit (Natural language
-                            processing)<br> BitPredict (Time series)</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="year" style="width:15%">2022</td>
-                    <td>Web development projects<br>
-                        <span class="details">My own portfolio : I mainly used jQuery for coding part, HTML,
-                            CSS.<br></span><br>
-                        Automation using Selenium<br><span class="details">Automation of <b>typing test and
-                                filling google forms</b> using Selenium<br></span>
-                    </td>
-                </tr>
-            </table>
-        </div><div class="headings">Computer proficiency</div>
-        <div class="cp" id="cp">
-            <table class="one">
-                <tr>
-                    <td class="year" style="width:15%">Data Science</td>
-                    <td> Python<br><span class="details">I have very strong base in <b>Data
-                                science</b> related modules like <b>NumPy, SciPy, Matplotlib, Seaborn,
-                                Statsmodels, Pandas</b> and have basic knowledge in <b>Tensorflow,
-                                Scikitlearn.<br><br></b></span>
-                        Tensorflow Projects<br><span class="details">Food vision (Transfer learning)</u><br>
-                            SkimLit (Natural language processing)<br> BitPredict (Time series)</span></td>
-                </tr>
-                <tr>
-                    <td class="year" style="width:15%">Web Develop</td>
-                    <td>Front-End<br>
-                        <span class="details">I am very good in <b>HTML, CSS, Javascript (mainly JQuery) DOM
-                                manipulation and React.js.<br><br></b></span>
-                        Back-END<br>
-                        <span class="details">I am not much into back-end development but I know little bit
-                            about backend tools like <b>Node.js, Express.js, Git, API. </b><br><br></span>
-                        Database Management<br>
-                        <span class="details">I have some knowledge in <b>SQL, MongoDB and
-                                mongoose.</b><br><br></b></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="year" colspan="2">My typing speed is around 65wpm.</td>
-                </tr>
-            </table>
-        </div><div class="headings">Certificates</div>
-        <div class="certificates" id="certificates">
-            <div id="hcg-slider-1" class="hcg-slider">
-                <div class="hcg-slide-container">
-                    <div class="hcg-slider-body">
-                    </div>
-                    <a class="hcg-slide-prev" href="#">&lt</a>
-                    <a class="hcg-slide-next" href="#">&gt</a>
-                </div>
-                <div class="hcg-slide-dot-control"></div>
-            </div>
-        </div><div class="headings">Hobbies</div>
-        <div class="hobbies" id="hobbies">
-            <h2><u>Photography and Editing</u></h2>
-            <p>I Love taking photos and try to capture moments that I think are interesting. I have never really
-                pursued anything with photography, but it is something I enjoy doing on my own. When it comes to
-                editing I really love creative photo editing. Photo editing will bring life to what you have
-                captured. </p>
-            <div class="photos">
-                <div id="hcg-slider-2" class="hcg-slider">
-                    <div class="hcg-slide-container">
-                        <div class="hcg-slider-body">
-                        </div>
-                        <a class="hcg-slide-prev" href="#">&lt</a>
-                        <a class="hcg-slide-next" href="#">&gt</a>
-                    </div>
-                    <div class="hcg-slide-dot-control"></div>
-                </div>
-            </div>
-            <br>
-            <h2><u>CGI and VFX</u></h2>
-            <p>When I was a kid I wanted to create graphics like in movies and I became passionate about
-                creating 3D stuff.
-                Inspired by some YouTubers like Blender guru, Jalex Rosa, Zack king I learned some 3d softwares
-                like Blender 3d, Adobe AE, Davinci Resolve which literally became my stress busters. I cannot
-                attach all so <a class="insta" href="https://www.instagram.com/saisandeep_chenna/"
-                    target="_blank">here</a> you can find my instagram page
-                where I upload all my stuff.<br>The pictures below are some of the CGI stuff which I have tried.
-            </p>
-            <div class="photos">
-                <div id="hcg-slider-3" class="hcg-slider">
-                    <div class="hcg-slide-container">
-                        <div class="hcg-slider-body">
-                        </div>
-                        <a class="hcg-slide-prev" href="#">&lt</a>
-                        <a class="hcg-slide-next" href="#">&gt</a>
-                    </div>
-                    <div class="hcg-slide-dot-control"></div>
-                </div>
-            </div>
-            <h2><u>Drawing</u></h2>
-            <p>I first started drawing when I was in 5th grade and that art is called <a class="ana"
-                    href="https://en.wikipedia.org/wiki/Anamorphosis" target="_blank">anamorphic </a>art. When we
-                look at it from a specific camera angle it basically conveys 2D art into 3D. From there the passion
-                for drawing began. Now I draw for fun.
-            </p>
-            <div class="photos">
-                <div id="hcg-slider-4" class="hcg-slider">
-                    <div class="hcg-slide-container">
-                        <div class="hcg-slider-body">
-                        </div>
-                        <a class="hcg-slide-prev" href="#">&lt</a>
-                        <a class="hcg-slide-next" href="#">&gt</a>
-                    </div>
-                    <div class="hcg-slide-dot-control"></div>
-                </div>
-            </div>
-            <h2><u>Listening music</u></h2>
-            <p>I love listening to music. Listening to music is always a good way to reduce stress. I spend most of
-                my free time listening to music. I listen to so many
-                different types of music that I can't even pick a favorite genre. Each day I seem to be in the
-                mood for something different, and I constantly go through phases of loving one genre for a week
-                and then switching the next week.<br><br>     
-            </p> 
-        </div><div class="headings">Contact</div>  
-        <div class="contact" id="contact">
-            <hr>
-            <div class="sm">
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=chennasaisandeep@gmail.com&su=&body="
-                    target="_blank"><i class="fa fa-envelope" aria-hidden="true"></i> GMAIL</a>
-                <a href="https://www.linkedin.com/in/sai-sandeep-chenna-628ab41a7" target="_blank"><i
-                        class="fa fa-linkedin-square" aria-hidden="true"></i> LINKEDIN</a>
-                <a href="https://www.instagram.com/saisandeep_chenna/" target="_blank"><i class="fa fa-instagram"
-                        aria-hidden="true"></i> INSTAGRAM</a>
-                <a href="Saisandeep Chenna.pdf" download="Saisandeep Chenna.pdf"><i class="fa fa-id-card-o"
-                        aria-hidden="true"></i> Resume</a>
-            </div><br><hr>
-            
-        </div>
-    </div>
+    <div id="root"></div>
+
+    <script src="scripts/portfolio.js"></script>
+    <script type="text/babel" src="scripts/index.js"></script>
 </body>
-<script src="scripts/typed.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="scripts/index.js" charset="utf-8"></script>
-<script>
-    var typed = new Typed(".animate", {
-        strings: [
-            "Data Scientist",
-            "Coder",
-            "Artist",
-            "Philomath",
-            "Blender Artist",
-            "Web developer"
-        ],
-        typeSpeed: 50,
-        backSpeed: 50,
-        loop: true
-    })
-</script>
-
 </html>
