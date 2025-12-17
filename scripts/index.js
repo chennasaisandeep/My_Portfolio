@@ -28,7 +28,6 @@ const Section = ({ id, className = "", children }) => (
     </section>
 );
 
-// -- MODAL FOR HOBBIES --
 const HobbyModal = ({ hobby, onClose }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [selectedPlaylist, setSelectedPlaylist] = useState(null);
@@ -38,15 +37,16 @@ const HobbyModal = ({ hobby, onClose }) => {
     const hasGallery = hobby.gallery && hobby.gallery.length > 0;
     const hasCert = !!hobby.certificate;
     const hasPlaylists = hobby.playlists && Object.keys(hobby.playlists).length > 0;
+    const isMedia = hasGallery || hasCert;
 
-    // Set first playlist as default when modal opens
+    // Set first playlist as default
     React.useEffect(() => {
         if (hasPlaylists && !selectedPlaylist) {
             setSelectedPlaylist(Object.keys(hobby.playlists)[0]);
         }
     }, [hasPlaylists, selectedPlaylist, hobby]);
 
-    // Prevent body scroll when modal is open
+    // Prevent body scroll
     React.useEffect(() => {
         document.body.style.overflow = 'hidden';
         return () => {
@@ -54,122 +54,128 @@ const HobbyModal = ({ hobby, onClose }) => {
         };
     }, []);
 
-    const nextImage = () => {
+    const nextImage = (e) => {
+        e?.stopPropagation();
         if (hasGallery) setCurrentIndex((prev) => (prev + 1) % hobby.gallery.length);
     };
 
-    const prevImage = () => {
+    const prevImage = (e) => {
+        e?.stopPropagation();
         if (hasGallery) setCurrentIndex((prev) => (prev - 1 + hobby.gallery.length) % hobby.gallery.length);
     };
 
     return (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in" onClick={(e) => e.target === e.currentTarget && onClose()}>
-            <button onClick={onClose} className="absolute top-6 right-6 text-white hover:text-gray-300 transition-colors z-10">
-                <i className="fas fa-times text-3xl"></i>
-            </button>
-
-            <div className="bg-white rounded-2xl w-full max-w-4xl shadow-2xl relative flex flex-col max-h-[90vh] md:h-[90vh] overflow-hidden">
-                <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-blue-600 to-blue-700 flex-shrink-0 rounded-t-2xl">
-                    <h3 className="text-xl font-bold flex items-center gap-2 text-white">
-                        <i className={`fas ${hobby.icon}`}></i> {hobby.name}
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-fade-in" onClick={(e) => e.target === e.currentTarget && onClose()}>
+            
+            {/* Modal Container */}
+            <div 
+                className={`
+                    bg-white rounded-2xl shadow-2xl relative flex flex-col overflow-hidden transition-all
+                    ${hasPlaylists 
+                        ? 'w-full max-w-5xl h-[85vh] md:h-[90vh]' 
+                        : 'w-auto h-auto max-w-[95vw] max-h-[95vh] min-w-[320px] md:min-w-[500px]'
+                    }
+                `}
+                onClick={(e) => e.stopPropagation()}
+            >
+                
+                {/* Header */}
+                {/* UPDATED: Added 'w-0 min-w-full' when isMedia is true to prevent text from expanding width */}
+                <div className={`p-4 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-blue-600 to-blue-700 flex-shrink-0 z-20 ${isMedia ? 'w-0 min-w-full' : 'w-full'}`}>
+                    <h3 className="text-lg md:text-xl font-bold flex items-center gap-2 text-white truncate pr-4">
+                        <i className={`fas ${hobby.icon}`}></i> <span className="truncate">{hobby.name}</span>
                     </h3>
-                    {hasGallery && <span className="text-sm text-blue-100">{currentIndex + 1} / {hobby.gallery.length}</span>}
+                    
+                    <button onClick={onClose} className="text-white/80 hover:text-white transition-colors p-1 flex-shrink-0">
+                        <i className="fas fa-times text-2xl"></i>
+                    </button>
                 </div>
 
-                <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
-                    {hasGallery ? (
-                        <div className="bg-black relative overflow-hidden h-[50vh] md:flex-1 md:min-h-0">
-                            <div className="absolute inset-0 flex items-center justify-center p-4">
-                                <img 
-                                    src={hobby.gallery[currentIndex]} 
-                                    alt={`${hobby.name} Gallery ${currentIndex + 1}`} 
-                                    className="max-w-full max-h-full object-contain"
-                                    onError={(e) => {console.error('Image failed to load:', e.target.src); e.target.src='https://via.placeholder.com/800x600?text=Image+Not+Found'}}
-                                />
-                            </div>
-                            {hobby.gallery.length > 1 && (
+                {/* Content Area */}
+                <div className={`flex-1 min-h-0 flex flex-col relative ${isMedia ? 'bg-black' : 'bg-[#0F172A]'}`}>
+                    
+                    {isMedia ? (
+                        <div className="relative flex items-center justify-center group bg-neutral-900 overflow-hidden flex-1">
+                            <img 
+                                src={hasGallery ? hobby.gallery[currentIndex] : hobby.certificate} 
+                                alt={hobby.name} 
+                                className="max-h-[60vh] md:max-h-[calc(85vh-12rem)] w-auto object-contain block mx-auto"
+                                onError={(e) => {console.error('Image failed to load:', e.target.src); e.target.src='https://via.placeholder.com/800x600?text=Image+Not+Found'}}
+                            />
+                            
+                            {/* Navigation Arrows */}
+                            {hasGallery && hobby.gallery.length > 1 && (
                                 <>
-                                    <button onClick={prevImage} className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/80 transition-all z-10">
+                                    <button onClick={prevImage} className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm transition-all border border-white/10 opacity-0 group-hover:opacity-100">
                                         <i className="fas fa-chevron-left"></i>
                                     </button>
-                                    <button onClick={nextImage} className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/80 transition-all z-10">
+                                    <button onClick={nextImage} className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm transition-all border border-white/10 opacity-0 group-hover:opacity-100">
                                         <i className="fas fa-chevron-right"></i>
                                     </button>
+                                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 bg-black/60 text-white text-xs rounded-full backdrop-blur-md border border-white/10 pointer-events-none">
+                                        {currentIndex + 1} / {hobby.gallery.length}
+                                    </div>
                                 </>
                             )}
                         </div>
-                    ) : hasCert ? (
-                        <div className="bg-black relative overflow-hidden h-[50vh] md:flex-1 md:min-h-0">
-                            <div className="absolute inset-0 flex items-center justify-center p-4">
-                                <img 
-                                    src={hobby.certificate} 
-                                    alt="Certificate" 
-                                    className="max-w-full max-h-full object-contain"
-                                />
-                            </div>
-                        </div>
+
                     ) : hasPlaylists ? (
-                        <div className="flex-1 bg-gradient-to-br from-slate-800 via-blue-800 to-slate-800 overflow-y-auto flex flex-col min-h-0 scrollbar-hide" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
-                            {/* Playlist Tabs - Sticky */}
-                            <div className="sticky top-0 z-10 pt-4 px-6 pb-3 backdrop-blur-md bg-slate-1000/40 mb-2">
-                                <div className="flex md:flex-wrap gap-2 overflow-x-auto scrollbar-hide pb-2" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
+                        <div className="flex-1 overflow-y-auto flex flex-col min-h-0 scrollbar-hide relative">
+                            <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-blue-900/20 to-transparent pointer-events-none"></div>
+                            <div className="relative z-10 px-6 pt-6 pb-2">
+                                <h4 className="text-blue-200/60 text-xs font-bold uppercase tracking-widest mb-4 pl-1">Collection</h4>
+                                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 mask-linear">
                                     {Object.keys(hobby.playlists).map((playlistName) => (
                                         <button
                                             key={playlistName}
                                             onClick={() => setSelectedPlaylist(playlistName)}
-                                            className={`px-4 py-2 rounded-full font-medium transition-all ${
-                                                selectedPlaylist === playlistName 
-                                                    ? 'bg-green-500 text-white shadow-lg' 
-                                                    : 'bg-white/10 text-white hover:bg-white/20'
-                                            }`}
+                                            className={`
+                                                px-5 py-2.5 rounded-full text-sm font-semibold transition-all whitespace-nowrap border
+                                                ${selectedPlaylist === playlistName 
+                                                    ? 'bg-white text-slate-900 border-white shadow-lg shadow-white/10' 
+                                                    : 'bg-white/5 text-slate-400 border-white/5 hover:bg-white/10 hover:text-white hover:border-white/20'
+                                                }
+                                            `}
                                         >
                                             {playlistName}
                                         </button>
                                     ))}
                                 </div>
                             </div>
-
-                            {/* Song List */}
-                            <div className="px-6 pb-6">
-                                <div className="space-y-2">
+                            <div className="flex-1 overflow-y-auto px-4 pb-4 scrollbar-hide relative z-10">
+                                <div className="grid gap-2 mt-2">
                                     {selectedPlaylist && hobby.playlists[selectedPlaylist].map((song, idx) => (
-                                        <a 
-                                            key={idx}
-                                            href={song.link || '#'}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="bg-white/5 hover:bg-white/10 p-4 rounded-lg transition-all group cursor-pointer backdrop-blur-sm block"
-                                        >
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-10 h-10 bg-white/10 rounded flex items-center justify-center text-white/60 group-hover:bg-green-500 group-hover:text-white transition-all">
-                                                    <i className="fas fa-play text-sm"></i>
-                                                </div>
-                                                <div className="flex-1">
-                                                    <div className="font-semibold text-white group-hover:text-green-400 transition-colors">{song.title}</div>
-                                                    <div className="text-sm text-white/60">{song.artist}</div>
-                                                </div>
-                                                <div className="text-white/40 text-sm opacity-0 group-hover:opacity-100 transition-opacity flex gap-3">
-                                                    {song.link && <i className="fas fa-external-link-alt"></i>}
-                                                    <i className="fas fa-heart"></i>
-                                                </div>
+                                        <a key={idx} href={song.link || '#'} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-all border border-transparent hover:border-white/5">
+                                            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shrink-0 shadow-lg group-hover:scale-105 transition-transform relative overflow-hidden">
+                                                <i className="fas fa-music text-white/50 text-lg group-hover:opacity-0 transition-opacity"></i>
+                                                <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity"><i className="fas fa-play text-white text-sm ml-1"></i></div>
                                             </div>
+                                            <div className="flex-1 min-w-0 flex flex-col justify-center">
+                                                <div className="text-slate-200 font-medium truncate pr-2 group-hover:text-blue-300 transition-colors">{song.title}</div>
+                                                <div className="text-slate-500 text-xs truncate">{song.artist}</div>
+                                            </div>
+                                            <div className="w-8 h-8 rounded-full flex items-center justify-center text-slate-600 group-hover:text-white group-hover:bg-white/10 transition-all opacity-0 group-hover:opacity-100"><i className="fas fa-external-link-alt text-xs"></i></div>
                                         </a>
                                     ))}
                                 </div>
                             </div>
                         </div>
                     ) : (
-                        <div className="h-full flex items-center justify-center bg-slate-50">
-                            <div className="text-center text-gray-400">
-                                <i className="fas fa-info-circle text-4xl mb-4"></i>
-                                <p>No content available for this hobby.</p>
-                            </div>
+                        <div className="flex-1 flex items-center justify-center text-slate-400 bg-slate-50">
+                            <p>No preview available</p>
                         </div>
                     )}
                 </div>
                 
-                <div className={`bg-white border-t border-gray-100 flex-shrink-0 rounded-b-2xl ${hasPlaylists ? 'p-3' : 'p-4 md:p-6'}`}>
-                    <p className="text-gray-600 text-sm">{hobby.description}</p>
+                {/* Footer Description */}
+                {/* UPDATED: Added 'w-0 min-w-full' to allow text to wrap based on Image Width */}
+                <div className={`p-4 bg-white border-t border-gray-100 flex-shrink-0 z-20 ${isMedia ? 'w-0 min-w-full' : 'w-full'}`}>
+                    <p className="text-slate-600 text-sm leading-relaxed break-words">{hobby.description}</p>
+                    {hobby.link && (
+                         <a href={hobby.link} target="_blank" className="mt-2 inline-flex items-center text-blue-600 font-bold hover:text-blue-700 text-sm hover:underline">
+                            View External Credential <i className="fas fa-arrow-right ml-2 text-xs"></i>
+                        </a>
+                    )}
                 </div>
             </div>
         </div>
@@ -179,63 +185,206 @@ const HobbyModal = ({ hobby, onClose }) => {
 const ProjectDetail = ({ project, onBack }) => {
     useEffect(() => { window.scrollTo(0, 0); }, []);
     
+    const renderTechStack = (stack) => (
+        <div className="flex flex-wrap gap-2 mt-3">
+            {stack.map((tech, i) => (
+                <span key={i} className="px-3 py-1 bg-slate-50 text-slate-700 text-xs font-semibold rounded-full border border-slate-200">
+                    {tech}
+                </span>
+            ))}
+        </div>
+    );
+
     return (
-        <div className="min-h-screen bg-white animate-fade-in">
-            <div className={`relative h-60 w-full bg-gradient-to-br ${project.gradient} flex items-end p-8 md:p-12`}>
-                <button onClick={onBack} className="absolute top-6 left-6 bg-black/20 hover:bg-black/40 text-white px-4 py-2 rounded-full backdrop-blur-sm transition-all flex items-center">
-                    <i className="fas fa-arrow-left mr-2"></i> Back
-                </button>
-                <div className="text-white w-full max-w-4xl mx-auto">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-2">{project.title}</h1>
-                    <div className="flex gap-4 opacity-90">
-                        <span>{project.role}</span>•<span>{project.year}</span>
+        <div className="min-h-screen bg-white animate-fade-in font-sans scrollbar-hide">
+            <style>{`
+                ::-webkit-scrollbar {
+                    display: none;
+                }
+                -ms-overflow-style: none;  /* IE and Edge */
+                scrollbar-width: none;  /* Firefox */
+            `}</style>
+            {/* Sticky Back Button */}
+            <button 
+                onClick={onBack} 
+                className="fixed top-6 right-6 z-50 bg-white/90 hover:bg-white text-slate-900 px-5 py-3 rounded-full shadow-xl backdrop-blur-md transition-all flex items-center border border-slate-200 font-semibold group hover:scale-105"
+            >
+                <i className={`fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform bg-gradient-to-r ${project.gradient} bg-clip-text text-transparent`}></i> Back
+            </button>
+
+            {/* 1. Hero Section */}
+            <div className={`relative w-full bg-gradient-to-br ${project.gradient} text-white pb-12 pt-24 px-6 md:px-12 shadow-lg`}>
+                <div className="max-w-7xl mx-auto">
+                    <div className="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-lg text-sm font-semibold mb-4 border border-white/10">
+                        {project.type || "Case Study"}
                     </div>
+                    <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight leading-tight">{project.title}</h1>
+                    <p className="text-lg md:text-xl opacity-90 max-w-2xl leading-relaxed">{project.summary}</p>
                 </div>
             </div>
-            
-            <div className="max-w-4xl mx-auto px-6 md:px-12 py-12">
-                <div className="flex gap-4 mb-10 border-b border-gray-100 pb-6">
-                    {project.links.github && (
-                        <a href={project.links.github} target="_blank" className="flex items-center text-gray-700 hover:text-black font-semibold">
-                            <i className="fab fa-github text-xl mr-2"></i> View Code
-                        </a>
-                    )}
-                    {project.links.paper && (
-                        <a href={project.links.paper} target="_blank" className="flex items-center text-gray-700 hover:text-black font-semibold">
-                            <i className="fas fa-external-link-alt text-xl mr-2"></i> Read Paper
-                        </a>
-                    )}
-                </div>
 
-                <div className="space-y-10">
-                    {project.contentBlocks.map((block, idx) => (
-                        <div key={idx}>
-                            {block.title && <h3 className="text-xl font-bold text-gray-900 mb-3">{block.title}</h3>}
-                            
-                            {block.type === 'text' && <p className="text-gray-600 leading-relaxed text-lg">{block.value}</p>}
-                            
-                            {block.type === 'list' && (
-                                <ul className="grid sm:grid-cols-2 gap-3">
-                                    {block.items.map((item, i) => (
-                                        <li key={i} className="flex items-center bg-gray-50 p-3 rounded-lg border border-gray-100">
-                                            <i className="fas fa-check-circle text-blue-500 mr-3"></i> {item}
+            <div className="max-w-7xl mx-auto px-6 md:px-12 py-12">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    
+                    {/* 2. Sidebar (Sticky Metadata) */}
+                    <aside className="lg:col-span-4 order-2 lg:order-1">
+                        <div className="sticky top-4 space-y-8">
+                            <div className="bg-slate-50 p-6 rounded-2xl border border-gray-100 shadow-sm">
+                                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Project Details</h3>
+                                
+                                <div className="space-y-4">
+                                    <div>
+                                        <div className="text-sm text-gray-500 font-medium">Role</div>
+                                        <div className="text-gray-900 font-semibold">{project.role}</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-sm text-gray-500 font-medium">Timeline</div>
+                                        <div className="text-gray-900 font-semibold">{project.year}</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-sm text-gray-500 font-medium">Company / Organization</div>
+                                        <div className="text-gray-900 font-semibold">{project.company || "Personal Project"}</div>
+                                    </div>
+                                    {project.location && (
+                                        <div>
+                                            <div className="text-sm text-gray-500 font-medium">Location</div>
+                                            <div className="text-gray-900 font-semibold">{project.location}</div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="mt-8 pt-6 border-t border-gray-200">
+                                    <div className="text-sm text-gray-500 font-medium mb-2">Technologies</div>
+                                    {renderTechStack(project.tags)}
+                                </div>
+
+                                {/* Action Links */}
+                                <div className="mt-8 flex flex-col gap-3">
+                                    {project.links.github && (
+                                        <a href={project.links.github} target="_blank" className="flex items-center justify-center w-full py-3 bg-gray-900 text-white rounded-lg hover:bg-black transition-all font-medium">
+                                            <i className="fab fa-github mr-2"></i> View Code
+                                        </a>
+                                    )}
+                                    {project.links.paper && (
+                                        <a href={project.links.paper} target="_blank" className="flex items-center justify-center w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-medium">
+                                            <i className="fas fa-file-pdf mr-2"></i> Read Paper
+                                        </a>
+                                    )}
+                                    {project.links.demo && (
+                                        <a href={project.links.demo} target="_blank" className="flex items-center justify-center w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all font-medium">
+                                            <i className="fas fa-external-link-alt mr-2"></i> Live Demo
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+
+                    {/* 3. Main Content Area */}
+                    <main className="lg:col-span-8 order-1 lg:order-2 space-y-12">
+                        
+                        {/* Context / Overview */}
+                        {project.sections?.overview && (
+                            <section>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                                    <span className={`w-8 h-8 rounded-lg bg-gradient-to-br ${project.gradient} text-white flex items-center justify-center mr-3 text-sm shadow-md`}>
+                                        <i className="fas fa-info"></i>
+                                    </span>
+                                    Overview
+                                </h2>
+                                <p className="text-gray-600 leading-relaxed text-lg whitespace-pre-line">{project.sections.overview}</p>
+                            </section>
+                        )}
+
+                        {/* Problem & Solution Grid */}
+                        {(project.sections?.problem || project.sections?.solution) && (
+                            <div className="grid md:grid-cols-2 gap-6">
+                                {project.sections.problem && (
+                                    <div className="bg-red-50 p-6 rounded-xl border border-red-100">
+                                        <h3 className="font-bold text-red-800 mb-2 flex items-center"><i className="fas fa-exclamation-circle mr-2"></i> The Challenge</h3>
+                                        <p className="text-red-900/70 text-sm leading-relaxed">{project.sections.problem}</p>
+                                    </div>
+                                )}
+                                {project.sections.solution && (
+                                    <div className="bg-green-50 p-6 rounded-xl border border-green-100">
+                                        <h3 className="font-bold text-green-800 mb-2 flex items-center"><i className="fas fa-check-circle mr-2"></i> The Solution</h3>
+                                        <p className="text-green-900/70 text-sm leading-relaxed">{project.sections.solution}</p>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Methodology (Timeline) */}
+                        {project.sections?.methodology && (
+                            <section>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-8 flex items-center">
+                                    <span className={`w-8 h-8 rounded-lg bg-gradient-to-br ${project.gradient} text-white flex items-center justify-center mr-3 text-sm shadow-md`}>
+                                        <i className="fas fa-cogs"></i>
+                                    </span>
+                                    Methodology & Approach
+                                </h2>
+                                
+                                {Array.isArray(project.sections.methodology) ? (
+                                    <div className="relative space-y-8">
+                                        {/* The Vertical Line */}
+                                        <div className="absolute left-[15px] top-2 bottom-0 w-0.5 bg-slate-200"></div>
+                                        
+                                        {project.sections.methodology.map((step, i) => (
+                                            <div key={i} className="relative pl-12">
+                                                {/* Number Dot */}
+                                                <span className={`absolute left-0 top-0 flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br ${project.gradient} text-white font-bold text-sm shadow-md z-10`}>
+                                                    {i + 1}
+                                                </span>
+                                                <div>
+                                                    <h3 className="text-lg font-bold text-gray-900 mb-1">{step.title}</h3>
+                                                    <p className="text-gray-600 leading-relaxed text-sm">{step.description}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="prose text-gray-600 leading-relaxed max-w-none whitespace-pre-line pl-4 border-l-4 border-slate-200">
+                                        {project.sections.methodology}
+                                    </div>
+                                )}
+                            </section>
+                        )}
+
+                        {/* Key Features List */}
+                        {project.sections?.features && (
+                            <section>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-4">Key Features</h2>
+                                <ul className="grid sm:grid-cols-2 gap-4">
+                                    {project.sections.features.map((feature, i) => (
+                                        <li key={i} className="flex items-start p-3 rounded-lg border border-gray-100 hover:border-gray-200 bg-gray-50/50 hover:bg-white transition-colors">
+                                            <i className={`fas fa-check-circle mt-1 mr-3 bg-gradient-to-r ${project.gradient} bg-clip-text text-transparent`}></i>
+                                            <span className="text-gray-700 font-medium text-sm">{feature}</span>
                                         </li>
                                     ))}
                                 </ul>
-                            )}
+                            </section>
+                        )}
 
-                            {block.type === 'metrics' && (
-                                <div className="grid grid-cols-2 gap-4">
-                                    {block.data.map((m, i) => (
-                                        <div key={i} className="bg-blue-50 p-4 rounded-xl text-center border border-blue-100">
-                                            <div className="text-2xl font-bold text-blue-600">{m.value}</div>
-                                            <div className="text-xs font-bold text-gray-500 uppercase">{m.label}</div>
+                        {/* Impact & Results Section */}
+                        {project.sections?.results && (
+                            <section>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-6">Impact & Results</h2>
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                                    {project.sections.results.map((metric, i) => (
+                                        <div key={i} className="p-6 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all group">
+                                            <div className={`text-1xl md:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r ${project.gradient} mb-2`}>
+                                                {metric.value}
+                                            </div>
+                                            <div className="text-xs font-bold text-gray-400 uppercase tracking-widest group-hover:text-gray-600 transition-colors">
+                                                {metric.label}
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
-                            )}
-                        </div>
-                    ))}
+                            </section>
+                        )}
+                        
+                    </main>
                 </div>
             </div>
         </div>
@@ -249,9 +398,17 @@ const App = () => {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [scrollPosition, setScrollPosition] = useState(0);
+    const [scrollProgress, setScrollProgress] = useState(0);
 
     useEffect(() => {
-        const handleScroll = () => setScrolled(window.scrollY > 20);
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 20);
+            
+            const totalScroll = document.documentElement.scrollTop;
+            const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scroll = `${totalScroll / windowHeight}`;
+            setScrollProgress(Number(scroll));
+        };
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
@@ -282,34 +439,46 @@ const App = () => {
 
     return (
         <div className="min-h-screen">
-            {/* Hobby Modal */}
+            {/* FORCE HIDE SCROLLBAR STYLES */}
+            <style>{`
+                /* Chrome, Safari and Opera */
+                ::-webkit-scrollbar {
+                    display: none;
+                }
+                /* IE, Edge and Firefox */
+                html, body {
+                    -ms-overflow-style: none;  /* IE and Edge */
+                    scrollbar-width: none;  /* Firefox */
+                }
+            `}</style>
+
+            {/* Modals */}
             {selectedHobby && <HobbyModal hobby={selectedHobby} onClose={() => setSelectedHobby(null)} />}
-            
-            {/* Certificate Modal */}
             {selectedCertificate && <HobbyModal hobby={{...selectedCertificate, gallery: selectedCertificate.images}} onClose={() => setSelectedCertificate(null)} />}
 
             {/* Navigation */}
             <nav className={`fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-4' : 'bg-transparent py-6'}`}>
                 <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
-                    <div className="font-bold text-xl tracking-tighter cursor-pointer" onClick={() => window.scrollTo(0,0)}>
+                    
+                    {/* Logo */}
+                    <div className="font-bold text-2xl tracking-tight pr-2 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent cursor-pointer" onClick={() => window.scrollTo(0,0)}>
                         {content.site.logo}
                     </div>
                     
-                    {/* Desktop Nav */}
                     <div className="hidden md:flex items-center gap-6">
                         {content.site.nav.map(item => (
                             <button key={item.id} onClick={() => handleNav(item.id)} className="text-sm font-medium text-gray-600 hover:text-black transition-colors">{item.label}</button>
                         ))}
-                        <a href={content.site.socials.email} className="ml-2 px-5 py-2.5 rounded-full bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 transition-all">Hire Me</a>
+                        <a href={content.site.socials.email} className="ml-2 px-5 py-2.5 bg-slate-900 text-white rounded-full text-sm font-medium hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20">
+                            Let's Talk
+                        </a>
                     </div>
 
-                    {/* Mobile Toggle */}
                     <button className="md:hidden text-2xl" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
                         <i className={`fas ${mobileMenuOpen ? 'fa-times' : 'fa-bars'}`}></i>
                     </button>
                 </div>
 
-                {/* Mobile Menu */}
                 {mobileMenuOpen && (
                     <div className="absolute top-full left-0 w-full bg-white shadow-xl border-t border-gray-100 p-6 flex flex-col gap-4 md:hidden animate-fade-in-up">
                         {content.site.nav.map(item => (
@@ -317,6 +486,11 @@ const App = () => {
                         ))}
                     </div>
                 )}
+
+                <div 
+                    className="absolute bottom-0 left-0 h-[3px] bg-gradient-to-r from-blue-600 to-indigo-600 transition-all duration-150 ease-out"
+                    style={{ width: `${scrollProgress * 100}%` }}
+                ></div>
             </nav>
 
             {/* Hero */}
@@ -351,7 +525,7 @@ const App = () => {
                         <div key={project.id} onClick={() => handleProjectClick(project.id)} className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col h-full">
                             <div className={`h-24 w-full bg-gradient-to-br ${project.gradient} relative p-6 flex flex-col justify-end`}>
                                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-all"></div>
-                                <h3 className="relative text-white text-xl font-bold shadow-sm">{project.title}</h3>
+                                <h3 className="relative text-white text-xl font-bold">{project.title}</h3>
                             </div>
                             <div className="p-6 flex-1 flex flex-col">
                                 <div className="flex flex-wrap gap-2 mb-4">
@@ -428,39 +602,43 @@ const App = () => {
                 </div>
             </Section>
 
-            {/* Skills */}
-            <Section id="skills" className="py-6 bg-slate-50">
-                <div className="mb-8">
-                    <h2 className="text-3xl font-bold mb-3">Skills & Technologies</h2>
-                    <p className="text-gray-500">Technical expertise across multiple domains.</p>
-                </div>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                    {Object.entries(content.skills.reduce((acc, skill) => {
-                        (acc[skill.category] = acc[skill.category] || []).push(skill);
-                        return acc;
-                    }, {})).map(([category, skills]) => (
-                        <div key={category} className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-all duration-300">
-                            <h3 className="font-bold text-lg text-gray-900 mb-4 flex items-center gap-2">
-                                <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                                {category}
-                            </h3>
-                            <ul className="space-y-2">
-                                {skills.map(s => (
-                                    <li key={s.name} className="text-gray-600 text-sm flex items-center gap-2 group">
-                                        <i className="fas fa-check text-blue-600 text-xs group-hover:scale-125 transition-transform"></i>
-                                        <span className="group-hover:text-gray-900 transition-colors">{s.name}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
+            {/* Skills Section */}
+            <Section id="skills" className="py-12 border-slate-200 bg-slate-50">
+                <div className="max-w-7xl mx-auto">
+                    {/* UPDATED: Changed 'mb-12' to 'mb-8' for consistent heading spacing */}
+                    <h2 className="text-3xl font-bold mb-8 text-left">Technical Expertise</h2>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                        {Object.entries(content.skills).map(([category, items], idx) => {
+                            const icons = [ "fas fa-robot", "fas fa-brain", "fas fa-database", "fas fa-square-root-alt" ];
+                            const colors = [ "text-purple-600 bg-purple-50", "text-blue-600 bg-blue-50", "text-emerald-600 bg-emerald-50", "text-orange-600 bg-orange-50" ];
+
+                            return (
+                                <div key={category} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 group hover:-translate-y-1">
+                                    <div className="flex items-center mb-6">
+                                        <div className={`w-10 h-10 rounded-lg ${colors[idx % 4]} flex items-center justify-center text-lg mr-4 group-hover:scale-110 transition-transform`}>
+                                            <i className={icons[idx % 4]}></i>
+                                        </div>
+                                        <h3 className="font-bold text-slate-900 text-lg leading-tight">{category}</h3>
+                                    </div>
+                                    
+                                    <div className="flex flex-wrap gap-2">
+                                        {items.map((skill, i) => (
+                                            <span key={i} className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-md hover:bg-slate-800 hover:text-white transition-colors cursor-default">
+                                                {skill}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
             </Section>
 
             {/* Certificates & Hobbies */}
             <Section id="certificates" className="py-6">
                 <div className="grid lg:grid-cols-2 gap-16">
-                    
                     {/* Certificates Column */}
                     <div>
                         <h2 className="text-3xl font-bold mb-8">Certificates</h2>
@@ -523,18 +701,15 @@ const App = () => {
                             ))}
                         </div>
                     </div>
-
                 </div>
             </Section>
 
             {/* Footer / Contact */}
-            <Section id="contact" className="py-12 text-center pb-20 bg-gradient-to-t from-gray-50 to-white">
-                <h2 className="text-4xl font-bold mb-6">Let's Connect</h2>
-                <p className="text-gray-500 max-w-xl mx-auto mb-10">
-                    Looking for opportunities? I'm just an email away.
-                </p>
-                <div className="flex justify-center gap-6 mb-16">
-                    <a href={content.site.socials.linkedin} target="_blank" className="w-12 h-12 rounded-full bg-white shadow-sm border border-gray-100 hover:bg-blue-600 hover:text-white flex items-center justify-center text-xl transition-all"><i className="fab fa-linkedin-in"></i></a>
+            <Section id="contact" className="py-24 border-t border-slate-200 text-center">
+                <h2 className="text-4xl font-bold mb-6">Let's work together.</h2>
+                <p className="text-slate-500 mb-10 max-w-xl mx-auto">I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!</p>
+                <div className="flex justify-center gap-4 mb-16">
+                    <a href={content.site.socials.linkedin} target="_blank" className="w-12 h-12 rounded-full bg-white shadow-sm border border-gray-100 hover:bg-[#0077b5] hover:text-white flex items-center justify-center text-xl transition-all"><i className="fab fa-linkedin-in"></i></a>
                     <a href={content.site.socials.github} target="_blank" className="w-12 h-12 rounded-full bg-white shadow-sm border border-gray-100 hover:bg-gray-900 hover:text-white flex items-center justify-center text-xl transition-all"><i className="fab fa-github"></i></a>
                     <a href={content.site.socials.email} className="w-12 h-12 rounded-full bg-white shadow-sm border border-gray-100 hover:bg-blue-600 hover:text-white flex items-center justify-center text-xl transition-all"><i className="fas fa-envelope"></i></a>
                 </div>

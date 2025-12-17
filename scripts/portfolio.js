@@ -13,7 +13,7 @@ window.portfolioData = {
         "socials": {
             "linkedin": "https://www.linkedin.com/in/sai-sandeep-chenna-628ab41a7",
             "github": "https://github.com/chennasaisandeep",
-            "email": "mailto:saisandeep.mds2023@gmail.com"
+            "email": "mailto:saisandeephp@gmail.com"
         },
         "resume": "data/pdf/Saisandeep Chenna.pdf"
     },
@@ -34,57 +34,131 @@ window.portfolioData = {
         {
             "id": "proj_solar",
             "title": "Solar Power Anomaly Detection",
-            "role": "Lead Developer",
-            "year": "2024",
-            "summary": "A near real-time system to detect anomalies in solar power generation data using Neural Networks and Isolation Forests.",
-            "tags": ["Python", "Anomaly Detection", "PowerBI", "Neural Networks"],
+            "role": "Data Scientist Intern",
+            "company": "Shree Cement Ltd.",
+            "location": "Kolkata, West Bengal",
+            "year": "May 2024 - Jul 2024",
+            "type": "Industrial Internship",
+            "summary": "A near real-time anomaly detection system for renewable energy assets, designed to reduce energy wastage and support the transition to green energy.",
+            "tags": ["Python", "Power BI", "Streamlit", "Anomaly Detection", "Neural Networks", "EDA"],
             "gradient": "from-amber-500 to-orange-600",
-            "links": { "github": "#" },
-            "contentBlocks": [
-                { "type": "text", "title": "The Problem", "value": "Solar power generation is subject to various inefficiencies. The goal was to improve efficiency by identifying these anomalies early." },
-                { "type": "text", "title": "The Solution", "value": "I developed a near real-time anomaly detection application using Isolation Forest and Autoencoders. The system integrates with Power BI for visual inspection." },
-                { "type": "list", "title": "Key Tech", "items": ["Isolation Forest", "DBSCAN", "Deep Neural Networks", "Power BI"] }
-            ]
-        },
-        {
-            "id": "proj_mlp",
-            "title": "MLP Classifier from Scratch",
-            "role": "Individual Contributor",
-            "year": "2023",
-            "summary": "A binary classification model built purely in NumPy to distinguish between Besni and Kecimen raisins.",
-            "tags": ["Python", "NumPy", "Deep Learning", "Mathematics"],
-            "gradient": "from-blue-500 to-indigo-600",
-            "links": { "github": "https://github.com/chennasaisandeep" },
-            "contentBlocks": [
-                { "type": "text", "title": "Overview", "value": "To understand the math of Neural Networks, I built a Multilayer Perceptron (MLP) without frameworks. This solidified my understanding of gradient descent calculus." },
-                { "type": "metrics", "data": [{ "label": "Precision", "value": "90%" }, { "label": "Libraries", "value": "NumPy Only" }] }
-            ]
+            "links": {},
+            "sections": {
+                "overview": "At Shree Cement Ltd., I worked with the Data Science & Analytics department to address inefficiencies in solar power generation. The project focused on building a robust system to monitor renewable energy assets in real-time.",
+                "problem": "Solar modules often suffer from performance dips due to dust, defects, or environmental factors. Identifying these specific underperforming units manually across vast solar farms is inefficient and leads to significant energy loss.",
+                "solution": "I developed a data-driven anomaly detection pipeline. By leveraging historical and real-time sensor data, the system predicts expected power output and flags deviations. This allows the maintenance team to target specific modules for repair or cleaning.",
+                "methodology": [
+                    { "title": "Data Collection", "description": "Ingested real-time data from inverters and weather stations." },
+                    { "title": "Preprocessing", "description": "Cleaned data and handled missing values using statistical imputation." },
+                    { "title": "Modeling", "description": "Experimented with Isolation Forests and Autoencoders to learn 'normal' behavior patterns." },
+                    { "title": "Deployment", "description": "Built a Streamlit interface for model interaction and integrated results into Microsoft Power BI for the operations team." }
+                ],
+                "features": [
+                    "Real-time monitoring of power output",
+                    "Automated alerts for performance deviations",
+                    "Interactive Power BI Dashboard",
+                    "Root cause analysis support"
+                ],
+                "results": [
+                    { "label": "Energy Efficiency", "value": "Improved" },
+                    { "label": "Detection Time", "value": "Real-time" },
+                    { "label": "Assets Monitored", "value": "100%" }
+                ]
+            }
         },
         {
             "id": "proj_covid",
             "title": "Covid-19 Effect on Air Quality",
             "role": "Researcher",
+            "company": "Academic Research",
+            "location": "Remote",
             "year": "2020",
-            "summary": "Statistical analysis of air pollutant concentrations before, during, and after the Covid-19 lockdown.",
-            "tags": ["Statistics", "Hypothesis Testing", "R/Python"],
+            "type": "Statistical Analysis",
+            "summary": "Investigated the impact of the COVID-19 lockdown on air quality in the Eastern Province of Saudi Arabia using multi-station sensor data.",
+            "tags": ["R", "Python", "Hypothesis Testing", "Air Quality", "Statistics", "Data Visualization"],
             "gradient": "from-emerald-500 to-teal-600",
             "links": { "paper": "https://www.isibang.ac.in/~rsen/Stat1old/3.pdf" },
-            "contentBlocks": [
-                { "type": "text", "title": "Study Scope", "value": "Mentored by Prof. Rituparna Sen (ISI, Bangalore). We performed hypothesis tests to investigate if the lockdown had a statistically significant effect on pollution levels." }
-            ]
+            "sections": {
+                "overview": "This study investigated the environmental impact of the nationwide lockdown imposed between March and June 2020 in Saudi Arabia. Using data from four monitoring stations, we analyzed the concentrations of major pollutants including CO, SO2, NO2, O3, and PM10.",
+                "problem": "The COVID-19 pandemic forced a global shutdown. While economically devastating, it offered a unique 'natural experiment' to understand how anthropogenic activities influence air quality in arid regions.",
+                "solution": "We performed a rigorous statistical analysis (Hypothesis Testing) comparing air quality data across three distinct phases: Pre-lockdown, During-lockdown, and Post-lockdown.",
+                "methodology": "The study utilized meteorological and air quality datasets from the Eastern Province. We applied descriptive statistics and outlier analysis. Hypothesis tests were conducted for the mean of each individual pollutant station-wise.",
+                "results": [
+                    { "label": "NO2 Reduction", "value": "Significant" },
+                    { "label": "Ozone (O3)", "value": "Increased" },
+                    { "label": "Stations Analyzed", "value": "4" }
+                ],
+                "features": [
+                    "NO2 identified as best marker for lockdown impact",
+                    "Found inverse relationship between NOx and Ozone",
+                    "Analysis of Pre, During, and Post lockdown phases",
+                    "Comparison with global urban data"
+                ]
+            }
         },
          {
             "id": "proj_gan",
-            "title": "Synthetic Data Quality Evaluation",
-            "role": "Intern",
+            "title": "Synthetic Data Evaluation Framework",
+            "role": "Data Scientist Intern",
+            "company": "Cloudcraftz AI",
             "year": "2023",
-            "summary": "Evaluated the quality of large-scale tabular synthetic data generated by various GAN models.",
-            "tags": ["GANs", "Python", "Data Quality", "Statistics"],
-            "gradient": "from-purple-500 to-pink-600",
-            "links": {},
-            "contentBlocks": [
-                { "type": "text", "title": "Objective", "value": "Validated if synthetic data generated by GANs maintained the statistical properties of the original private datasets." }
-            ]
+            "type": "Research & Implementation",
+            "summary": "Designed a robust evaluation pipeline for GAN-generated tabular data using the 'TabSynDex' universal metric to quantify fidelity, utility, and privacy.",
+            "tags": ["GANs", "TabSynDex", "Python", "Statistical Analysis", "Privacy Preserving"],
+            "gradient": "from-purple-600 to-indigo-600",
+            "links": {
+                 "paper": "https://arxiv.org/pdf/2207.05295"
+            },
+            "sections": {
+                "overview": "Synthetic data generation is critical for privacy-sensitive domains, but evaluating its quality is notoriously difficult. During my internship, I implemented a unified evaluation framework to benchmark various GAN architectures (CTGAN, WGAN-GP, TVAE) against real-world datasets.",
+                "problem": "Traditional metrics like accuracy are insufficient for tabular data, which contains mixed data types (categorical/continuous) and complex dependencies. There was no single standard to measure how 'real' the synthetic data actually looked.",
+                "solution": "I implemented \"TabSynDex\", a universal metric  that aggregates multiple quality dimensions into a single interpretable score (0-1). This allowed us to objectively rank generative models based on their ability to preserve data distribution and utility.",
+                "methodology": [
+                    { "title": "Basic Statistical Comparison", "description": "Computed the similarity of mean, median, and standard deviation between real and synthetic columns. Used the Kolmogorov-Smirnov (KS) test to detect distributional shifts." },
+                    { "title": "Correlation Preservation", "description": "Calculated the difference between the Correlation Matrices of real and synthetic data (using Pearson for numerical and Theil's U for categorical) to ensure inter-column relationships were maintained." },
+                    { "title": "Machine Learning Efficacy", "description": "Executed 'Train on Synthetic, Test on Real' (TSTR) experiments. We trained classifiers (Random Forest, XGBoost) on synthetic data and validated them on real hold-out sets to measure utility." },
+                    { "title": "Privacy Assessment", "description": "Performed Distance to Closest Record (DCR) analysis to verify that the GANs were generating novel samples rather than memorizing the training data." }
+                ],
+                "features": [
+                    "Unified TabSynDex Score (0-1) for easy benchmarking",
+                    "Support for Mixed-Type Data (Numerical & Categorical)",
+                    "Automated comparative reports for CTGAN vs WGAN",
+                    "Privacy leakage detection via Distance Metrics"
+                ],
+                "results": [
+                    { "label": "Evaluation Metric", "value": "TabSynDex" },
+                    { "label": "Models Ranked", "value": "3+" },
+                    { "label": "Outcome", "value": "Validated" }
+                ]
+            }
+        },
+        {
+            "id": "proj_mlp",
+            "title": "MLP Classifier from Scratch",
+            "role": "Individual Contributor",
+            "company": "Personal Project",
+            "year": "2023",
+            "type": "Deep Learning Implementation",
+            "summary": "A deep dive into the mathematics of Neural Networks by building a Multilayer Perceptron completely from scratch using only NumPy.",
+            "tags": ["Python", "NumPy", "Calculus", "Deep Learning", "Algorithms"],
+            "gradient": "from-blue-500 to-indigo-600",
+            "links": { "github": "https://github.com/chennasaisandeep" },
+            "sections": {
+                "overview": "Modern frameworks like PyTorch and TensorFlow abstract away the complexity of backpropagation. To truly understand the mechanics of learning, I built a neural network using only matrix multiplication libraries.",
+                "problem": "Understanding the 'Black Box' nature of neural networks and the calculus behind gradient descent optimization.",
+                "solution": "Implemented a configurable MLP class in Python that handles forward propagation, loss calculation, backpropagation, and weight updates manually.",
+                "methodology": [
+                    { "title": "Architecture", "description": "Designed a flexible architecture allowing variable hidden layers and neurons." },
+                    { "title": "Math", "description": "Implemented derivation of activation functions (Sigmoid/ReLU) and Chain Rule for backpropagation." },
+                    { "title": "Optimization", "description": "Coded Stochastic Gradient Descent (SGD) from scratch." },
+                    { "title": "Testing", "description": "Benchmarked on the Raisin dataset to classify between Besni and Kecimen varieties." }
+                ],
+                "results": [
+                    { "label": "Precision", "value": "90%" },
+                    { "label": "Dependencies", "value": "NumPy Only" },
+                    { "label": "Understanding", "value": "100%" }
+                ]
+            }
         }
     ],
     "experience": [
@@ -140,22 +214,40 @@ window.portfolioData = {
             ]
         }
     ],
-    "skills": [
-        { "name": "Python", "category": "Languages" },
-        { "name": "TensorFlow", "category": "ML/AI" },
-        {"name": "Pytorch", "category": "ML/AI"},
-        {"name": "Transformers", "category": "ML/AI"},
-        { "name": "SQL", "category": "Data" },
-        { "name": "NumPy", "category": "Data" },
-        { "name": "Pandas", "category": "Data" },
-        { "name": "Probability", "category": "Math" },
-        { "name": "Statistics", "category": "Math" },
-        { "name": "Calculus", "category": "Math" },
-        { "name": "OpenCV", "category": "Vision" },
-        { "name": "Git", "category": "Tools" },
-        { "name": "Docker", "category": "Tools" },
-        { "name": "Power BI", "category": "Tools" }
-    ],
+    "skills": {
+        "Generative AI & Agents": [
+            "LangGraph",
+            "LangChain",
+            "Multi-Agent Systems",
+            "Agentic Graph RAG",
+            "Vector DBs (Qdrant)",
+            "LLM Finetuning"
+        ],
+        "Deep Learning & Vision": [
+            "PyTorch",
+            "TensorFlow",
+            "Transformers",
+            "OpenCV",
+            "Hugging Face",
+            "Neural Networks"
+        ],
+        "Data & MLOps": [
+            "Pandas",
+            "NumPy",
+            "SQL",
+            "Docker",
+            "Git",
+            "Power BI"
+        ],
+        "Math & Foundations": [
+            "Python",
+            "Probability & Statistics",
+            "Calculus",
+            "Linear Algebra",
+            "Algorithms",
+            "Data Structures"
+        ]
+    },
     "education": [
         {
             "school": "Chennai Mathematical Institute",
