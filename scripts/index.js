@@ -170,7 +170,7 @@ const HobbyModal = ({ hobby, onClose }) => {
                         ? 'w-full max-w-2xl h-[80vh] md:h-[85vh] bg-[#0a0a0f] border border-white/[0.06]' 
                         : isMedia
                             ? 'w-full max-w-4xl h-[85vh] bg-[#0c0c14] border border-white/[0.06]'
-                            : 'bg-white dark:bg-slate-900 w-auto h-auto max-w-[95vw] max-h-[95vh] min-w-[320px] md:min-w-[500px]'
+                            : 'bg-white dark:bg-slate-900 w-full md:w-auto h-auto max-w-[95vw] max-h-[95vh] min-w-[280px] md:min-w-[500px]'
                     }
                 `}
                 onClick={(e) => e.stopPropagation()}
@@ -1068,8 +1068,8 @@ const App = () => {
                                                     <i className={`${cert.icon || 'fas fa-certificate'} text-white text-lg`}></i>
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <div className="flex items-center gap-2 mb-1">
-                                                        <h3 className="font-bold text-slate-900 dark:text-white text-sm leading-tight truncate">
+                                                    <div className="flex items-center gap-2 mb-1 min-w-0">
+                                                        <h3 className="font-bold text-slate-900 dark:text-white text-sm leading-tight truncate flex-1 min-w-0">
                                                             {cert.name}
                                                         </h3>
                                                         {isClickable && (
@@ -1123,8 +1123,8 @@ const App = () => {
                                                     <i className={`fas ${hobby.icon} text-white text-lg`}></i>
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <div className="flex items-center gap-2 mb-1">
-                                                        <h3 className="font-bold text-slate-900 dark:text-white text-sm leading-tight">
+                                                    <div className="flex items-center gap-2 mb-1 min-w-0">
+                                                        <h3 className="font-bold text-slate-900 dark:text-white text-sm leading-tight truncate flex-1 min-w-0">
                                                             {hobby.name}
                                                         </h3>
                                                         {isClickable && (
