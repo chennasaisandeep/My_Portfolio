@@ -602,7 +602,7 @@ const ProjectDetail = ({ project, onBack }) => {
                         {project.sections?.results && (
                             <section>
                                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Impact & Results</h2>
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                                     {project.sections.results.map((metric, i) => (
                                         <div key={i} className="p-6 bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all group">
                                             <div className={`text-1xl md:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r ${project.gradient} mb-2`}>
@@ -707,7 +707,7 @@ const App = () => {
     }
 
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen overflow-x-hidden">
             {/* FORCE HIDE SCROLLBAR STYLES */}
             <style>{`
                 /* Chrome, Safari and Opera */
@@ -726,11 +726,11 @@ const App = () => {
             {selectedCertificate && <HobbyModal hobby={{...selectedCertificate, gallery: selectedCertificate.images}} onClose={() => setSelectedCertificate(null)} />}
 
             {/* Animated Gradient Mesh Background — fixed, behind everything */}
-            <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-                <div className="mesh-blob w-[500px] h-[500px] top-[-10%] left-[-10%]" style={{background: 'rgba(99, 102, 241, 0.12)', animation: 'meshFloat1 20s ease-in-out infinite'}}></div>
-                <div className="mesh-blob w-[400px] h-[400px] top-[30%] right-[-8%]" style={{background: 'rgba(139, 92, 246, 0.10)', animation: 'meshFloat2 25s ease-in-out infinite'}}></div>
-                <div className="mesh-blob w-[350px] h-[350px] bottom-[10%] left-[20%]" style={{background: 'rgba(59, 130, 246, 0.08)', animation: 'meshFloat3 22s ease-in-out infinite'}}></div>
-                <div className="mesh-blob w-[300px] h-[300px] top-[60%] right-[15%]" style={{background: 'rgba(168, 85, 247, 0.07)', animation: 'meshFloat1 28s ease-in-out infinite'}}></div>
+            <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none" style={{width: '100vw', maxWidth: '100vw'}}>
+                <div className="mesh-blob w-[min(500px,80vw)] h-[min(500px,80vw)] top-[-10%] left-[-10%]" style={{background: 'rgba(99, 102, 241, 0.12)', animation: 'meshFloat1 20s ease-in-out infinite'}}></div>
+                <div className="mesh-blob w-[min(400px,70vw)] h-[min(400px,70vw)] top-[30%] right-[0%]" style={{background: 'rgba(139, 92, 246, 0.10)', animation: 'meshFloat2 25s ease-in-out infinite'}}></div>
+                <div className="mesh-blob w-[min(350px,65vw)] h-[min(350px,65vw)] bottom-[10%] left-[20%]" style={{background: 'rgba(59, 130, 246, 0.08)', animation: 'meshFloat3 22s ease-in-out infinite'}}></div>
+                <div className="mesh-blob w-[min(300px,60vw)] h-[min(300px,60vw)] top-[60%] right-[15%]" style={{background: 'rgba(168, 85, 247, 0.07)', animation: 'meshFloat1 28s ease-in-out infinite'}}></div>
             </div>
 
             {/* Navigation */}
@@ -810,7 +810,7 @@ const App = () => {
                         </div>
 
                         {/* Metrics */}
-                        <div className="grid grid-cols-2 gap-8 relative">
+                        <div className="grid grid-cols-2 gap-4 md:gap-8 relative">
                             <div className="absolute -top-4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-300 dark:via-slate-700 to-transparent"></div>
                             {content.hero.metrics.map((m, i) => (
                                 <div key={i} className="pt-8">

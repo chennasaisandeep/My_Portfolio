@@ -38,10 +38,12 @@
     </script>
     
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        *, *::before, *::after { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; max-width: 100vw; overflow-x: hidden; }
         html { 
             scroll-behavior: smooth;
             scroll-padding-top: 50px; /* Account for fixed navbar height */
+            overflow-x: hidden;
         }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
@@ -336,7 +338,7 @@
             0% { transform: translateY(0) translateX(0); opacity: 0; }
             10% { opacity: 0.5; }
             90% { opacity: 0.5; }
-            100% { transform: translateY(-500px) translateX(80px); opacity: 0; }
+            100% { transform: translateY(-500px) translateX(40px); opacity: 0; }
         }
         .particle {
             position: absolute;
