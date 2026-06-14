@@ -846,13 +846,13 @@ const App = () => {
                             style={{animationDelay: `${idx * 0.08}s`}}
                         >
                             {/* Gradient Header */}
-                            <div className={`relative bg-gradient-to-br ${project.gradient} ${idx === 0 ? 'min-h-[8rem] md:min-h-[10rem]' : 'min-h-[7rem]'} w-full p-6 flex flex-col justify-between overflow-hidden`}>
+                            <div className={`relative bg-gradient-to-br ${project.gradient} min-h-[8rem] w-full p-6 flex flex-col justify-end overflow-hidden`}>
                                 {/* Decorative mesh */}
                                 <div className="absolute inset-0 opacity-10" style={{backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.2) 0%, transparent 40%)'}}></div>
-                                <div className="relative flex justify-end">
-                                    <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-white/20 backdrop-blur-sm text-white rounded-full border border-white/10">{project.type || 'Project'}</span>
+                                <div className="relative z-10 flex flex-col items-start gap-2.5 mt-auto">
+                                    <h3 className={`text-white font-bold ${idx === 0 ? 'text-2xl md:text-3xl' : 'text-xl'} leading-tight drop-shadow-sm`}>{project.title}</h3>
+                                    <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-white/15 backdrop-blur-md text-white/90 rounded border border-white/20 shadow-sm">{project.type || 'Project'}</span>
                                 </div>
-                                <h3 className={`relative text-white font-bold ${idx === 0 ? 'text-2xl md:text-3xl' : 'text-xl'} leading-tight mt-auto`}>{project.title}</h3>
                             </div>
 
                             {/* Content */}
@@ -1028,7 +1028,7 @@ const App = () => {
             </Section>
 
             {/* Certificates & Hobbies */}
-            <Section id="certificates" className="section-gap-lg">
+            <Section id="certificates" className="section-gap">
                 <div className="grid lg:grid-cols-2 gap-16">
                     {/* Certificates Column */}
                     <div className="reveal">
@@ -1150,7 +1150,7 @@ const App = () => {
 
                 <div className="relative reveal">
                     <span className="text-xs font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 mb-3 block">Get In Touch</span>
-                    <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text inline-block leading-relaxed">Let's work together.</h2>
+                    <h2 className="text-[1.75rem] sm:text-4xl md:text-5xl font-bold mb-6 gradient-text inline-block leading-relaxed">Let's work together.</h2>
                     <p className="text-slate-500 dark:text-slate-400 mb-12 max-w-xl mx-auto leading-relaxed">I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!</p>
                     <div className="flex justify-center gap-5 mb-16">
                         <a href={content.site.socials.linkedin} target="_blank" className="w-14 h-14 rounded-2xl bg-white dark:bg-slate-900/80 shadow-sm border border-slate-200 dark:border-slate-800 hover:bg-[#0077b5] hover:text-white hover:border-transparent hover:shadow-lg hover:shadow-blue-500/20 hover:-translate-y-1 flex items-center justify-center text-xl transition-all duration-300 text-slate-500 dark:text-slate-400"><i className="fab fa-linkedin-in"></i></a>
