@@ -51,7 +51,7 @@ window.portfolioData = {
             "summary": "A retrieval-augmented planning system that turns natural-language feature requests into grounded, file-level implementation plans for large codebases.",
             "tags": ["GraphRAG", "Knowledge Graphs", "FastAPI", "Neo4j", "Qdrant", "VS Code"],
             "gradient": "from-purple-600 to-fuchsia-600",
-            "links": { },
+            "links": {},
             "sections": {
                 "overview": "An AI-assisted planning platform designed for complex software maintenance in a large codebase. Given a natural-language request and a target scope, it returns a prioritized set of files and optional implementation guidance.",
                 "problem": "In large enterprise codebases, discovering the right files and sequencing changes is hard. Traditional search often produces low recall or low precision, leading to incomplete context and wasted time.",
@@ -84,7 +84,7 @@ window.portfolioData = {
             "summary": "Built an end-to-end data and alignment pipeline to specialize a compact LLM for technical firmware assistance.",
             "tags": ["LLM", "Fine-Tuning", "SFT", "DPO", "Python", "Transformers"],
             "gradient": "from-blue-500 to-indigo-600",
-            "links": { },
+            "links": {},
             "sections": {
                 "overview": "This project is an end-to-end specialization pipeline for a compact language model focused on embedded firmware engineering documentation. The system turns heterogeneous technical sources into structured training corpora.",
                 "problem": "General-purpose small language models are efficient but often underperform on specialized engineering domains. Training needed to run efficiently on finite GPU resources while preserving long-context signal.",
@@ -117,7 +117,7 @@ window.portfolioData = {
             "summary": "A graph-native platform for composing, executing, and observing AI-enabled workflows with real-time control loops.",
             "tags": ["React Flow", "Fastify", "Python", "Redis", "PostgreSQL", "TypeScript"],
             "gradient": "from-emerald-500 to-teal-600",
-            "links": { },
+            "links": {},
             "sections": {
                 "overview": "AgentMesh is a full-stack workflow orchestration system for building agentic pipelines as directed graphs instead of hardcoded scripts. It combines a visual canvas, an API control plane, and a Python execution engine.",
                 "problem": "Teams often hit a scaling wall with AI workflows: execution semantics are unclear, operational visibility is weak, and reuse is expensive.",
@@ -186,7 +186,7 @@ window.portfolioData = {
             "tags": ["GANs", "TabSynDex", "Python", "Statistical Analysis", "Privacy Preserving"],
             "gradient": "from-purple-600 to-indigo-600",
             "links": {
-                 "paper": "https://arxiv.org/pdf/2207.05295"
+                "paper": "https://arxiv.org/pdf/2207.05295"
             },
             "sections": {
                 "overview": "Synthetic data generation is critical for privacy-sensitive domains, but evaluating its quality is notoriously difficult. During my internship, I implemented a unified evaluation framework to benchmark various GAN architectures (CTGAN, WGAN-GP, TVAE) against real-world datasets.",
@@ -278,8 +278,8 @@ window.portfolioData = {
             "Python & TypeScript",
             "FastAPI & Fastify",
             "Redis & Message Queues",
-            "PostgreSQL & Neo4j",
             "Docker",
+            "PostgreSQL & Neo4j",
             "Git"
         ],
         "Data Science & ML": [

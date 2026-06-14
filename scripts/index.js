@@ -1031,7 +1031,7 @@ const App = () => {
             <Section id="certificates" className="section-gap">
                 <div className="grid lg:grid-cols-2 gap-16">
                     {/* Certificates Column */}
-                    <div className="reveal">
+                    <div className="reveal w-full min-w-0">
                         <div className="mb-8">
                             <span className="text-xs font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 mb-3 block">Credentials</span>
                             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">Certificates</h2>
@@ -1091,7 +1091,7 @@ const App = () => {
                     </div>
 
                     {/* Hobbies Column */}
-                    <div id="hobbies" className="reveal" >
+                    <div id="hobbies" className="reveal w-full min-w-0" >
                         <div className="mb-8">
                             <span className="text-xs font-bold uppercase tracking-[0.2em] text-rose-500 dark:text-rose-400 mb-3 block">Beyond Code</span>
                             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">Interests & Hobbies</h2>
