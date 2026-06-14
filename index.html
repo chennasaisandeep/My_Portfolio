@@ -8,6 +8,11 @@
     
     <!-- 1. Tailwind CSS (Styling) -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     
     <!-- 2. FontAwesome (Icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -21,6 +26,16 @@
 
     <!-- Custom Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- FODT Prevention: Apply theme before paint -->
+    <script>
+        (function() {
+            const saved = localStorage.getItem('portfolio-theme');
+            if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
     
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -36,7 +51,103 @@
         /* Hide scrollbar for music window */
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         
-        /* === MUSIC SECTION STYLES === */
+        /* ============================== */
+        /* SMOOTH THEME TRANSITION        */
+        /* ============================== */
+        *, *::before, *::after {
+            transition: background-color 0.4s ease, 
+                        border-color 0.4s ease,
+                        box-shadow 0.3s ease;
+        }
+        /* Exclude elements where color transitions look bad */
+        .no-theme-transition, .no-theme-transition * {
+            transition: none !important;
+        }
+
+        /* ============================== */
+        /* THEME TOGGLE — CELESTIAL MORPH */
+        /* ============================== */
+        .theme-toggle {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        /* Sun / Moon icon morph */
+        .theme-toggle .toggle-icon {
+            position: absolute;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                        opacity 0.3s ease;
+        }
+        .theme-toggle .sun-icon {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+        .theme-toggle .moon-icon {
+            opacity: 0;
+            transform: rotate(-90deg) scale(0.5);
+        }
+        .dark .theme-toggle .sun-icon {
+            opacity: 0;
+            transform: rotate(90deg) scale(0.5);
+        }
+        .dark .theme-toggle .moon-icon {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+
+        /* Sun rays animation */
+        @keyframes rayPulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        .sun-rays {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            animation: rayPulse 3s ease-in-out infinite;
+            transition: opacity 0.3s ease;
+        }
+        .dark .sun-rays {
+            opacity: 0 !important;
+        }
+        
+        /* Stars for moon mode */
+        @keyframes starTwinkle1 { 0%,100%{opacity:0} 50%{opacity:1} }
+        @keyframes starTwinkle2 { 0%,100%{opacity:0} 40%{opacity:0.8} }
+        @keyframes starTwinkle3 { 0%,100%{opacity:0.3} 60%{opacity:1} }
+        
+        .moon-star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #fbbf24;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .dark .moon-star { opacity: 1; }
+        .moon-star:nth-child(1) { top: 6px; right: 8px; animation: starTwinkle1 2s ease-in-out infinite; }
+        .moon-star:nth-child(2) { top: 10px; right: 4px; animation: starTwinkle2 2.5s ease-in-out infinite 0.3s; width: 2px; height: 2px; }
+        .moon-star:nth-child(3) { bottom: 10px; left: 6px; animation: starTwinkle3 1.8s ease-in-out infinite 0.6s; }
+
+        /* ============================== */
+        /* MUSIC SECTION STYLES           */
+        /* ============================== */
         
         /* Equalizer bars animation */
         @keyframes eqBar1 { 0%,100%{height:4px} 50%{height:16px} }
@@ -84,9 +195,20 @@
         }
         .pulse-dot { animation: pulse-dot 1.5s ease-in-out infinite; }
         
-        /* Animation Classes */
+        /* ============================== */
+        /* GENERAL ANIMATION CLASSES      */
+        /* ============================== */
         @keyframes fadeInUp { 
             to { opacity: 1; transform: translateY(0); } 
+        }
+
+        /* Gallery image enter animation */
+        @keyframes galleryImageEnter {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .gallery-image-enter {
+            animation: galleryImageEnter 0.35s ease-out;
         }
         
         .animate-fade-in {
@@ -119,7 +241,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
 
     <div id="root">
         <div class="spinner"></div>

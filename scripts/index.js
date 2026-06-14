@@ -2,12 +2,54 @@ const { useState, useEffect } = React;
 
 let content = null;
 
+// --- THEME TOGGLE COMPONENT ---
+
+const ThemeToggle = ({ isDark, onToggle }) => {
+    return (
+        <button
+            onClick={onToggle}
+            className="theme-toggle bg-slate-100 dark:bg-slate-800 hover:shadow-lg hover:shadow-blue-500/10 dark:hover:shadow-indigo-500/20"
+            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+            title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+            {/* Twinkling stars (visible in dark mode) */}
+            <span className="moon-star"></span>
+            <span className="moon-star"></span>
+            <span className="moon-star"></span>
+            
+            {/* Sun rays backdrop */}
+            <svg className="sun-rays toggle-icon" viewBox="0 0 36 36" fill="none">
+                <circle cx="18" cy="18" r="5" fill="none" stroke="#f59e0b" strokeWidth="1" opacity="0.4"/>
+                <circle cx="18" cy="18" r="10" fill="none" stroke="#f59e0b" strokeWidth="0.5" opacity="0.2"/>
+            </svg>
+            
+            {/* Sun icon */}
+            <svg className="toggle-icon sun-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/>
+                <line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/>
+                <line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            
+            {/* Moon icon */}
+            <svg className="toggle-icon moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="#818cf8" fillOpacity="0.2"/>
+            </svg>
+        </button>
+    );
+};
+
 // --- COMPONENTS ---
 
 const Button = ({ children, primary, onClick, href, icon }) => {
     const baseClass = "inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:-translate-y-1 cursor-pointer";
     const primaryClass = "bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/30 border border-transparent";
-    const secondaryClass = "bg-white text-gray-900 border border-gray-200 hover:bg-gray-50 hover:border-gray-300";
+    const secondaryClass = "bg-white dark:bg-slate-800 text-gray-900 dark:text-white border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 hover:border-gray-300 dark:hover:border-slate-600";
     
     const btnContent = (
         <>
@@ -90,13 +132,22 @@ const HobbyModal = ({ hobby, onClose }) => {
         }
     }, [hasPlaylists, selectedPlaylist, hobby]);
 
-    // Prevent body scroll
+    // Prevent body scroll + keyboard navigation
     React.useEffect(() => {
         document.body.style.overflow = 'hidden';
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') onClose();
+            if (hasGallery && validGallery.length > 1) {
+                if (e.key === 'ArrowRight') setCurrentIndex((prev) => (prev + 1) % validGallery.length);
+                if (e.key === 'ArrowLeft') setCurrentIndex((prev) => (prev - 1 + validGallery.length) % validGallery.length);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
         return () => {
             document.body.style.overflow = 'unset';
+            window.removeEventListener('keydown', handleKeyDown);
         };
-    }, []);
+    }, [hasGallery, validGallery.length]);
 
     const nextImage = (e) => {
         e?.stopPropagation();
@@ -117,7 +168,9 @@ const HobbyModal = ({ hobby, onClose }) => {
                     rounded-2xl shadow-2xl relative flex flex-col overflow-hidden transition-all
                     ${hasPlaylists 
                         ? 'w-full max-w-2xl h-[80vh] md:h-[85vh] bg-[#0a0a0f] border border-white/[0.06]' 
-                        : 'bg-white w-auto h-auto max-w-[95vw] max-h-[95vh] min-w-[320px] md:min-w-[500px]'
+                        : isMedia
+                            ? 'w-full max-w-4xl h-[85vh] bg-[#0c0c14] border border-white/[0.06]'
+                            : 'bg-white dark:bg-slate-900 w-auto h-auto max-w-[95vw] max-h-[95vh] min-w-[320px] md:min-w-[500px]'
                     }
                 `}
                 onClick={(e) => e.stopPropagation()}
@@ -127,7 +180,7 @@ const HobbyModal = ({ hobby, onClose }) => {
                 <div className={`p-4 flex justify-between items-center flex-shrink-0 z-20 ${
                     hasPlaylists 
                         ? 'bg-white/[0.03] border-b border-white/[0.06] w-full' 
-                        : `border-b border-gray-100 bg-gradient-to-r from-blue-600 to-blue-700 ${isMedia ? 'w-0 min-w-full' : 'w-full'}`
+                        : `border-b border-gray-100 dark:border-slate-700 bg-gradient-to-r from-blue-600 to-blue-700 ${isMedia ? 'w-0 min-w-full' : 'w-full'}`
                 }`}>
                     <h3 className={`text-lg md:text-xl font-bold flex items-center gap-2 truncate pr-4 ${hasPlaylists ? 'text-white/80' : 'text-white'}`}>
                         <i className={`fas ${hobby.icon} ${hasPlaylists ? 'text-white/40' : ''}`}></i> <span className="truncate">{hobby.name}</span>
@@ -139,44 +192,69 @@ const HobbyModal = ({ hobby, onClose }) => {
                 </div>
 
                 {/* Content Area */}
-                <div className={`flex-1 min-h-0 flex flex-col relative ${isMedia ? 'bg-black' : 'bg-[#0F172A]'}`}>
+                <div className={`flex-1 min-h-0 flex flex-col relative ${isMedia ? 'bg-black' : hasPlaylists ? 'bg-[#0a0a0f]' : 'bg-[#0F172A]'}`}>
                     
                     {isMedia ? (
-                        <div className="relative flex items-center justify-center group bg-black overflow-hidden flex-1">
+                        <div className="relative flex flex-col overflow-hidden flex-1 min-h-0">
                             {loadingGallery ? (
-                                <div className="text-white flex flex-col items-center justify-center h-full">
+                                <div className="text-white flex flex-col items-center justify-center flex-1 bg-[#0c0c14]">
                                     <i className="fas fa-circle-notch fa-spin text-4xl mb-4 text-blue-500"></i>
                                     <p className="text-sm text-gray-400">Loading Images...</p>
                                 </div>
                             ) : (
                                 <>
-                                    {/* Blurred Background Projection */}
-                                    <div 
-                                        className="absolute inset-0 bg-cover bg-center blur-2xl opacity-60 scale-110 pointer-events-none"
-                                        style={{ backgroundImage: `url('${hasGallery ? validGallery[currentIndex] : hobby.certificate}')` }}
-                                    ></div>
+                                    {/* Main Image Area — fixed height container */}
+                                    <div className="relative flex items-center justify-center group flex-1 min-h-0 bg-[#0c0c14]">
+                                        {/* Subtle grid pattern background */}
+                                        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.4) 1px, transparent 1px)', backgroundSize: '24px 24px'}}></div>
 
-                                    {/* Main Image */}
-                                    <img 
-                                        src={hasGallery ? validGallery[currentIndex] : hobby.certificate} 
-                                        alt={hobby.name} 
-                                        className="relative z-10 max-h-[60vh] md:max-h-[calc(85vh-12rem)] w-auto object-contain block mx-auto shadow-2xl"
-                                        onError={(e) => {console.error('Image failed to load:', e.target.src); e.target.src='https://via.placeholder.com/800x600?text=Image+Not+Found'}}
-                                    />
-                                    
-                                    {/* Navigation Arrows */}
-                                    {hasGallery && validGallery.length > 1 && (
-                                        <>
-                                            <button onClick={prevImage} className="absolute z-20 left-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm transition-all border border-white/10 opacity-0 group-hover:opacity-100">
-                                                <i className="fas fa-chevron-left"></i>
-                                            </button>
-                                            <button onClick={nextImage} className="absolute z-20 right-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm transition-all border border-white/10 opacity-0 group-hover:opacity-100">
-                                                <i className="fas fa-chevron-right"></i>
-                                            </button>
-                                            <div className="absolute z-20 bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 bg-black/60 text-white text-xs rounded-full backdrop-blur-md border border-white/10 pointer-events-none">
+                                        {/* Main Image with transition */}
+                                        <img 
+                                            key={currentIndex}
+                                            src={hasGallery ? validGallery[currentIndex] : hobby.certificate} 
+                                            alt={`${hobby.name} - ${currentIndex + 1}`} 
+                                            className="relative z-10 max-h-full max-w-[90%] object-contain block mx-auto rounded-lg shadow-2xl gallery-image-enter"
+                                            onError={(e) => {console.error('Image failed to load:', e.target.src); e.target.src='https://via.placeholder.com/800x600?text=Image+Not+Found'}}
+                                        />
+                                        
+                                        {/* Navigation Arrows — always vertically centered in the fixed container */}
+                                        {hasGallery && validGallery.length > 1 && (
+                                            <>
+                                                <button onClick={prevImage} className="absolute z-20 left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white w-11 h-11 rounded-full flex items-center justify-center backdrop-blur-md transition-all border border-white/10 opacity-0 group-hover:opacity-100 hover:scale-110">
+                                                    <i className="fas fa-chevron-left text-sm"></i>
+                                                </button>
+                                                <button onClick={nextImage} className="absolute z-20 right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white w-11 h-11 rounded-full flex items-center justify-center backdrop-blur-md transition-all border border-white/10 opacity-0 group-hover:opacity-100 hover:scale-110">
+                                                    <i className="fas fa-chevron-right text-sm"></i>
+                                                </button>
+                                            </>
+                                        )}
+
+                                        {/* Counter badge (top-right) */}
+                                        {hasGallery && validGallery.length > 1 && (
+                                            <div className="absolute z-20 top-4 right-4 px-3 py-1.5 bg-white/10 text-white/80 text-xs font-semibold rounded-lg backdrop-blur-md border border-white/10 tabular-nums">
+                                                <i className="fas fa-images mr-1.5 text-white/40"></i>
                                                 {currentIndex + 1} / {validGallery.length}
                                             </div>
-                                        </>
+                                        )}
+                                    </div>
+
+                                    {/* Thumbnail strip — pinned at bottom */}
+                                    {hasGallery && validGallery.length > 1 && (
+                                        <div className="flex items-center gap-1.5 px-4 py-3 bg-[#08080f] border-t border-white/[0.06] overflow-x-auto scrollbar-hide flex-shrink-0">
+                                            {validGallery.map((src, idx) => (
+                                                <button
+                                                    key={idx}
+                                                    onClick={(e) => { e.stopPropagation(); setCurrentIndex(idx); }}
+                                                    className={`flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden transition-all duration-200 border-2 ${
+                                                        idx === currentIndex 
+                                                            ? 'border-blue-500 ring-1 ring-blue-500/50 opacity-100' 
+                                                            : 'border-transparent opacity-35 hover:opacity-70'
+                                                    }`}
+                                                >
+                                                    <img src={src} alt="" className="w-full h-full object-cover" />
+                                                </button>
+                                            ))}
+                                        </div>
                                     )}
                                 </>
                             )}
@@ -208,7 +286,7 @@ const HobbyModal = ({ hobby, onClose }) => {
                                         <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full opacity-10 blur-2xl" style={{ background: currentColors.to }}></div>
                                         
                                         <div className="relative z-10 flex items-end gap-5">
-                                            {/* Vinyl / Album Art Block */}
+                                            {/* Album Art Block */}
                                             <div className="hidden md:flex w-24 h-24 rounded-2xl items-center justify-center flex-shrink-0 relative overflow-hidden shadow-2xl" style={{ background: `linear-gradient(135deg, ${currentColors.from}, ${currentColors.to})` }}>
                                                 {/* Subtle corner shine */}
                                                 <div className="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-white/10 blur-md"></div>
@@ -313,7 +391,7 @@ const HobbyModal = ({ hobby, onClose }) => {
                             );
                         })()
                     ) : (
-                        <div className="flex-1 flex items-center justify-center text-slate-400 bg-slate-50">
+                        <div className="flex-1 flex items-center justify-center text-slate-400 bg-slate-50 dark:bg-slate-900">
                             <p>No preview available</p>
                         </div>
                     )}
@@ -323,9 +401,9 @@ const HobbyModal = ({ hobby, onClose }) => {
                 <div className={`p-4 flex-shrink-0 z-20 ${
                     hasPlaylists 
                         ? 'bg-[#0a0a0f] border-t border-white/[0.04] w-full' 
-                        : `bg-white border-t border-gray-100 ${isMedia ? 'w-0 min-w-full' : 'w-full'}`
+                        : `bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-700 ${isMedia ? 'w-0 min-w-full' : 'w-full'}`
                 }`}>
-                    <p className={`text-sm leading-relaxed break-words ${hasPlaylists ? 'text-white/30' : 'text-slate-600'}`}>{hobby.description}</p>
+                    <p className={`text-sm leading-relaxed break-words ${hasPlaylists ? 'text-white/30' : 'text-slate-600 dark:text-slate-400'}`}>{hobby.description}</p>
                     {hobby.link && (
                          <a href={hobby.link} target="_blank" className="mt-2 inline-flex items-center text-blue-600 font-bold hover:text-blue-700 text-sm hover:underline">
                             View External Credential <i className="fas fa-arrow-right ml-2 text-xs"></i>
@@ -343,7 +421,7 @@ const ProjectDetail = ({ project, onBack }) => {
     const renderTechStack = (stack) => (
         <div className="flex flex-wrap gap-2 mt-3">
             {stack.map((tech, i) => (
-                <span key={i} className="px-3 py-1 bg-slate-50 text-slate-700 text-xs font-semibold rounded-full border border-slate-200">
+                <span key={i} className="px-3 py-1 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-full border border-slate-200 dark:border-slate-700">
                     {tech}
                 </span>
             ))}
@@ -351,7 +429,7 @@ const ProjectDetail = ({ project, onBack }) => {
     );
 
     return (
-        <div className="min-h-screen bg-white animate-fade-in font-sans scrollbar-hide">
+        <div className="min-h-screen bg-white dark:bg-slate-950 animate-fade-in font-sans scrollbar-hide">
             <style>{`
                 ::-webkit-scrollbar {
                     display: none;
@@ -362,7 +440,7 @@ const ProjectDetail = ({ project, onBack }) => {
             {/* Sticky Back Button */}
             <button 
                 onClick={onBack} 
-                className="fixed top-6 right-6 z-50 bg-white/90 hover:bg-white text-slate-900 px-5 py-3 rounded-full shadow-xl backdrop-blur-md transition-all flex items-center border border-slate-200 font-semibold group hover:scale-105"
+                className="fixed top-6 right-6 z-50 bg-white/90 dark:bg-slate-800/90 hover:bg-white dark:hover:bg-slate-700 text-slate-900 dark:text-white px-5 py-3 rounded-full shadow-xl backdrop-blur-md transition-all flex items-center border border-slate-200 dark:border-slate-700 font-semibold group hover:scale-105"
             >
                 <i className={`fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform bg-gradient-to-r ${project.gradient} bg-clip-text text-transparent`}></i> Back
             </button>
@@ -384,39 +462,39 @@ const ProjectDetail = ({ project, onBack }) => {
                     {/* 2. Sidebar (Sticky Metadata) */}
                     <aside className="lg:col-span-4 order-2 lg:order-1">
                         <div className="sticky top-4 space-y-8">
-                            <div className="bg-slate-50 p-6 rounded-2xl border border-gray-100 shadow-sm">
-                                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Project Details</h3>
+                            <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm">
+                                <h3 className="text-sm font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-4">Project Details</h3>
                                 
                                 <div className="space-y-4">
                                     <div>
-                                        <div className="text-sm text-gray-500 font-medium">Role</div>
-                                        <div className="text-gray-900 font-semibold">{project.role}</div>
+                                        <div className="text-sm text-gray-500 dark:text-slate-500 font-medium">Role</div>
+                                        <div className="text-gray-900 dark:text-white font-semibold">{project.role}</div>
                                     </div>
                                     <div>
-                                        <div className="text-sm text-gray-500 font-medium">Timeline</div>
-                                        <div className="text-gray-900 font-semibold">{project.year}</div>
+                                        <div className="text-sm text-gray-500 dark:text-slate-500 font-medium">Timeline</div>
+                                        <div className="text-gray-900 dark:text-white font-semibold">{project.year}</div>
                                     </div>
                                     <div>
-                                        <div className="text-sm text-gray-500 font-medium">Company / Organization</div>
-                                        <div className="text-gray-900 font-semibold">{project.company || "Personal Project"}</div>
+                                        <div className="text-sm text-gray-500 dark:text-slate-500 font-medium">Company / Organization</div>
+                                        <div className="text-gray-900 dark:text-white font-semibold">{project.company || "Personal Project"}</div>
                                     </div>
                                     {project.location && (
                                         <div>
-                                            <div className="text-sm text-gray-500 font-medium">Location</div>
-                                            <div className="text-gray-900 font-semibold">{project.location}</div>
+                                            <div className="text-sm text-gray-500 dark:text-slate-500 font-medium">Location</div>
+                                            <div className="text-gray-900 dark:text-white font-semibold">{project.location}</div>
                                         </div>
                                     )}
                                 </div>
 
-                                <div className="mt-8 pt-6 border-t border-gray-200">
-                                    <div className="text-sm text-gray-500 font-medium mb-2">Technologies</div>
+                                <div className="mt-8 pt-6 border-t border-gray-200 dark:border-slate-700">
+                                    <div className="text-sm text-gray-500 dark:text-slate-500 font-medium mb-2">Technologies</div>
                                     {renderTechStack(project.tags)}
                                 </div>
 
                                 {/* Action Links */}
                                 <div className="mt-8 flex flex-col gap-3">
                                     {project.links.github && (
-                                        <a href={project.links.github} target="_blank" className="flex items-center justify-center w-full py-3 bg-gray-900 text-white rounded-lg hover:bg-black transition-all font-medium">
+                                        <a href={project.links.github} target="_blank" className="flex items-center justify-center w-full py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg hover:bg-black dark:hover:bg-gray-100 transition-all font-medium">
                                             <i className="fab fa-github mr-2"></i> View Code
                                         </a>
                                     )}
@@ -441,13 +519,13 @@ const ProjectDetail = ({ project, onBack }) => {
                         {/* Context / Overview */}
                         {project.sections?.overview && (
                             <section>
-                                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
                                     <span className={`w-8 h-8 rounded-lg bg-gradient-to-br ${project.gradient} text-white flex items-center justify-center mr-3 text-sm shadow-md`}>
                                         <i className="fas fa-info"></i>
                                     </span>
                                     Overview
                                 </h2>
-                                <p className="text-gray-600 leading-relaxed text-lg whitespace-pre-line">{project.sections.overview}</p>
+                                <p className="text-gray-600 dark:text-slate-400 leading-relaxed text-lg whitespace-pre-line">{project.sections.overview}</p>
                             </section>
                         )}
 
@@ -455,15 +533,15 @@ const ProjectDetail = ({ project, onBack }) => {
                         {(project.sections?.problem || project.sections?.solution) && (
                             <div className="grid md:grid-cols-2 gap-6">
                                 {project.sections.problem && (
-                                    <div className="bg-red-50 p-6 rounded-xl border border-red-100">
-                                        <h3 className="font-bold text-red-800 mb-2 flex items-center"><i className="fas fa-exclamation-circle mr-2"></i> The Challenge</h3>
-                                        <p className="text-red-900/70 text-sm leading-relaxed">{project.sections.problem}</p>
+                                    <div className="bg-red-50 dark:bg-red-950/30 p-6 rounded-xl border border-red-100 dark:border-red-900/50">
+                                        <h3 className="font-bold text-red-800 dark:text-red-400 mb-2 flex items-center"><i className="fas fa-exclamation-circle mr-2"></i> The Challenge</h3>
+                                        <p className="text-red-900/70 dark:text-red-300/70 text-sm leading-relaxed">{project.sections.problem}</p>
                                     </div>
                                 )}
                                 {project.sections.solution && (
-                                    <div className="bg-green-50 p-6 rounded-xl border border-green-100">
-                                        <h3 className="font-bold text-green-800 mb-2 flex items-center"><i className="fas fa-check-circle mr-2"></i> The Solution</h3>
-                                        <p className="text-green-900/70 text-sm leading-relaxed">{project.sections.solution}</p>
+                                    <div className="bg-green-50 dark:bg-green-950/30 p-6 rounded-xl border border-green-100 dark:border-green-900/50">
+                                        <h3 className="font-bold text-green-800 dark:text-green-400 mb-2 flex items-center"><i className="fas fa-check-circle mr-2"></i> The Solution</h3>
+                                        <p className="text-green-900/70 dark:text-green-300/70 text-sm leading-relaxed">{project.sections.solution}</p>
                                     </div>
                                 )}
                             </div>
@@ -472,7 +550,7 @@ const ProjectDetail = ({ project, onBack }) => {
                         {/* Methodology (Timeline) */}
                         {project.sections?.methodology && (
                             <section>
-                                <h2 className="text-2xl font-bold text-gray-900 mb-8 flex items-center">
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center">
                                     <span className={`w-8 h-8 rounded-lg bg-gradient-to-br ${project.gradient} text-white flex items-center justify-center mr-3 text-sm shadow-md`}>
                                         <i className="fas fa-cogs"></i>
                                     </span>
@@ -482,7 +560,7 @@ const ProjectDetail = ({ project, onBack }) => {
                                 {Array.isArray(project.sections.methodology) ? (
                                     <div className="relative space-y-8">
                                         {/* The Vertical Line */}
-                                        <div className="absolute left-[15px] top-2 bottom-0 w-0.5 bg-slate-200"></div>
+                                        <div className="absolute left-[15px] top-2 bottom-0 w-0.5 bg-slate-200 dark:bg-slate-800"></div>
                                         
                                         {project.sections.methodology.map((step, i) => (
                                             <div key={i} className="relative pl-12">
@@ -491,14 +569,14 @@ const ProjectDetail = ({ project, onBack }) => {
                                                     {i + 1}
                                                 </span>
                                                 <div>
-                                                    <h3 className="text-lg font-bold text-gray-900 mb-1">{step.title}</h3>
-                                                    <p className="text-gray-600 leading-relaxed text-sm">{step.description}</p>
+                                                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">{step.title}</h3>
+                                                    <p className="text-gray-600 dark:text-slate-400 leading-relaxed text-sm">{step.description}</p>
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="prose text-gray-600 leading-relaxed max-w-none whitespace-pre-line pl-4 border-l-4 border-slate-200">
+                                    <div className="prose text-gray-600 dark:text-slate-400 leading-relaxed max-w-none whitespace-pre-line pl-4 border-l-4 border-slate-200 dark:border-slate-700">
                                         {project.sections.methodology}
                                     </div>
                                 )}
@@ -508,12 +586,12 @@ const ProjectDetail = ({ project, onBack }) => {
                         {/* Key Features List */}
                         {project.sections?.features && (
                             <section>
-                                <h2 className="text-2xl font-bold text-gray-900 mb-4">Key Features</h2>
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Key Features</h2>
                                 <ul className="grid sm:grid-cols-2 gap-4">
                                     {project.sections.features.map((feature, i) => (
-                                        <li key={i} className="flex items-start p-3 rounded-lg border border-gray-100 hover:border-gray-200 bg-gray-50/50 hover:bg-white transition-colors">
+                                        <li key={i} className="flex items-start p-3 rounded-lg border border-gray-100 dark:border-slate-800 hover:border-gray-200 dark:hover:border-slate-700 bg-gray-50/50 dark:bg-slate-900/50 hover:bg-white dark:hover:bg-slate-800/50 transition-colors">
                                             <i className={`fas fa-check-circle mt-1 mr-3 bg-gradient-to-r ${project.gradient} bg-clip-text text-transparent`}></i>
-                                            <span className="text-gray-700 font-medium text-sm">{feature}</span>
+                                            <span className="text-gray-700 dark:text-slate-300 font-medium text-sm">{feature}</span>
                                         </li>
                                     ))}
                                 </ul>
@@ -523,14 +601,14 @@ const ProjectDetail = ({ project, onBack }) => {
                         {/* Impact & Results Section */}
                         {project.sections?.results && (
                             <section>
-                                <h2 className="text-2xl font-bold text-gray-900 mb-6">Impact & Results</h2>
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Impact & Results</h2>
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                                     {project.sections.results.map((metric, i) => (
-                                        <div key={i} className="p-6 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all group">
+                                        <div key={i} className="p-6 bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all group">
                                             <div className={`text-1xl md:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r ${project.gradient} mb-2`}>
                                                 {metric.value}
                                             </div>
-                                            <div className="text-xs font-bold text-gray-400 uppercase tracking-widest group-hover:text-gray-600 transition-colors">
+                                            <div className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest group-hover:text-gray-600 dark:group-hover:text-slate-400 transition-colors">
                                                 {metric.label}
                                             </div>
                                         </div>
@@ -554,6 +632,20 @@ const App = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [scrollPosition, setScrollPosition] = useState(0);
     const [scrollProgress, setScrollProgress] = useState(0);
+    const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
+
+    // Theme toggle handler
+    const toggleTheme = () => {
+        const newDark = !isDark;
+        setIsDark(newDark);
+        if (newDark) {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('portfolio-theme', 'dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('portfolio-theme', 'light');
+        }
+    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -612,7 +704,7 @@ const App = () => {
             {selectedCertificate && <HobbyModal hobby={{...selectedCertificate, gallery: selectedCertificate.images}} onClose={() => setSelectedCertificate(null)} />}
 
             {/* Navigation */}
-            <nav className={`fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-4' : 'bg-transparent py-6'}`}>
+            <nav className={`fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 dark:bg-slate-950/90 backdrop-blur-md shadow-sm dark:shadow-slate-900/50 py-4' : 'bg-transparent py-6'}`}>
                 <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
                     
                     {/* Logo */}
@@ -622,22 +714,27 @@ const App = () => {
                     
                     <div className="hidden md:flex items-center gap-6">
                         {content.site.nav.map(item => (
-                            <button key={item.id} onClick={() => handleNav(item.id)} className="text-sm font-medium text-gray-600 hover:text-black transition-colors">{item.label}</button>
+                            <button key={item.id} onClick={() => handleNav(item.id)} className="text-sm font-medium text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors">{item.label}</button>
                         ))}
-                        <a href={content.site.socials.email} className="ml-2 px-5 py-2.5 bg-slate-900 text-white rounded-full text-sm font-medium hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20">
+                        <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
+                        <a href={content.site.socials.email} className="ml-1 px-5 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full text-sm font-medium hover:bg-slate-800 dark:hover:bg-slate-100 transition-all shadow-lg shadow-slate-900/20 dark:shadow-white/10">
                             Let's Talk
                         </a>
                     </div>
 
-                    <button className="md:hidden text-2xl" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-                        <i className={`fas ${mobileMenuOpen ? 'fa-times' : 'fa-bars'}`}></i>
-                    </button>
+                    {/* Mobile: theme toggle + hamburger */}
+                    <div className="flex items-center gap-3 md:hidden">
+                        <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
+                        <button className="text-2xl text-slate-900 dark:text-white" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                            <i className={`fas ${mobileMenuOpen ? 'fa-times' : 'fa-bars'}`}></i>
+                        </button>
+                    </div>
                 </div>
 
                 {mobileMenuOpen && (
-                    <div className="absolute top-full left-0 w-full bg-white shadow-xl border-t border-gray-100 p-6 flex flex-col gap-4 md:hidden animate-fade-in-up">
+                    <div className="absolute top-full left-0 w-full bg-white dark:bg-slate-900 shadow-xl border-t border-gray-100 dark:border-slate-800 p-6 flex flex-col gap-4 md:hidden animate-fade-in-up">
                         {content.site.nav.map(item => (
-                            <button key={item.id} onClick={() => handleNav(item.id)} className="text-left text-lg font-medium py-2">{item.label}</button>
+                            <button key={item.id} onClick={() => handleNav(item.id)} className="text-left text-lg font-medium py-2 text-slate-900 dark:text-white">{item.label}</button>
                         ))}
                     </div>
                 )}
@@ -651,18 +748,18 @@ const App = () => {
             {/* Hero */}
             <header className="pt-24 pb-16 px-6 md:px-12 md:pt-32 md:pb-24 max-w-7xl mx-auto">
                 <div className="max-w-3xl">
-                    <h1 className="text-4xl md:text-7xl font-bold tracking-tight mb-6 text-slate-900">{content.hero.headline}</h1>
-                    <p className="text-xl text-slate-500 mb-10 leading-relaxed max-w-2xl">{content.hero.subheadline}</p>
+                    <h1 className="text-4xl md:text-7xl font-bold tracking-tight mb-6 text-slate-900 dark:text-white">{content.hero.headline}</h1>
+                    <p className="text-xl text-slate-500 dark:text-slate-400 mb-10 leading-relaxed max-w-2xl">{content.hero.subheadline}</p>
                     <div className="flex flex-wrap gap-4 mb-16">
                         {content.hero.ctas.map((cta, i) => (
                             <Button key={i} primary={cta.primary} onClick={() => cta.action === 'resume' ? window.open(cta.href, '_blank') : handleNav(cta.action)} href={cta.href}>{cta.label}</Button>
                         ))}
                     </div>
-                    <div className="grid grid-cols-3 gap-8 border-t border-gray-200 pt-8">
+                    <div className="grid grid-cols-3 gap-8 border-t border-gray-200 dark:border-slate-800 pt-8">
                         {content.hero.metrics.map((m, i) => (
                             <div key={i}>
-                                <div className="text-3xl font-bold text-slate-900">{m.value}</div>
-                                <div className="text-sm text-slate-500 font-medium">{m.label}</div>
+                                <div className="text-3xl font-bold text-slate-900 dark:text-white">{m.value}</div>
+                                <div className="text-sm text-slate-500 dark:text-slate-400 font-medium">{m.label}</div>
                             </div>
                         ))}
                     </div>
@@ -670,24 +767,24 @@ const App = () => {
             </header>
 
             {/* Work Grid */}
-            <Section id="work" className="py-6 bg-slate-50/50">
+            <Section id="work" className="py-6 bg-slate-50/50 dark:bg-slate-900/50">
                 <div className="mb-8">
-                    <h2 className="text-3xl font-bold mb-3">Selected Work</h2>
-                    <p className="text-gray-500">Highlighting projects in ML and Data Analysis.</p>
+                    <h2 className="text-3xl font-bold mb-3 dark:text-white">Selected Work</h2>
+                    <p className="text-gray-500 dark:text-slate-400">Highlighting projects in ML and Data Analysis.</p>
                 </div>
                 <div className="grid md:grid-cols-2 gap-6">
                     {content.projects.map(project => (
-                        <div key={project.id} onClick={() => handleProjectClick(project.id)} className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col h-full">
+                        <div key={project.id} onClick={() => handleProjectClick(project.id)} className="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-gray-100 dark:border-slate-800 hover:shadow-xl dark:hover:shadow-slate-900/50 transition-all duration-300 cursor-pointer flex flex-col h-full">
                             <div className={`h-24 w-full bg-gradient-to-br ${project.gradient} relative p-6 flex flex-col justify-end`}>
                                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-all"></div>
                                 <h3 className="relative text-white text-xl font-bold">{project.title}</h3>
                             </div>
                             <div className="p-6 flex-1 flex flex-col">
                                 <div className="flex flex-wrap gap-2 mb-4">
-                                    {project.tags.slice(0,3).map(t => <span key={t} className="text-xs font-semibold px-2 py-1 bg-gray-100 text-gray-600 rounded">{t}</span>)}
+                                    {project.tags.slice(0,3).map(t => <span key={t} className="text-xs font-semibold px-2 py-1 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 rounded">{t}</span>)}
                                 </div>
-                                <p className="text-gray-600 text-sm mb-6 line-clamp-2 flex-1">{project.summary}</p>
-                                <div className="text-blue-600 font-medium text-sm flex items-center group-hover:translate-x-1 transition-transform">
+                                <p className="text-gray-600 dark:text-slate-400 text-sm mb-6 line-clamp-2 flex-1">{project.summary}</p>
+                                <div className="text-blue-600 dark:text-blue-400 font-medium text-sm flex items-center group-hover:translate-x-1 transition-transform">
                                     View Case Study <i className="fas fa-arrow-right ml-2"></i>
                                 </div>
                             </div>
@@ -698,22 +795,22 @@ const App = () => {
 
             {/* Experience */}
             <Section id="experience" className="py-6">
-                <h2 className="text-3xl font-bold mb-8">Experience</h2>
+                <h2 className="text-3xl font-bold mb-8 dark:text-white">Experience</h2>
                 <div className="space-y-4">
                     {content.experience.map((exp, i) => (
                         <div key={i} className="flex flex-col md:flex-row gap-4 md:gap-12">
                             <div className="md:w-1/4 pt-1">
-                                <div className="font-bold text-blue-600">{exp.period}</div>
+                                <div className="font-bold text-blue-600 dark:text-blue-400">{exp.period}</div>
                             </div>
-                            <div className="md:w-3/4 border-l-2 border-gray-100 pl-8 pb-8 relative">
-                                <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-white border-4 border-blue-600"></div>
-                                <h3 className="text-xl font-bold">{exp.role}</h3>
-                                <div className="text-gray-500 mb-3">{exp.company} • {exp.location}</div>
-                                <p className="text-gray-600 mb-3">{exp.summary}</p>
+                            <div className="md:w-3/4 border-l-2 border-gray-100 dark:border-slate-800 pl-8 pb-8 relative">
+                                <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-white dark:bg-slate-950 border-4 border-blue-600 dark:border-blue-500"></div>
+                                <h3 className="text-xl font-bold dark:text-white">{exp.role}</h3>
+                                <div className="text-gray-500 dark:text-slate-400 mb-3">{exp.company} • {exp.location}</div>
+                                <p className="text-gray-600 dark:text-slate-400 mb-3">{exp.summary}</p>
                                 <ul className="space-y-1">
                                     {exp.achievements.map((a, j) => (
-                                        <li key={j} className="text-sm text-gray-500 flex items-start">
-                                            <i className="fas fa-caret-right text-gray-400 mt-1 mr-2"></i> {a}
+                                        <li key={j} className="text-sm text-gray-500 dark:text-slate-500 flex items-start">
+                                            <i className="fas fa-caret-right text-gray-400 dark:text-slate-600 mt-1 mr-2"></i> {a}
                                         </li>
                                     ))}
                                 </ul>
@@ -726,25 +823,25 @@ const App = () => {
             {/* Education */}
             <Section id="education" className="py-6">
                 <div className="mb-8">
-                    <h2 className="text-3xl font-bold mb-3">Education</h2>
-                    <p className="text-gray-500">Academic background and qualifications.</p>
+                    <h2 className="text-3xl font-bold mb-3 dark:text-white">Education</h2>
+                    <p className="text-gray-500 dark:text-slate-400">Academic background and qualifications.</p>
                 </div>
                 <div className="grid md:grid-cols-2 gap-6">
                     {content.education.map((edu, i) => (
-                        <div key={i} className="bg-gradient-to-br from-slate-50 to-blue-50 border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300 group">
+                        <div key={i} className="bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-6 hover:shadow-lg transition-all duration-300 group">
                             <div className="flex items-start gap-4">
                                 <div className="w-14 h-14 rounded-xl bg-blue-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                                     <i className={`fas ${edu.icon} text-2xl text-white`}></i>
                                 </div>
                                 <div className="flex-1">
-                                    <h3 className="font-bold text-xl text-gray-900 mb-1">{edu.school}</h3>
-                                    <p className="text-blue-600 font-semibold mb-2">{edu.degree}</p>
-                                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 text-sm text-gray-600">
+                                    <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-1">{edu.school}</h3>
+                                    <p className="text-blue-600 dark:text-blue-400 font-semibold mb-2">{edu.degree}</p>
+                                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 text-sm text-gray-600 dark:text-slate-400">
                                         <span className="flex items-center gap-1">
-                                            <i className="fas fa-calendar text-gray-400"></i>
+                                            <i className="fas fa-calendar text-gray-400 dark:text-slate-500"></i>
                                             {edu.year}
                                         </span>
-                                        <span className="text-gray-300 hidden sm:inline">•</span>
+                                        <span className="text-gray-300 dark:text-slate-600 hidden sm:inline">•</span>
                                         <span className="flex items-center gap-1">
                                             <i className="fas fa-star text-yellow-500"></i>
                                             {edu.grade}
@@ -758,28 +855,27 @@ const App = () => {
             </Section>
 
             {/* Skills Section */}
-            <Section id="skills" className="py-12 border-slate-200 bg-slate-50">
+            <Section id="skills" className="py-12 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
                 <div className="max-w-7xl mx-auto">
-                    {/* UPDATED: Changed 'mb-12' to 'mb-8' for consistent heading spacing */}
-                    <h2 className="text-3xl font-bold mb-8 text-left">Technical Expertise</h2>
+                    <h2 className="text-3xl font-bold mb-8 text-left dark:text-white">Technical Expertise</h2>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                         {Object.entries(content.skills).map(([category, items], idx) => {
                             const icons = [ "fas fa-robot", "fas fa-brain", "fas fa-database", "fas fa-square-root-alt" ];
-                            const colors = [ "text-purple-600 bg-purple-50", "text-blue-600 bg-blue-50", "text-emerald-600 bg-emerald-50", "text-orange-600 bg-orange-50" ];
+                            const colors = [ "text-purple-600 bg-purple-50 dark:text-purple-400 dark:bg-purple-900/30", "text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/30", "text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-900/30", "text-orange-600 bg-orange-50 dark:text-orange-400 dark:bg-orange-900/30" ];
 
                             return (
-                                <div key={category} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 group hover:-translate-y-1">
+                                <div key={category} className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-lg transition-all duration-300 group hover:-translate-y-1">
                                     <div className="flex items-center mb-6">
                                         <div className={`w-10 h-10 rounded-lg ${colors[idx % 4]} flex items-center justify-center text-lg mr-4 group-hover:scale-110 transition-transform`}>
                                             <i className={icons[idx % 4]}></i>
                                         </div>
-                                        <h3 className="font-bold text-slate-900 text-lg leading-tight">{category}</h3>
+                                        <h3 className="font-bold text-slate-900 dark:text-white text-lg leading-tight">{category}</h3>
                                     </div>
                                     
                                     <div className="flex flex-wrap gap-2">
                                         {items.map((skill, i) => (
-                                            <span key={i} className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-md hover:bg-slate-800 hover:text-white transition-colors cursor-default">
+                                            <span key={i} className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-semibold rounded-md hover:bg-slate-800 dark:hover:bg-white hover:text-white dark:hover:text-slate-900 transition-colors cursor-default">
                                                 {skill}
                                             </span>
                                         ))}
@@ -796,79 +892,141 @@ const App = () => {
                 <div className="grid lg:grid-cols-2 gap-16">
                     {/* Certificates Column */}
                     <div>
-                        <h2 className="text-3xl font-bold mb-8">Certificates</h2>
+                        <div className="flex items-center gap-3 mb-8">
+                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-600/20">
+                                <i className="fas fa-award text-white text-lg"></i>
+                            </div>
+                            <div>
+                                <h2 className="text-3xl font-bold dark:text-white">Certificates</h2>
+                                <p className="text-xs text-gray-400 dark:text-slate-500 font-medium uppercase tracking-wider">{content.certificates.length} credentials</p>
+                            </div>
+                        </div>
                         <div className="space-y-3">
-                            {content.certificates.map((cert, i) => (
-                                <div 
-                                    key={i} 
-                                    onClick={() => {
-                                        if (cert.images && cert.images.length > 0) {
-                                            setSelectedCertificate(cert);
-                                        } else if (cert.link) {
-                                            window.open(cert.link, '_blank');
-                                        }
-                                    }}
-                                    className={`bg-white border border-gray-100 p-6 rounded-xl shadow-sm flex items-start gap-4 transition-all hover:shadow-md ${
-                                        (cert.images && cert.images.length > 0) || cert.link ? 'cursor-pointer group' : ''
-                                    }`}
-                                >
-                                    <div className={`w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0 text-blue-600 ${
-                                        (cert.images && cert.images.length > 0) || cert.link ? 'group-hover:bg-blue-600 group-hover:text-white' : ''
-                                    } transition-colors`}>
-                                        <i className={`${cert.icon || 'fas fa-certificate'} text-lg`}></i>
-                                    </div>
-                                    <div className="flex-1">
-                                        <h3 className="font-bold text-gray-900 flex items-center gap-2">
-                                            {cert.name}
-                                            {((cert.images && cert.images.length > 0) || cert.link) && <i className="fas fa-external-link-alt text-xs text-gray-400 group-hover:text-blue-600 transition-colors"></i>}
-                                        </h3>
-                                        <div className="text-sm text-blue-600 mb-2 font-medium">{cert.issuer}</div>
-                                        <p className="text-sm text-gray-500">{cert.description}</p>
-                                    </div>
-                                </div>
-                            ))}
+                            {(() => {
+                                const certGradients = [
+                                    'from-blue-500 to-indigo-500',
+                                    'from-violet-500 to-purple-500',
+                                    'from-cyan-500 to-blue-500',
+                                    'from-emerald-500 to-teal-500',
+                                ];
+                                return content.certificates.map((cert, i) => {
+                                    const grad = certGradients[i % certGradients.length];
+                                    const isClickable = (cert.images && cert.images.length > 0) || cert.link;
+                                    return (
+                                        <div 
+                                            key={i} 
+                                            onClick={() => {
+                                                if (cert.images && cert.images.length > 0) {
+                                                    setSelectedCertificate(cert);
+                                                } else if (cert.link) {
+                                                    window.open(cert.link, '_blank');
+                                                }
+                                            }}
+                                            className={`relative bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 ${
+                                                isClickable ? 'cursor-pointer group' : ''
+                                            }`}
+                                        >
+                                            {/* Gradient left accent bar */}
+                                            <div className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${grad} rounded-l-xl`}></div>
+                                            
+                                            <div className="pl-5 pr-5 py-5 flex items-start gap-4">
+                                                {/* Icon with gradient background */}
+                                                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${grad} flex items-center justify-center shrink-0 shadow-md ${isClickable ? 'group-hover:scale-110 group-hover:shadow-lg' : ''} transition-all`}>
+                                                    <i className={`${cert.icon || 'fas fa-certificate'} text-white text-lg`}></i>
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <h3 className="font-bold text-gray-900 dark:text-white text-sm leading-tight truncate">
+                                                            {cert.name}
+                                                        </h3>
+                                                        {isClickable && (
+                                                            <i className="fas fa-arrow-up-right-from-square text-[10px] text-gray-300 dark:text-slate-600 group-hover:text-blue-500 transition-colors flex-shrink-0"></i>
+                                                        )}
+                                                    </div>
+                                                    <div className="text-xs text-blue-600 dark:text-blue-400 font-semibold mb-1.5 flex items-center gap-1.5">
+                                                        <i className="fas fa-building text-[9px] opacity-60"></i>
+                                                        {cert.issuer}
+                                                    </div>
+                                                    <p className="text-xs text-gray-500 dark:text-slate-500 leading-relaxed line-clamp-2">{cert.description}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                });
+                            })()}
                         </div>
                     </div>
 
                     {/* Hobbies Column */}
                     <div id="hobbies" style={{scrollMarginTop: '25px'}}>
-                        <h2 className="text-3xl font-bold mb-8">Interests & Hobbies</h2>
+                        <div className="flex items-center gap-3 mb-8">
+                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center shadow-lg shadow-rose-500/20">
+                                <i className="fas fa-heart text-white text-lg"></i>
+                            </div>
+                            <div>
+                                <h2 className="text-3xl font-bold dark:text-white">Interests & Hobbies</h2>
+                                <p className="text-xs text-gray-400 dark:text-slate-500 font-medium uppercase tracking-wider">{content.hobbies.length} passions</p>
+                            </div>
+                        </div>
                         <div className="space-y-3">
-                            {content.hobbies.map((hobby, i) => (
-                                <div 
-                                    key={i} 
-                                    onClick={() => (hobby.gallery || hobby.imageFolder || hobby.certificate || hobby.playlists) && setSelectedHobby(hobby)}
-                                    className={`bg-white border border-gray-100 p-6 rounded-xl shadow-sm flex items-start gap-4 transition-all ${
-                                        (hobby.gallery || hobby.imageFolder || hobby.certificate || hobby.playlists) ? 'hover:shadow-md cursor-pointer group' : ''
-                                    }`}
-                                >
-                                    <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                                        <i className={`fas ${hobby.icon} text-lg`}></i>
-                                    </div>
-                                    <div className="flex-1">
-                                        <h3 className="font-bold text-gray-900 flex items-center gap-2">
-                                            {hobby.name}
-                                            {(hobby.gallery || hobby.imageFolder || hobby.certificate || hobby.playlists) && <i className="fas fa-external-link-alt text-xs text-gray-400 group-hover:text-blue-600 transition-colors"></i>}
-                                        </h3>
-                                        <p className="text-sm text-gray-500 mt-2">{hobby.description}</p>
-                                    </div>
-                                </div>
-                            ))}
+                            {(() => {
+                                const hobbyGradients = [
+                                    'from-rose-500 to-pink-500',
+                                    'from-amber-500 to-orange-500',
+                                    'from-teal-500 to-emerald-500',
+                                    'from-fuchsia-500 to-purple-500',
+                                    'from-sky-500 to-blue-500',
+                                ];
+                                return content.hobbies.map((hobby, i) => {
+                                    const grad = hobbyGradients[i % hobbyGradients.length];
+                                    const isClickable = hobby.gallery || hobby.imageFolder || hobby.certificate || hobby.playlists;
+                                    return (
+                                        <div 
+                                            key={i} 
+                                            onClick={() => isClickable && setSelectedHobby(hobby)}
+                                            className={`relative bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 ${
+                                                isClickable ? 'cursor-pointer group' : ''
+                                            }`}
+                                        >
+                                            {/* Gradient left accent bar */}
+                                            <div className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${grad} rounded-l-xl`}></div>
+                                            
+                                            <div className="pl-5 pr-5 py-5 flex items-start gap-4">
+                                                {/* Icon with gradient background */}
+                                                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${grad} flex items-center justify-center shrink-0 shadow-md ${isClickable ? 'group-hover:scale-110 group-hover:shadow-lg' : ''} transition-all`}>
+                                                    <i className={`fas ${hobby.icon} text-white text-lg`}></i>
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <h3 className="font-bold text-gray-900 dark:text-white text-sm leading-tight">
+                                                            {hobby.name}
+                                                        </h3>
+                                                        {isClickable && (
+                                                            <i className="fas fa-arrow-up-right-from-square text-[10px] text-gray-300 dark:text-slate-600 group-hover:text-blue-500 transition-colors flex-shrink-0"></i>
+                                                        )}
+                                                    </div>
+                                                    <p className="text-xs text-gray-500 dark:text-slate-500 leading-relaxed line-clamp-2">{hobby.description}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                });
+                            })()}
                         </div>
                     </div>
                 </div>
             </Section>
 
             {/* Footer / Contact */}
-            <Section id="contact" className="py-24 border-t border-slate-200 text-center">
-                <h2 className="text-4xl font-bold mb-6">Let's work together.</h2>
-                <p className="text-slate-500 mb-10 max-w-xl mx-auto">I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!</p>
+            <Section id="contact" className="py-24 border-t border-slate-200 dark:border-slate-800 text-center">
+                <h2 className="text-4xl font-bold mb-6 dark:text-white">Let's work together.</h2>
+                <p className="text-slate-500 dark:text-slate-400 mb-10 max-w-xl mx-auto">I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!</p>
                 <div className="flex justify-center gap-4 mb-16">
-                    <a href={content.site.socials.linkedin} target="_blank" className="w-12 h-12 rounded-full bg-white shadow-sm border border-gray-100 hover:bg-[#0077b5] hover:text-white flex items-center justify-center text-xl transition-all"><i className="fab fa-linkedin-in"></i></a>
-                    <a href={content.site.socials.github} target="_blank" className="w-12 h-12 rounded-full bg-white shadow-sm border border-gray-100 hover:bg-gray-900 hover:text-white flex items-center justify-center text-xl transition-all"><i className="fab fa-github"></i></a>
-                    <a href={content.site.socials.email} className="w-12 h-12 rounded-full bg-white shadow-sm border border-gray-100 hover:bg-blue-600 hover:text-white flex items-center justify-center text-xl transition-all"><i className="fas fa-envelope"></i></a>
+                    <a href={content.site.socials.linkedin} target="_blank" className="w-12 h-12 rounded-full bg-white dark:bg-slate-900 shadow-sm border border-gray-100 dark:border-slate-800 hover:bg-[#0077b5] hover:text-white hover:border-transparent flex items-center justify-center text-xl transition-all text-slate-600 dark:text-slate-400"><i className="fab fa-linkedin-in"></i></a>
+                    <a href={content.site.socials.github} target="_blank" className="w-12 h-12 rounded-full bg-white dark:bg-slate-900 shadow-sm border border-gray-100 dark:border-slate-800 hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-gray-900 hover:border-transparent flex items-center justify-center text-xl transition-all text-slate-600 dark:text-slate-400"><i className="fab fa-github"></i></a>
+                    <a href={content.site.socials.email} className="w-12 h-12 rounded-full bg-white dark:bg-slate-900 shadow-sm border border-gray-100 dark:border-slate-800 hover:bg-blue-600 hover:text-white hover:border-transparent flex items-center justify-center text-xl transition-all text-slate-600 dark:text-slate-400"><i className="fas fa-envelope"></i></a>
                 </div>
-                <p className="text-sm text-gray-400">&copy; {new Date().getFullYear()} {content.site.title}. All rights reserved.</p>
+                <p className="text-sm text-gray-400 dark:text-slate-600">&copy; {new Date().getFullYear()} {content.site.title}. All rights reserved.</p>
             </Section>
         </div>
     );
