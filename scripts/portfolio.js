@@ -19,18 +19,122 @@ window.portfolioData = {
     },
     "hero": {
         "headline": "Machine Learning Engineer at HP.",
-        "subheadline": "Transforming data into insights. I specialize in building impactful ML solutions, from anomaly detection to web content extraction.",
+        "subheadline": "Architecting intelligent systems. I specialize in building scalable AI platforms, agentic workflows, and domain-specific LLM pipelines for complex engineering challenges.",
         "ctas": [
             { "label": "View Projects", "action": "work", "primary": true },
             { "label": "Resume", "action": "resume", "primary": false, "href": "data/pdf/Saisandeep Chenna.pdf" }
         ],
         "metrics": [
-            { "label": "Months Experience", "value": "6+" },
+            { "label": "Months Experience", "value": (() => {
+                const start = new Date(2025, 2, 1); // March 2025
+                const now = new Date();
+                const months = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
+                return `${Math.max(1, months)}+`;
+            })() },
             { "label": "Projects Delivered", "value": "3" },
-            { "label": "GPA (CMI)", "value": "9.18" }
+            { "label": "GPA (CMI)", "value": "9.22" }
         ]
     },
     "projects": [
+        {
+            "id": "proj_graphrag",
+            "title": "GraphRAG Planning Platform",
+            "role": "Machine Learning Engineer",
+            "company": "HP",
+            "year": "2025",
+            "type": "AI Platform Development",
+            "summary": "A retrieval-augmented planning system that turns natural-language feature requests into grounded, file-level implementation plans for large codebases.",
+            "tags": ["GraphRAG", "Knowledge Graphs", "FastAPI", "Neo4j", "Qdrant", "VS Code"],
+            "gradient": "from-purple-600 to-fuchsia-600",
+            "links": { },
+            "sections": {
+                "overview": "An AI-assisted planning platform designed for complex software maintenance in a large codebase. Given a natural-language request and a target scope, it returns a prioritized set of files and optional implementation guidance.",
+                "problem": "In large enterprise codebases, discovering the right files and sequencing changes is hard. Traditional search often produces low recall or low precision, leading to incomplete context and wasted time.",
+                "solution": "Built a staged orchestration flow combining semantic retrieval, keyword retrieval, graph-based structural context, neural reranking, and staged LLM reasoning into a single pipeline.",
+                "methodology": [
+                    { "title": "Retrieval", "description": "Implemented a hybrid pipeline blending semantic and lexical search signals, fused using reciprocal rank fusion." },
+                    { "title": "Reranking", "description": "Applied neural reranking plus graph-neighbor expansion for dependency-aware coverage." },
+                    { "title": "Execution", "description": "Created durable queue mode with worker-based execution and restart resilience." }
+                ],
+                "features": [
+                    "Scope-aware hybrid retrieval",
+                    "Neural reranking with graph-neighbor expansion",
+                    "Streaming progress model for interactive editor UX",
+                    "Durable queue mode with worker execution"
+                ],
+                "results": [
+                    { "label": "Candidate Reduction", "value": "~80%" },
+                    { "label": "Pipeline", "value": "Deterministic" },
+                    { "label": "Execution Mode", "value": "Durable" }
+                ]
+            }
+        },
+        {
+            "id": "proj_slm",
+            "title": "Domain-Specific SLM Training Pipeline",
+            "role": "Machine Learning Engineer",
+            "company": "HP",
+            "year": "2025",
+            "type": "AI / MLOps",
+            "summary": "Built an end-to-end data and alignment pipeline to specialize a compact LLM for technical firmware assistance.",
+            "tags": ["LLM", "Fine-Tuning", "SFT", "DPO", "Python", "Transformers"],
+            "gradient": "from-blue-500 to-indigo-600",
+            "links": { },
+            "sections": {
+                "overview": "This project is an end-to-end specialization pipeline for a compact language model focused on embedded firmware engineering documentation. The system turns heterogeneous technical sources into structured training corpora.",
+                "problem": "General-purpose small language models are efficient but often underperform on specialized engineering domains. Training needed to run efficiently on finite GPU resources while preserving long-context signal.",
+                "solution": "Developed a staged ML pipeline with clear handoffs: Data ingestion, Corpus refinement, Supervision dataset preparation, Model adaptation (CPT, SFT, DPO), Continuous behavior checks, and Export.",
+                "methodology": [
+                    { "title": "Data Processing", "description": "Built dataset preparation scripts mapping multi-stage QA sources into SFT, DPO, and ranked formats." },
+                    { "title": "Model Adaptation", "description": "Implemented continual pre-training, supervised fine-tuning with assistant-token masking, and direct preference optimization." },
+                    { "title": "Evaluation", "description": "Implemented callback-based qualitative evaluation to compare baseline and training checkpoints." }
+                ],
+                "features": [
+                    "End-to-end training lifecycle from raw docs to deployable models",
+                    "Long-context domain adaptation",
+                    "Response-targeted supervision via assistant-masking",
+                    "Periodic automated model-vs-baseline comparison"
+                ],
+                "results": [
+                    { "label": "Corpus Refinement", "value": "100% Success" },
+                    { "label": "Records Improved", "value": "74.5%" },
+                    { "label": "Throughput", "value": "5.5 rec/s" }
+                ]
+            }
+        },
+        {
+            "id": "proj_agentmesh",
+            "title": "AgentMesh: Agentic Workflow Orchestrator",
+            "role": "Machine Learning Engineer",
+            "company": "HP",
+            "year": "2026",
+            "type": "Platform Development",
+            "summary": "A graph-native platform for composing, executing, and observing AI-enabled workflows with real-time control loops.",
+            "tags": ["React Flow", "Fastify", "Python", "Redis", "PostgreSQL", "TypeScript"],
+            "gradient": "from-emerald-500 to-teal-600",
+            "links": { },
+            "sections": {
+                "overview": "AgentMesh is a full-stack workflow orchestration system for building agentic pipelines as directed graphs instead of hardcoded scripts. It combines a visual canvas, an API control plane, and a Python execution engine.",
+                "problem": "Teams often hit a scaling wall with AI workflows: execution semantics are unclear, operational visibility is weak, and reuse is expensive.",
+                "solution": "Developed a graph-native runtime model. Workflows are validated before execution, tracked in durable run tables, and streamed to the frontend in real time.",
+                "methodology": [
+                    { "title": "Architecture", "description": "TypeScript services handle routing, persistence, and node-definition metadata, while Python handles runtime execution and graph semantics." },
+                    { "title": "Execution", "description": "Implemented dependency tracking with ready-node scheduling and input-signature caching to avoid unnecessary recomputation." },
+                    { "title": "Observability", "description": "Built real-time execution signaling from worker to frontend via Redis pub/sub and WebSocket relay." }
+                ],
+                "features": [
+                    "Visual DAG authoring with rich node metadata",
+                    "Pre-execution graph validation with cycle detection",
+                    "Dependency-aware execution",
+                    "Real-time execution telemetry"
+                ],
+                "results": [
+                    { "label": "Graph Safety", "value": "Deterministic" },
+                    { "label": "Redundancy", "value": "Reduced" },
+                    { "label": "Observability", "value": "Real-time" }
+                ]
+            }
+        },
         {
             "id": "proj_solar",
             "title": "Solar Power Anomaly Detection",
@@ -67,36 +171,6 @@ window.portfolioData = {
             }
         },
         {
-            "id": "proj_covid",
-            "title": "Covid-19 Effect on Air Quality",
-            "role": "Researcher",
-            "company": "Academic Research",
-            "location": "Remote",
-            "year": "2020",
-            "type": "Statistical Analysis",
-            "summary": "Investigated the impact of the COVID-19 lockdown on air quality in the Eastern Province of Saudi Arabia using multi-station sensor data.",
-            "tags": ["R", "Python", "Hypothesis Testing", "Air Quality", "Statistics", "Data Visualization"],
-            "gradient": "from-emerald-500 to-teal-600",
-            "links": { "paper": "https://www.isibang.ac.in/~rsen/Stat1old/3.pdf" },
-            "sections": {
-                "overview": "This study investigated the environmental impact of the nationwide lockdown imposed between March and June 2020 in Saudi Arabia. Using data from four monitoring stations, we analyzed the concentrations of major pollutants including CO, SO2, NO2, O3, and PM10.",
-                "problem": "The COVID-19 pandemic forced a global shutdown. While economically devastating, it offered a unique 'natural experiment' to understand how anthropogenic activities influence air quality in arid regions.",
-                "solution": "We performed a rigorous statistical analysis (Hypothesis Testing) comparing air quality data across three distinct phases: Pre-lockdown, During-lockdown, and Post-lockdown.",
-                "methodology": "The study utilized meteorological and air quality datasets from the Eastern Province. We applied descriptive statistics and outlier analysis. Hypothesis tests were conducted for the mean of each individual pollutant station-wise.",
-                "results": [
-                    { "label": "NO2 Reduction", "value": "Significant" },
-                    { "label": "Ozone (O3)", "value": "Increased" },
-                    { "label": "Stations Analyzed", "value": "4" }
-                ],
-                "features": [
-                    "NO2 identified as best marker for lockdown impact",
-                    "Found inverse relationship between NOx and Ozone",
-                    "Analysis of Pre, During, and Post lockdown phases",
-                    "Comparison with global urban data"
-                ]
-            }
-        },
-         {
             "id": "proj_gan",
             "title": "Synthetic Data Evaluation Framework",
             "role": "Data Scientist Intern",
@@ -129,34 +203,6 @@ window.portfolioData = {
                     { "label": "Evaluation Metric", "value": "TabSynDex" },
                     { "label": "Models Ranked", "value": "3+" },
                     { "label": "Outcome", "value": "Validated" }
-                ]
-            }
-        },
-        {
-            "id": "proj_mlp",
-            "title": "MLP Classifier from Scratch",
-            "role": "Individual Contributor",
-            "company": "Personal Project",
-            "year": "2023",
-            "type": "Deep Learning Implementation",
-            "summary": "A deep dive into the mathematics of Neural Networks by building a Multilayer Perceptron completely from scratch using only NumPy.",
-            "tags": ["Python", "NumPy", "Calculus", "Deep Learning", "Algorithms"],
-            "gradient": "from-blue-500 to-indigo-600",
-            "links": { "github": "https://github.com/chennasaisandeep" },
-            "sections": {
-                "overview": "Modern frameworks like PyTorch and TensorFlow abstract away the complexity of backpropagation. To truly understand the mechanics of learning, I built a neural network using only matrix multiplication libraries.",
-                "problem": "Understanding the 'Black Box' nature of neural networks and the calculus behind gradient descent optimization.",
-                "solution": "Implemented a configurable MLP class in Python that handles forward propagation, loss calculation, backpropagation, and weight updates manually.",
-                "methodology": [
-                    { "title": "Architecture", "description": "Designed a flexible architecture allowing variable hidden layers and neurons." },
-                    { "title": "Math", "description": "Implemented derivation of activation functions (Sigmoid/ReLU) and Chain Rule for backpropagation." },
-                    { "title": "Optimization", "description": "Coded Stochastic Gradient Descent (SGD) from scratch." },
-                    { "title": "Testing", "description": "Benchmarked on the Raisin dataset to classify between Besni and Kecimen varieties." }
-                ],
-                "results": [
-                    { "label": "Precision", "value": "90%" },
-                    { "label": "Dependencies", "value": "NumPy Only" },
-                    { "label": "Understanding", "value": "100%" }
                 ]
             }
         }
@@ -216,36 +262,36 @@ window.portfolioData = {
     ],
     "skills": {
         "Generative AI & Agents": [
-            "LangGraph",
-            "LangChain",
+            "LangGraph & LangChain",
             "Multi-Agent Systems",
-            "Agentic Graph RAG",
-            "Vector DBs (Qdrant)",
-            "LLM Finetuning"
-        ],
-        "Deep Learning & Vision": [
-            "PyTorch",
-            "TensorFlow",
-            "Transformers",
-            "OpenCV",
+            "GraphRAG",
+            "LLM Fine-Tuning (SFT/DPO)",
             "Hugging Face",
-            "Neural Networks"
+            "Vector DBs"
         ],
-        "Data & MLOps": [
-            "Pandas",
-            "NumPy",
-            "SQL",
+        "Backend & Architecture": [
+            "Python & TypeScript",
+            "FastAPI & Fastify",
+            "Redis & Message Queues",
+            "PostgreSQL & Neo4j",
             "Docker",
-            "Git",
-            "Power BI"
+            "Git"
+        ],
+        "Data Science & ML": [
+            "PyTorch & TensorFlow",
+            "Transformers",
+            "Pandas & NumPy",
+            "SQL",
+            "Machine Learning",
+            "Computer Vision"
         ],
         "Math & Foundations": [
-            "Python",
             "Probability & Statistics",
             "Calculus",
             "Linear Algebra",
             "Algorithms",
-            "Data Structures"
+            "Data Structures",
+            "System Design"
         ]
     },
     "education": [
@@ -253,7 +299,7 @@ window.portfolioData = {
             "school": "Chennai Mathematical Institute",
             "degree": "M.Sc. Data Science",
             "year": "Aug 2023 - Apr 2025",
-            "grade": "GPA: 9.18",
+            "grade": "GPA: 9.22",
             "icon": "fa-graduation-cap"
         },
         {
@@ -308,28 +354,22 @@ window.portfolioData = {
             "name": "Photography & Editing",
             "description": "I love capturing moments and bringing them to life through creative editing.",
             "icon": "fa-camera",
-            "gallery": [
-                "images/photography/1.jpg", "images/photography/2.jpg", "images/photography/3.jpg",
-                "images/photography/4.jpg", "images/photography/5.jpg", "images/photography/6.jpg"
-            ]
+            "imageFolder": "images/photography",
+            "maxImages": 30
         },
         {
             "name": "CGI & VFX",
             "description": "Creating 3D graphics and visual effects using Blender 3D and After Effects.",
             "icon": "fa-cube",
-            "gallery": [
-                "images/renders/7.jpg", "images/renders/8.jpg", "images/renders/9.jpg",
-                "images/renders/10.jpg", "images/renders/11.jpg"
-            ]
+            "imageFolder": "images/renders",
+            "maxImages": 30
         },
         {
             "name": "Drawing",
             "description": "Passionate about anamorphic art and perspective manipulation.",
             "icon": "fa-paint-brush",
-            "gallery": [
-                "images/drawings/12.jpg", "images/drawings/13.jpg", "images/drawings/14.jpg",
-                "images/drawings/15.jpg", "images/drawings/16.jpg"
-            ]
+            "imageFolder": "images/drawings",
+            "maxImages": 30
         },
         {
             "name": "Music",
@@ -367,7 +407,7 @@ window.portfolioData = {
         },
         {
             "name": "Fast Typing",
-            "description": "Achieved typing speed of 67 WPM to boost coding productivity.",
+            "description": "Achieved typing speed of 71 WPM to boost coding productivity.",
             "icon": "fa-keyboard"
         }
     ]

@@ -31,13 +31,57 @@ const Section = ({ id, className = "", children }) => (
 const HobbyModal = ({ hobby, onClose }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [selectedPlaylist, setSelectedPlaylist] = useState(null);
+    const [validGallery, setValidGallery] = useState([]);
+    const [loadingGallery, setLoadingGallery] = useState(true);
 
     if (!hobby) return null;
 
-    const hasGallery = hobby.gallery && hobby.gallery.length > 0;
+    useEffect(() => {
+        let mounted = true;
+        let candidates = [];
+        if (hobby.gallery) {
+            candidates = hobby.gallery;
+        } else if (hobby.imageFolder) {
+            const format = hobby.imageFormat || 'jpg';
+            const max = hobby.maxImages || 30;
+            for(let i=1; i<=max; i++) {
+                candidates.push(`${hobby.imageFolder}/${i}.${format}`);
+            }
+        }
+
+        if (candidates.length > 0) {
+            setLoadingGallery(true);
+            const valid = [];
+            let checked = 0;
+            
+            candidates.forEach((src, idx) => {
+                const img = new Image();
+                const checkDone = () => {
+                    checked++;
+                    if (checked === candidates.length && mounted) {
+                        setValidGallery(valid.sort((a,b) => a.idx - b.idx).map(v => v.src));
+                        setLoadingGallery(false);
+                    }
+                };
+                img.onload = () => {
+                    if (mounted) valid.push({ idx, src });
+                    checkDone();
+                };
+                img.onerror = () => {
+                    checkDone();
+                };
+                img.src = src;
+            });
+        } else {
+            setLoadingGallery(false);
+        }
+        return () => { mounted = false; };
+    }, [hobby]);
+
+    const hasGallery = validGallery.length > 0;
     const hasCert = !!hobby.certificate;
     const hasPlaylists = hobby.playlists && Object.keys(hobby.playlists).length > 0;
-    const isMedia = hasGallery || hasCert;
+    const isMedia = hasGallery || hasCert || (loadingGallery && (hobby.gallery || hobby.imageFolder));
 
     // Set first playlist as default
     React.useEffect(() => {
@@ -56,12 +100,12 @@ const HobbyModal = ({ hobby, onClose }) => {
 
     const nextImage = (e) => {
         e?.stopPropagation();
-        if (hasGallery) setCurrentIndex((prev) => (prev + 1) % hobby.gallery.length);
+        if (hasGallery) setCurrentIndex((prev) => (prev + 1) % validGallery.length);
     };
 
     const prevImage = (e) => {
         e?.stopPropagation();
-        if (hasGallery) setCurrentIndex((prev) => (prev - 1 + hobby.gallery.length) % hobby.gallery.length);
+        if (hasGallery) setCurrentIndex((prev) => (prev - 1 + validGallery.length) % validGallery.length);
     };
 
     return (
@@ -70,24 +114,27 @@ const HobbyModal = ({ hobby, onClose }) => {
             {/* Modal Container */}
             <div 
                 className={`
-                    bg-white rounded-2xl shadow-2xl relative flex flex-col overflow-hidden transition-all
+                    rounded-2xl shadow-2xl relative flex flex-col overflow-hidden transition-all
                     ${hasPlaylists 
-                        ? 'w-full max-w-5xl h-[85vh] md:h-[90vh]' 
-                        : 'w-auto h-auto max-w-[95vw] max-h-[95vh] min-w-[320px] md:min-w-[500px]'
+                        ? 'w-full max-w-2xl h-[80vh] md:h-[85vh] bg-[#0a0a0f] border border-white/[0.06]' 
+                        : 'bg-white w-auto h-auto max-w-[95vw] max-h-[95vh] min-w-[320px] md:min-w-[500px]'
                     }
                 `}
                 onClick={(e) => e.stopPropagation()}
             >
                 
                 {/* Header */}
-                {/* UPDATED: Added 'w-0 min-w-full' when isMedia is true to prevent text from expanding width */}
-                <div className={`p-4 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-blue-600 to-blue-700 flex-shrink-0 z-20 ${isMedia ? 'w-0 min-w-full' : 'w-full'}`}>
-                    <h3 className="text-lg md:text-xl font-bold flex items-center gap-2 text-white truncate pr-4">
-                        <i className={`fas ${hobby.icon}`}></i> <span className="truncate">{hobby.name}</span>
+                <div className={`p-4 flex justify-between items-center flex-shrink-0 z-20 ${
+                    hasPlaylists 
+                        ? 'bg-white/[0.03] border-b border-white/[0.06] w-full' 
+                        : `border-b border-gray-100 bg-gradient-to-r from-blue-600 to-blue-700 ${isMedia ? 'w-0 min-w-full' : 'w-full'}`
+                }`}>
+                    <h3 className={`text-lg md:text-xl font-bold flex items-center gap-2 truncate pr-4 ${hasPlaylists ? 'text-white/80' : 'text-white'}`}>
+                        <i className={`fas ${hobby.icon} ${hasPlaylists ? 'text-white/40' : ''}`}></i> <span className="truncate">{hobby.name}</span>
                     </h3>
                     
-                    <button onClick={onClose} className="text-white/80 hover:text-white transition-colors p-1 flex-shrink-0">
-                        <i className="fas fa-times text-2xl"></i>
+                    <button onClick={onClose} className={`${hasPlaylists ? 'text-white/30 hover:text-white/70' : 'text-white/80 hover:text-white'} transition-colors p-1 flex-shrink-0`}>
+                        <i className="fas fa-times text-xl"></i>
                     </button>
                 </div>
 
@@ -95,71 +142,176 @@ const HobbyModal = ({ hobby, onClose }) => {
                 <div className={`flex-1 min-h-0 flex flex-col relative ${isMedia ? 'bg-black' : 'bg-[#0F172A]'}`}>
                     
                     {isMedia ? (
-                        <div className="relative flex items-center justify-center group bg-neutral-900 overflow-hidden flex-1">
-                            <img 
-                                src={hasGallery ? hobby.gallery[currentIndex] : hobby.certificate} 
-                                alt={hobby.name} 
-                                className="max-h-[60vh] md:max-h-[calc(85vh-12rem)] w-auto object-contain block mx-auto"
-                                onError={(e) => {console.error('Image failed to load:', e.target.src); e.target.src='https://via.placeholder.com/800x600?text=Image+Not+Found'}}
-                            />
-                            
-                            {/* Navigation Arrows */}
-                            {hasGallery && hobby.gallery.length > 1 && (
+                        <div className="relative flex items-center justify-center group bg-black overflow-hidden flex-1">
+                            {loadingGallery ? (
+                                <div className="text-white flex flex-col items-center justify-center h-full">
+                                    <i className="fas fa-circle-notch fa-spin text-4xl mb-4 text-blue-500"></i>
+                                    <p className="text-sm text-gray-400">Loading Images...</p>
+                                </div>
+                            ) : (
                                 <>
-                                    <button onClick={prevImage} className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm transition-all border border-white/10 opacity-0 group-hover:opacity-100">
-                                        <i className="fas fa-chevron-left"></i>
-                                    </button>
-                                    <button onClick={nextImage} className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm transition-all border border-white/10 opacity-0 group-hover:opacity-100">
-                                        <i className="fas fa-chevron-right"></i>
-                                    </button>
-                                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 bg-black/60 text-white text-xs rounded-full backdrop-blur-md border border-white/10 pointer-events-none">
-                                        {currentIndex + 1} / {hobby.gallery.length}
-                                    </div>
+                                    {/* Blurred Background Projection */}
+                                    <div 
+                                        className="absolute inset-0 bg-cover bg-center blur-2xl opacity-60 scale-110 pointer-events-none"
+                                        style={{ backgroundImage: `url('${hasGallery ? validGallery[currentIndex] : hobby.certificate}')` }}
+                                    ></div>
+
+                                    {/* Main Image */}
+                                    <img 
+                                        src={hasGallery ? validGallery[currentIndex] : hobby.certificate} 
+                                        alt={hobby.name} 
+                                        className="relative z-10 max-h-[60vh] md:max-h-[calc(85vh-12rem)] w-auto object-contain block mx-auto shadow-2xl"
+                                        onError={(e) => {console.error('Image failed to load:', e.target.src); e.target.src='https://via.placeholder.com/800x600?text=Image+Not+Found'}}
+                                    />
+                                    
+                                    {/* Navigation Arrows */}
+                                    {hasGallery && validGallery.length > 1 && (
+                                        <>
+                                            <button onClick={prevImage} className="absolute z-20 left-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm transition-all border border-white/10 opacity-0 group-hover:opacity-100">
+                                                <i className="fas fa-chevron-left"></i>
+                                            </button>
+                                            <button onClick={nextImage} className="absolute z-20 right-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm transition-all border border-white/10 opacity-0 group-hover:opacity-100">
+                                                <i className="fas fa-chevron-right"></i>
+                                            </button>
+                                            <div className="absolute z-20 bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 bg-black/60 text-white text-xs rounded-full backdrop-blur-md border border-white/10 pointer-events-none">
+                                                {currentIndex + 1} / {validGallery.length}
+                                            </div>
+                                        </>
+                                    )}
                                 </>
                             )}
                         </div>
 
                     ) : hasPlaylists ? (
-                        <div className="flex-1 overflow-y-auto flex flex-col min-h-0 scrollbar-hide relative">
-                            <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-blue-900/20 to-transparent pointer-events-none"></div>
-                            <div className="relative z-10 px-6 pt-6 pb-2">
-                                <h4 className="text-blue-200/60 text-xs font-bold uppercase tracking-widest mb-4 pl-1">Collection</h4>
-                                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 mask-linear">
-                                    {Object.keys(hobby.playlists).map((playlistName) => (
-                                        <button
-                                            key={playlistName}
-                                            onClick={() => setSelectedPlaylist(playlistName)}
-                                            className={`
-                                                px-5 py-2.5 rounded-full text-sm font-semibold transition-all whitespace-nowrap border
-                                                ${selectedPlaylist === playlistName 
-                                                    ? 'bg-white text-slate-900 border-white shadow-lg shadow-white/10' 
-                                                    : 'bg-white/5 text-slate-400 border-white/5 hover:bg-white/10 hover:text-white hover:border-white/20'
-                                                }
-                                            `}
-                                        >
-                                            {playlistName}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                            <div className="flex-1 overflow-y-auto px-4 pb-4 scrollbar-hide relative z-10">
-                                <div className="grid gap-2 mt-2">
-                                    {selectedPlaylist && hobby.playlists[selectedPlaylist].map((song, idx) => (
-                                        <a key={idx} href={song.link || '#'} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-all border border-transparent hover:border-white/5">
-                                            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shrink-0 shadow-lg group-hover:scale-105 transition-transform relative overflow-hidden">
-                                                <i className="fas fa-music text-white/50 text-lg group-hover:opacity-0 transition-opacity"></i>
-                                                <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity"><i className="fas fa-play text-white text-sm ml-1"></i></div>
+                        (() => {
+                            // Genre-specific color palettes for a professional look
+                            const genreColors = {
+                                'English': { from: '#6366f1', to: '#8b5cf6', accent: 'rgb(139,92,246)', bg: 'rgba(99,102,241,0.15)', text: '#a5b4fc', pill: 'bg-indigo-500/20 text-indigo-300 border-indigo-400/30' },
+                                'Telugu': { from: '#f59e0b', to: '#ef4444', accent: 'rgb(245,158,11)', bg: 'rgba(245,158,11,0.15)', text: '#fcd34d', pill: 'bg-amber-500/20 text-amber-300 border-amber-400/30' },
+                                'Hindi': { from: '#ec4899', to: '#f43f5e', accent: 'rgb(236,72,153)', bg: 'rgba(236,72,153,0.15)', text: '#f9a8d4', pill: 'bg-pink-500/20 text-pink-300 border-pink-400/30' },
+                                'Others': { from: '#06b6d4', to: '#3b82f6', accent: 'rgb(6,182,212)', bg: 'rgba(6,182,212,0.15)', text: '#67e8f9', pill: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/30' },
+                            };
+                            const currentColors = genreColors[selectedPlaylist] || genreColors['English'];
+                            const songs = selectedPlaylist ? hobby.playlists[selectedPlaylist] : [];
+                            const totalSongs = songs.length;
+
+                            return (
+                                <div className="flex-1 overflow-hidden flex flex-col min-h-0 bg-[#0a0a0f]">
+                                    
+                                    {/* === HERO HEADER with gradient and equalizer === */}
+                                    <div 
+                                        className="relative px-6 pt-8 pb-6 flex-shrink-0 overflow-hidden"
+                                        style={{ background: `linear-gradient(135deg, ${currentColors.from}22 0%, ${currentColors.to}15 50%, transparent 100%)` }}
+                                    >
+                                        {/* Decorative blur orbs */}
+                                        <div className="absolute -top-12 -right-12 w-40 h-40 rounded-full opacity-20 blur-3xl" style={{ background: currentColors.from }}></div>
+                                        <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full opacity-10 blur-2xl" style={{ background: currentColors.to }}></div>
+                                        
+                                        <div className="relative z-10 flex items-end gap-5">
+                                            {/* Vinyl / Album Art Block */}
+                                            <div className="hidden md:flex w-24 h-24 rounded-2xl items-center justify-center flex-shrink-0 relative overflow-hidden shadow-2xl" style={{ background: `linear-gradient(135deg, ${currentColors.from}, ${currentColors.to})` }}>
+                                                {/* Subtle corner shine */}
+                                                <div className="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-white/10 blur-md"></div>
+                                                <div className="absolute -bottom-4 -left-4 w-12 h-12 rounded-full bg-black/15 blur-sm"></div>
+                                                <i className="fas fa-music text-white text-3xl relative z-10 drop-shadow-lg"></i>
                                             </div>
-                                            <div className="flex-1 min-w-0 flex flex-col justify-center">
-                                                <div className="text-slate-200 font-medium truncate pr-2 group-hover:text-blue-300 transition-colors">{song.title}</div>
-                                                <div className="text-slate-500 text-xs truncate">{song.artist}</div>
+                                            
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Collection</span>
+                                                    <span className="w-1.5 h-1.5 rounded-full pulse-dot" style={{ background: currentColors.accent }}></span>
+                                                </div>
+                                                <h3 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight shimmer-text" style={{ backgroundImage: `linear-gradient(90deg, ${currentColors.from}, ${currentColors.to}, ${currentColors.from})` }}>
+                                                    {selectedPlaylist || 'My Music'}
+                                                </h3>
+                                                <p className="text-white/30 text-xs mt-1.5 font-medium">{totalSongs} tracks • Curated Favorites</p>
                                             </div>
-                                            <div className="w-8 h-8 rounded-full flex items-center justify-center text-slate-600 group-hover:text-white group-hover:bg-white/10 transition-all opacity-0 group-hover:opacity-100"><i className="fas fa-external-link-alt text-xs"></i></div>
-                                        </a>
-                                    ))}
+                                            
+                                            {/* Animated Equalizer */}
+                                            <div className="hidden sm:flex items-end gap-[3px] h-6 pr-1 flex-shrink-0">
+                                                <span className="eq-bar eq-bar-1" style={{ background: currentColors.accent }}></span>
+                                                <span className="eq-bar eq-bar-2" style={{ background: currentColors.accent }}></span>
+                                                <span className="eq-bar eq-bar-3" style={{ background: currentColors.accent }}></span>
+                                                <span className="eq-bar eq-bar-4" style={{ background: currentColors.accent }}></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* === GENRE TABS === */}
+                                    <div className="px-6 py-3 flex gap-2 overflow-x-auto scrollbar-hide flex-shrink-0 border-b border-white/[0.04]">
+                                        {Object.keys(hobby.playlists).map((playlistName) => {
+                                            const isActive = selectedPlaylist === playlistName;
+                                            const pillColors = genreColors[playlistName] || genreColors['English'];
+                                            return (
+                                                <button
+                                                    key={playlistName}
+                                                    onClick={() => setSelectedPlaylist(playlistName)}
+                                                    className={`
+                                                        px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap border
+                                                        ${isActive 
+                                                            ? pillColors.pill + ' shadow-lg' 
+                                                            : 'bg-transparent text-white/25 border-white/[0.06] hover:text-white/50 hover:border-white/10'
+                                                        }
+                                                    `}
+                                                    style={isActive ? { boxShadow: `0 0 20px ${pillColors.from}15` } : {}}
+                                                >
+                                                    {playlistName}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                    
+                                    {/* === TRACK LIST HEADER === */}
+                                    <div className="px-6 pt-3 pb-1 flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.15em] text-white/20 flex-shrink-0">
+                                        <span className="w-8 text-center">#</span>
+                                        <span className="flex-1">Title</span>
+                                        <span className="w-16 text-right hidden sm:block"><i className="fas fa-external-link-alt text-[8px]"></i></span>
+                                    </div>
+                                    
+                                    {/* === TRACK ROWS === */}
+                                    <div className="flex-1 overflow-y-auto px-3 pb-4 scrollbar-hide">
+                                        <div className="space-y-0.5">
+                                            {songs.map((song, idx) => (
+                                                <a 
+                                                    key={idx} 
+                                                    href={song.link || '#'} 
+                                                    target="_blank" 
+                                                    rel="noopener noreferrer" 
+                                                    className="song-row group flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-white/[0.04] transition-all duration-200 relative"
+                                                >
+                                                    {/* Track Number / Play icon */}
+                                                    <div className="w-8 flex items-center justify-center relative flex-shrink-0">
+                                                        <span className="song-index text-sm font-medium text-white/20 tabular-nums">{idx + 1}</span>
+                                                        <i className="song-play-icon fas fa-play text-white text-[10px] absolute"></i>
+                                                    </div>
+                                                    
+                                                    {/* Mini album art square */}
+                                                    <div 
+                                                        className="w-10 h-10 rounded-md flex items-center justify-center flex-shrink-0 shadow-md group-hover:shadow-lg transition-shadow relative overflow-hidden"
+                                                        style={{ background: `linear-gradient(135deg, ${currentColors.from}90, ${currentColors.to}90)` }}
+                                                    >
+                                                        <i className="fas fa-music text-white/60 text-xs"></i>
+                                                        {/* Subtle inner ring */}
+                                                        <div className="absolute inset-[3px] rounded border border-white/10"></div>
+                                                    </div>
+                                                    
+                                                    {/* Song info */}
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="text-sm font-semibold text-white/90 truncate group-hover:text-white transition-colors leading-tight">{song.title}</div>
+                                                        <div className="text-[11px] text-white/30 truncate mt-0.5 group-hover:text-white/40 transition-colors">{song.artist}</div>
+                                                    </div>
+                                                    
+                                                    {/* Link indicator */}
+                                                    <div className="w-16 flex items-center justify-end flex-shrink-0 gap-3">
+                                                        <i className="fab fa-youtube text-white/10 text-sm group-hover:text-red-400/60 transition-colors hidden sm:block"></i>
+                                                    </div>
+                                                </a>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            );
+                        })()
                     ) : (
                         <div className="flex-1 flex items-center justify-center text-slate-400 bg-slate-50">
                             <p>No preview available</p>
@@ -168,9 +320,12 @@ const HobbyModal = ({ hobby, onClose }) => {
                 </div>
                 
                 {/* Footer Description */}
-                {/* UPDATED: Added 'w-0 min-w-full' to allow text to wrap based on Image Width */}
-                <div className={`p-4 bg-white border-t border-gray-100 flex-shrink-0 z-20 ${isMedia ? 'w-0 min-w-full' : 'w-full'}`}>
-                    <p className="text-slate-600 text-sm leading-relaxed break-words">{hobby.description}</p>
+                <div className={`p-4 flex-shrink-0 z-20 ${
+                    hasPlaylists 
+                        ? 'bg-[#0a0a0f] border-t border-white/[0.04] w-full' 
+                        : `bg-white border-t border-gray-100 ${isMedia ? 'w-0 min-w-full' : 'w-full'}`
+                }`}>
+                    <p className={`text-sm leading-relaxed break-words ${hasPlaylists ? 'text-white/30' : 'text-slate-600'}`}>{hobby.description}</p>
                     {hobby.link && (
                          <a href={hobby.link} target="_blank" className="mt-2 inline-flex items-center text-blue-600 font-bold hover:text-blue-700 text-sm hover:underline">
                             View External Credential <i className="fas fa-arrow-right ml-2 text-xs"></i>
@@ -682,9 +837,9 @@ const App = () => {
                             {content.hobbies.map((hobby, i) => (
                                 <div 
                                     key={i} 
-                                    onClick={() => (hobby.gallery || hobby.certificate || hobby.playlists) && setSelectedHobby(hobby)}
+                                    onClick={() => (hobby.gallery || hobby.imageFolder || hobby.certificate || hobby.playlists) && setSelectedHobby(hobby)}
                                     className={`bg-white border border-gray-100 p-6 rounded-xl shadow-sm flex items-start gap-4 transition-all ${
-                                        (hobby.gallery || hobby.certificate || hobby.playlists) ? 'hover:shadow-md cursor-pointer group' : ''
+                                        (hobby.gallery || hobby.imageFolder || hobby.certificate || hobby.playlists) ? 'hover:shadow-md cursor-pointer group' : ''
                                     }`}
                                 >
                                     <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
@@ -693,7 +848,7 @@ const App = () => {
                                     <div className="flex-1">
                                         <h3 className="font-bold text-gray-900 flex items-center gap-2">
                                             {hobby.name}
-                                            {(hobby.gallery || hobby.certificate || hobby.playlists) && <i className="fas fa-external-link-alt text-xs text-gray-400 group-hover:text-blue-600 transition-colors"></i>}
+                                            {(hobby.gallery || hobby.imageFolder || hobby.certificate || hobby.playlists) && <i className="fas fa-external-link-alt text-xs text-gray-400 group-hover:text-blue-600 transition-colors"></i>}
                                         </h3>
                                         <p className="text-sm text-gray-500 mt-2">{hobby.description}</p>
                                     </div>
