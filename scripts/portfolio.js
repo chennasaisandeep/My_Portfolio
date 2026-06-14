@@ -7,7 +7,7 @@ window.portfolioData = {
             { "label": "Experience", "id": "experience" },
             { "label": "Education", "id": "education" },
             { "label": "Skills", "id": "skills" },
-            { "label": "Interests", "id": "hobbies" },
+            { "label": "More", "id": "certificates" },
             { "label": "Contact", "id": "contact" }
         ],
         "socials": {
@@ -25,14 +25,19 @@ window.portfolioData = {
             { "label": "Resume", "action": "resume", "primary": false, "href": "data/pdf/Saisandeep Chenna.pdf" }
         ],
         "metrics": [
-            { "label": "Months Experience", "value": (() => {
+            (() => {
                 const start = new Date(2025, 2, 1); // March 2025
                 const now = new Date();
-                const months = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
-                return `${Math.max(1, months)}+`;
-            })() },
-            { "label": "Projects Delivered", "value": "3" },
-            { "label": "GPA (CMI)", "value": "9.22" }
+                const totalMonths = Math.max(1, (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth()));
+                const years = Math.floor(totalMonths / 12);
+                const months = totalMonths % 12;
+                let desktopValue = '';
+                if (years > 0 && months > 0) desktopValue = `${years} Year${years > 1 ? 's' : ''} ${months} Month${months > 1 ? 's' : ''}`;
+                else if (years > 0) desktopValue = `${years} Year${years > 1 ? 's' : ''}`;
+                else desktopValue = `${totalMonths} Month${totalMonths > 1 ? 's' : ''}`;
+                return { "label": "Experience", "value": desktopValue, "mobileValue": `${totalMonths}+ Months` };
+            })(),
+            { "label": "Projects Delivered", "value": "3" }
         ]
     },
     "projects": [

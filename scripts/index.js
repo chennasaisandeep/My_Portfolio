@@ -48,8 +48,8 @@ const ThemeToggle = ({ isDark, onToggle }) => {
 
 const Button = ({ children, primary, onClick, href, icon }) => {
     const baseClass = "inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:-translate-y-1 cursor-pointer";
-    const primaryClass = "bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/30 border border-transparent";
-    const secondaryClass = "bg-white dark:bg-slate-800 text-gray-900 dark:text-white border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 hover:border-gray-300 dark:hover:border-slate-600";
+    const primaryClass = "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 shadow-lg shadow-blue-500/25 border border-transparent hover:shadow-xl hover:shadow-blue-500/30";
+    const secondaryClass = "bg-white/80 dark:bg-slate-900/80 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-700 backdrop-blur-sm";
     
     const btnContent = (
         <>
@@ -660,6 +660,28 @@ const App = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    // Scroll reveal observer
+    useEffect(() => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    entry.target.addEventListener('animationend', () => {
+                        entry.target.classList.remove('reveal', 'revealed');
+                        entry.target.classList.add('reveal-done');
+                    }, { once: true });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+        const timer = setTimeout(() => {
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }, 100);
+
+        return () => { clearTimeout(timer); observer.disconnect(); };
+    }, [selectedId]);
+
     const activeProject = content.projects.find(p => p.id === selectedId);
 
     const handleNav = (id) => {
@@ -703,21 +725,31 @@ const App = () => {
             {selectedHobby && <HobbyModal hobby={selectedHobby} onClose={() => setSelectedHobby(null)} />}
             {selectedCertificate && <HobbyModal hobby={{...selectedCertificate, gallery: selectedCertificate.images}} onClose={() => setSelectedCertificate(null)} />}
 
+            {/* Animated Gradient Mesh Background — fixed, behind everything */}
+            <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+                <div className="mesh-blob w-[500px] h-[500px] top-[-10%] left-[-10%]" style={{background: 'rgba(99, 102, 241, 0.12)', animation: 'meshFloat1 20s ease-in-out infinite'}}></div>
+                <div className="mesh-blob w-[400px] h-[400px] top-[30%] right-[-8%]" style={{background: 'rgba(139, 92, 246, 0.10)', animation: 'meshFloat2 25s ease-in-out infinite'}}></div>
+                <div className="mesh-blob w-[350px] h-[350px] bottom-[10%] left-[20%]" style={{background: 'rgba(59, 130, 246, 0.08)', animation: 'meshFloat3 22s ease-in-out infinite'}}></div>
+                <div className="mesh-blob w-[300px] h-[300px] top-[60%] right-[15%]" style={{background: 'rgba(168, 85, 247, 0.07)', animation: 'meshFloat1 28s ease-in-out infinite'}}></div>
+            </div>
+
             {/* Navigation */}
-            <nav className={`fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 dark:bg-slate-950/90 backdrop-blur-md shadow-sm dark:shadow-slate-900/50 py-4' : 'bg-transparent py-6'}`}>
-                <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
-                    
+            <nav className="fixed top-0 left-0 right-0 w-full z-50">
+                {/* Frosted glass background layer — always visible when scrolled OR menu open */}
+                <div className={`absolute inset-0 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl shadow-lg shadow-slate-900/5 dark:shadow-black/20 transition-opacity duration-300 ${(scrolled || mobileMenuOpen) ? 'opacity-100' : 'opacity-0'}`}></div>
+
+                <div className="relative max-w-7xl mx-auto px-6 md:px-12 py-4 flex justify-between items-center">
                     {/* Logo */}
-                    <div className="font-bold text-2xl tracking-tight pr-2 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent cursor-pointer" onClick={() => window.scrollTo(0,0)}>
+                    <div className="font-bold text-2xl tracking-tight pr-2 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent cursor-pointer" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
                         {content.site.logo}
                     </div>
                     
                     <div className="hidden md:flex items-center gap-6">
                         {content.site.nav.map(item => (
-                            <button key={item.id} onClick={() => handleNav(item.id)} className="text-sm font-medium text-gray-600 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors">{item.label}</button>
+                            <button key={item.id} onClick={() => handleNav(item.id)} className="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors duration-200">{item.label}</button>
                         ))}
                         <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
-                        <a href={content.site.socials.email} className="ml-1 px-5 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full text-sm font-medium hover:bg-slate-800 dark:hover:bg-slate-100 transition-all shadow-lg shadow-slate-900/20 dark:shadow-white/10">
+                        <a href={content.site.socials.email} className="ml-1 px-5 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full text-sm font-medium hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors duration-200">
                             Let's Talk
                         </a>
                     </div>
@@ -725,67 +757,117 @@ const App = () => {
                     {/* Mobile: theme toggle + hamburger */}
                     <div className="flex items-center gap-3 md:hidden">
                         <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
-                        <button className="text-2xl text-slate-900 dark:text-white" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-                            <i className={`fas ${mobileMenuOpen ? 'fa-times' : 'fa-bars'}`}></i>
+                        <button className="w-10 h-10 flex items-center justify-center rounded-lg text-slate-700 dark:text-slate-300" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                            <i className={`fas ${mobileMenuOpen ? 'fa-xmark' : 'fa-bars'} text-lg`}></i>
                         </button>
                     </div>
                 </div>
 
                 {mobileMenuOpen && (
-                    <div className="absolute top-full left-0 w-full bg-white dark:bg-slate-900 shadow-xl border-t border-gray-100 dark:border-slate-800 p-6 flex flex-col gap-4 md:hidden animate-fade-in-up">
-                        {content.site.nav.map(item => (
-                            <button key={item.id} onClick={() => handleNav(item.id)} className="text-left text-lg font-medium py-2 text-slate-900 dark:text-white">{item.label}</button>
-                        ))}
+                    <div className="relative md:hidden border-t border-white/20 dark:border-slate-800/50 mobile-menu-enter">
+                        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col">
+                            {content.site.nav.map((item, idx) => {
+                                const icons = {'work': 'fa-briefcase', 'experience': 'fa-building', 'education': 'fa-graduation-cap', 'skills': 'fa-code', 'certificates': 'fa-certificate', 'contact': 'fa-envelope'};
+                                return (
+                                    <button 
+                                        key={item.id} 
+                                        onClick={() => { handleNav(item.id); setMobileMenuOpen(false); }} 
+                                        className="flex items-center gap-3 py-3 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
+                                    >
+                                        <i className={`fas ${icons[item.id] || 'fa-circle'} text-sm w-5 text-center text-slate-400 dark:text-slate-600`}></i>
+                                        <span className="font-medium text-[15px]">{item.label}</span>
+                                    </button>
+                                );
+                            })}
+                            <div className="mt-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+                                <a href={content.site.socials.email} className="flex items-center justify-center gap-2 w-full py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg text-sm font-medium">
+                                    <i className="fas fa-paper-plane text-xs"></i> Let's Talk
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 )}
 
                 <div 
-                    className="absolute bottom-0 left-0 h-[3px] bg-gradient-to-r from-blue-600 to-indigo-600 transition-all duration-150 ease-out"
+                    className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-blue-600 to-indigo-600 transition-all duration-150 ease-out"
                     style={{ width: `${scrollProgress * 100}%` }}
                 ></div>
             </nav>
 
             {/* Hero */}
-            <header className="pt-24 pb-16 px-6 md:px-12 md:pt-32 md:pb-24 max-w-7xl mx-auto">
-                <div className="max-w-3xl">
-                    <h1 className="text-4xl md:text-7xl font-bold tracking-tight mb-6 text-slate-900 dark:text-white">{content.hero.headline}</h1>
-                    <p className="text-xl text-slate-500 dark:text-slate-400 mb-10 leading-relaxed max-w-2xl">{content.hero.subheadline}</p>
-                    <div className="flex flex-wrap gap-4 mb-16">
-                        {content.hero.ctas.map((cta, i) => (
-                            <Button key={i} primary={cta.primary} onClick={() => cta.action === 'resume' ? window.open(cta.href, '_blank') : handleNav(cta.action)} href={cta.href}>{cta.label}</Button>
-                        ))}
-                    </div>
-                    <div className="grid grid-cols-3 gap-8 border-t border-gray-200 dark:border-slate-800 pt-8">
-                        {content.hero.metrics.map((m, i) => (
-                            <div key={i}>
-                                <div className="text-3xl font-bold text-slate-900 dark:text-white">{m.value}</div>
-                                <div className="text-sm text-slate-500 dark:text-slate-400 font-medium">{m.label}</div>
-                            </div>
-                        ))}
+            <header className="relative min-h-[90vh] flex items-center pt-20">
+                <div className="px-6 md:px-12 max-w-7xl mx-auto w-full">
+                    <div className="max-w-3xl">
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 text-slate-900 dark:text-white leading-[1.05]">
+                            {content.hero.headline}
+                        </h1>
+                        <p className="text-lg md:text-xl text-slate-500 dark:text-slate-400 mb-12 leading-relaxed max-w-2xl">{content.hero.subheadline}</p>
+
+                        <div className="flex flex-wrap gap-4 mb-16">
+                            {content.hero.ctas.map((cta, i) => (
+                                <Button key={i} primary={cta.primary} onClick={() => cta.action === 'resume' ? window.open(cta.href, '_blank') : handleNav(cta.action)} href={cta.href}>{cta.label}</Button>
+                            ))}
+                        </div>
+
+                        {/* Metrics */}
+                        <div className="grid grid-cols-2 gap-8 relative">
+                            <div className="absolute -top-4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-300 dark:via-slate-700 to-transparent"></div>
+                            {content.hero.metrics.map((m, i) => (
+                                <div key={i} className="pt-8">
+                                    <div className="text-3xl md:text-4xl font-bold gradient-text">
+                                        {m.mobileValue ? (
+                                            <>
+                                                <span className="hidden md:inline">{m.value}</span>
+                                                <span className="md:hidden">{m.mobileValue}</span>
+                                            </>
+                                        ) : m.value}
+                                    </div>
+                                    <div className="text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">{m.label}</div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </header>
 
-            {/* Work Grid */}
-            <Section id="work" className="py-6 bg-slate-50/50 dark:bg-slate-900/50">
-                <div className="mb-8">
-                    <h2 className="text-3xl font-bold mb-3 dark:text-white">Selected Work</h2>
-                    <p className="text-gray-500 dark:text-slate-400">Highlighting projects in ML and Data Analysis.</p>
+            {/* Selected Work */}
+            <Section id="work" className="section-gap">
+                <div className="reveal mb-12">
+                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 mb-3 block">Portfolio</span>
+                    <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tight">Selected Work</h2>
+                    <p className="text-slate-500 dark:text-slate-400 mt-3 max-w-lg">Highlighting projects in ML, AI platforms, and data analysis.</p>
                 </div>
                 <div className="grid md:grid-cols-2 gap-6">
-                    {content.projects.map(project => (
-                        <div key={project.id} onClick={() => handleProjectClick(project.id)} className="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-gray-100 dark:border-slate-800 hover:shadow-xl dark:hover:shadow-slate-900/50 transition-all duration-300 cursor-pointer flex flex-col h-full">
-                            <div className={`h-24 w-full bg-gradient-to-br ${project.gradient} relative p-6 flex flex-col justify-end`}>
-                                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-all"></div>
-                                <h3 className="relative text-white text-xl font-bold">{project.title}</h3>
+                    {content.projects.map((project, idx) => (
+                        <div
+                            key={project.id}
+                            onClick={() => handleProjectClick(project.id)}
+                            className={`group relative bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:shadow-slate-300/50 dark:hover:shadow-black/30 hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col reveal ${idx === 0 ? 'md:col-span-2' : ''}`}
+                            style={{animationDelay: `${idx * 0.08}s`}}
+                        >
+                            {/* Gradient Header */}
+                            <div className={`relative bg-gradient-to-br ${project.gradient} ${idx === 0 ? 'min-h-[8rem] md:min-h-[10rem]' : 'min-h-[7rem]'} w-full p-6 flex flex-col justify-between overflow-hidden`}>
+                                {/* Decorative mesh */}
+                                <div className="absolute inset-0 opacity-10" style={{backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.2) 0%, transparent 40%)'}}></div>
+                                <div className="relative flex justify-end">
+                                    <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-white/20 backdrop-blur-sm text-white rounded-full border border-white/10">{project.type || 'Project'}</span>
+                                </div>
+                                <h3 className={`relative text-white font-bold ${idx === 0 ? 'text-2xl md:text-3xl' : 'text-xl'} leading-tight mt-auto`}>{project.title}</h3>
                             </div>
+
+                            {/* Content */}
                             <div className="p-6 flex-1 flex flex-col">
                                 <div className="flex flex-wrap gap-2 mb-4">
-                                    {project.tags.slice(0,3).map(t => <span key={t} className="text-xs font-semibold px-2 py-1 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 rounded">{t}</span>)}
+                                    {project.tags.slice(0, idx === 0 ? 5 : 3).map(t => (
+                                        <span key={t} className="text-xs font-semibold px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-md border border-slate-200/50 dark:border-slate-700/50">{t}</span>
+                                    ))}
                                 </div>
-                                <p className="text-gray-600 dark:text-slate-400 text-sm mb-6 line-clamp-2 flex-1">{project.summary}</p>
-                                <div className="text-blue-600 dark:text-blue-400 font-medium text-sm flex items-center group-hover:translate-x-1 transition-transform">
-                                    View Case Study <i className="fas fa-arrow-right ml-2"></i>
+                                <p className={`text-slate-600 dark:text-slate-400 text-sm mb-6 flex-1 ${idx === 0 ? 'line-clamp-3' : 'line-clamp-2'}`}>{project.summary}</p>
+                                <div className="flex items-center justify-between">
+                                    <div className="text-blue-600 dark:text-blue-400 font-semibold text-sm flex items-center group-hover:gap-3 gap-2 transition-all">
+                                        View Case Study <i className="fas fa-arrow-right text-xs"></i>
+                                    </div>
+                                    <span className="text-xs text-slate-400 dark:text-slate-600 font-medium">{project.year}</span>
                                 </div>
                             </div>
                         </div>
@@ -794,23 +876,36 @@ const App = () => {
             </Section>
 
             {/* Experience */}
-            <Section id="experience" className="py-6">
-                <h2 className="text-3xl font-bold mb-8 dark:text-white">Experience</h2>
-                <div className="space-y-4">
+            <Section id="experience" className="section-gap">
+                <div className="reveal mb-12">
+                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 mb-3 block">Career</span>
+                    <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tight">Experience</h2>
+                    <p className="text-slate-500 dark:text-slate-400 mt-3 max-w-lg">My professional journey in data science and ML engineering.</p>
+                </div>
+                <div className="space-y-0">
                     {content.experience.map((exp, i) => (
-                        <div key={i} className="flex flex-col md:flex-row gap-4 md:gap-12">
-                            <div className="md:w-1/4 pt-1">
-                                <div className="font-bold text-blue-600 dark:text-blue-400">{exp.period}</div>
+                        <div key={i} className="flex flex-col md:flex-row gap-4 md:gap-12 reveal" style={{animationDelay: `${i * 0.1}s`}}>
+                            <div className="md:w-1/4 pt-1 flex-shrink-0">
+                                <div className="text-sm font-bold text-blue-600 dark:text-blue-400 mb-0.5">{exp.period}</div>
+                                <div className="text-xs text-slate-400 dark:text-slate-600 font-medium">{exp.location}</div>
                             </div>
-                            <div className="md:w-3/4 border-l-2 border-gray-100 dark:border-slate-800 pl-8 pb-8 relative">
-                                <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-white dark:bg-slate-950 border-4 border-blue-600 dark:border-blue-500"></div>
-                                <h3 className="text-xl font-bold dark:text-white">{exp.role}</h3>
-                                <div className="text-gray-500 dark:text-slate-400 mb-3">{exp.company} • {exp.location}</div>
-                                <p className="text-gray-600 dark:text-slate-400 mb-3">{exp.summary}</p>
-                                <ul className="space-y-1">
+                            <div className="md:w-3/4 border-l-2 border-slate-200 dark:border-slate-800 pl-8 pb-10 relative group">
+                                {/* Timeline dot */}
+                                <div className={`absolute -left-[9px] top-1 w-4 h-4 rounded-full border-[3px] border-blue-500 dark:border-blue-400 bg-white dark:bg-slate-950 ${i === 0 ? 'timeline-dot-pulse' : ''} transition-all group-hover:scale-125`}></div>
+
+                                {/* Company badge */}
+                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800/80 text-xs font-bold text-slate-600 dark:text-slate-400 mb-3 border border-slate-200/50 dark:border-slate-700/50">
+                                    <i className="fas fa-building text-[9px] opacity-50"></i>
+                                    {exp.company}
+                                </div>
+
+                                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{exp.role}</h3>
+                                <p className="text-slate-600 dark:text-slate-400 text-sm mb-4 leading-relaxed">{exp.summary}</p>
+                                <ul className="space-y-2">
                                     {exp.achievements.map((a, j) => (
-                                        <li key={j} className="text-sm text-gray-500 dark:text-slate-500 flex items-start">
-                                            <i className="fas fa-caret-right text-gray-400 dark:text-slate-600 mt-1 mr-2"></i> {a}
+                                        <li key={j} className="text-sm text-slate-500 dark:text-slate-500 flex items-start gap-2.5">
+                                            <i className="fas fa-chevron-right text-blue-500/50 dark:text-blue-400/40 text-[8px] mt-1.5 flex-shrink-0"></i>
+                                            <span>{a}</span>
                                         </li>
                                     ))}
                                 </ul>
@@ -821,32 +916,54 @@ const App = () => {
             </Section>
 
             {/* Education */}
-            <Section id="education" className="py-6">
-                <div className="mb-8">
-                    <h2 className="text-3xl font-bold mb-3 dark:text-white">Education</h2>
-                    <p className="text-gray-500 dark:text-slate-400">Academic background and qualifications.</p>
+            <Section id="education" className="section-gap">
+                <div className="reveal mb-12">
+                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 mb-3 block">Academics</span>
+                    <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tight">Education</h2>
+                    <p className="text-slate-500 dark:text-slate-400 mt-3 max-w-lg">Academic background and qualifications.</p>
                 </div>
                 <div className="grid md:grid-cols-2 gap-6">
                     {content.education.map((edu, i) => (
-                        <div key={i} className="bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-6 hover:shadow-lg transition-all duration-300 group">
-                            <div className="flex items-start gap-4">
-                                <div className="w-14 h-14 rounded-xl bg-blue-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                                    <i className={`fas ${edu.icon} text-2xl text-white`}></i>
-                                </div>
-                                <div className="flex-1">
-                                    <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-1">{edu.school}</h3>
-                                    <p className="text-blue-600 dark:text-blue-400 font-semibold mb-2">{edu.degree}</p>
-                                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 text-sm text-gray-600 dark:text-slate-400">
-                                        <span className="flex items-center gap-1">
-                                            <i className="fas fa-calendar text-gray-400 dark:text-slate-500"></i>
-                                            {edu.year}
-                                        </span>
-                                        <span className="text-gray-300 dark:text-slate-600 hidden sm:inline">•</span>
-                                        <span className="flex items-center gap-1">
-                                            <i className="fas fa-star text-yellow-500"></i>
-                                            {edu.grade}
-                                        </span>
+                        <div key={i} className="reveal group relative bg-white dark:bg-slate-900 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:hover:shadow-slate-900/50" style={{animationDelay: `${i * 0.1}s`}}>
+
+                            {/* Dot grid background */}
+                            <div className="absolute inset-0 dot-grid-pattern opacity-50 pointer-events-none"></div>
+
+                            <div className="relative p-6">
+                                <div className="flex flex-col md:flex-row md:items-start gap-4">
+                                    <div className="flex items-start gap-4 flex-1 min-w-0">
+                                        {/* Institution icon */}
+                                        <div className="relative flex-shrink-0">
+                                            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-blue-600/20">
+                                                <i className={`fas ${edu.icon} text-2xl text-white`}></i>
+                                            </div>
+                                            <div className="absolute inset-0 rounded-xl border-2 border-blue-400/30 dark:border-blue-400/20 group-hover:scale-125 group-hover:opacity-0 transition-all duration-500"></div>
+                                        </div>
+
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-1 leading-tight">{edu.school}</h3>
+                                            <p className="text-blue-600 dark:text-blue-400 font-semibold text-sm mb-3">{edu.degree}</p>
+                                            <div className="flex items-center gap-1.5 text-sm text-slate-600 dark:text-slate-400">
+                                                <i className="fas fa-calendar text-slate-400 dark:text-slate-600 text-xs"></i>
+                                                {edu.year}
+                                            </div>
+                                            {/* Grade badge — shown below text on mobile */}
+                                            {edu.grade && (
+                                                <div className="mt-3 inline-flex md:hidden items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800/60">
+                                                    <i className="fas fa-award text-blue-500 dark:text-blue-400 text-xs"></i>
+                                                    <span className="text-sm font-bold text-slate-700 dark:text-slate-300">{edu.grade}</span>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
+
+                                    {/* Grade badge — shown on right side on desktop */}
+                                    {edu.grade && (
+                                        <div className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800/60 flex-shrink-0">
+                                            <i className="fas fa-award text-blue-500 dark:text-blue-400 text-xs"></i>
+                                            <span className="text-sm font-bold text-slate-700 dark:text-slate-300">{edu.grade}</span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -854,31 +971,54 @@ const App = () => {
                 </div>
             </Section>
 
-            {/* Skills Section */}
-            <Section id="skills" className="py-12 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
+            {/* Technical Expertise */}
+            <Section id="skills" className="section-gap">
                 <div className="max-w-7xl mx-auto">
-                    <h2 className="text-3xl font-bold mb-8 text-left dark:text-white">Technical Expertise</h2>
-                    
+                    <div className="reveal mb-12">
+                        <span className="text-xs font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 mb-3 block">What I Do</span>
+                        <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tight">Technical Expertise</h2>
+                    </div>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                         {Object.entries(content.skills).map(([category, items], idx) => {
-                            const icons = [ "fas fa-robot", "fas fa-brain", "fas fa-database", "fas fa-square-root-alt" ];
-                            const colors = [ "text-purple-600 bg-purple-50 dark:text-purple-400 dark:bg-purple-900/30", "text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/30", "text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-900/30", "text-orange-600 bg-orange-50 dark:text-orange-400 dark:bg-orange-900/30" ];
+                            const icons = ["fas fa-robot", "fas fa-brain", "fas fa-database", "fas fa-square-root-alt"];
+                            const gradients = [
+                                'from-purple-600 to-fuchsia-600',
+                                'from-blue-600 to-cyan-500',
+                                'from-emerald-600 to-teal-500',
+                                'from-orange-500 to-amber-500'
+                            ];
+                            const glowColors = [
+                                'rgba(147, 51, 234, 0.15)',
+                                'rgba(59, 130, 246, 0.15)',
+                                'rgba(16, 185, 129, 0.15)',
+                                'rgba(249, 115, 22, 0.15)'
+                            ];
+                            const tagHovers = [
+                                'hover:bg-purple-600 hover:text-white hover:border-purple-600',
+                                'hover:bg-blue-600 hover:text-white hover:border-blue-600',
+                                'hover:bg-emerald-600 hover:text-white hover:border-emerald-600',
+                                'hover:bg-orange-500 hover:text-white hover:border-orange-500'
+                            ];
 
                             return (
-                                <div key={category} className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-lg transition-all duration-300 group hover:-translate-y-1">
-                                    <div className="flex items-center mb-6">
-                                        <div className={`w-10 h-10 rounded-lg ${colors[idx % 4]} flex items-center justify-center text-lg mr-4 group-hover:scale-110 transition-transform`}>
-                                            <i className={icons[idx % 4]}></i>
+                                <div key={category} className="reveal group relative bg-white dark:bg-slate-900 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:hover:shadow-slate-900/50" style={{animationDelay: `${idx * 0.08}s`}}>
+
+                                    <div className="p-6">
+                                        <div className="flex items-center gap-4 mb-6">
+                                            <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${gradients[idx % 4]} flex items-center justify-center text-white text-lg shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`} style={{boxShadow: `0 8px 24px ${glowColors[idx % 4]}`}}>
+                                                <i className={icons[idx % 4]}></i>
+                                            </div>
+                                            <h3 className="font-bold text-slate-900 dark:text-white text-lg leading-tight">{category}</h3>
                                         </div>
-                                        <h3 className="font-bold text-slate-900 dark:text-white text-lg leading-tight">{category}</h3>
-                                    </div>
-                                    
-                                    <div className="flex flex-wrap gap-2">
-                                        {items.map((skill, i) => (
-                                            <span key={i} className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-semibold rounded-md hover:bg-slate-800 dark:hover:bg-white hover:text-white dark:hover:text-slate-900 transition-colors cursor-default">
-                                                {skill}
-                                            </span>
-                                        ))}
+
+                                        <div className="flex flex-wrap gap-2">
+                                            {items.map((skill, i) => (
+                                                <span key={i} className={`px-3 py-1.5 bg-slate-50 dark:bg-slate-800/80 text-slate-600 dark:text-slate-400 text-xs font-semibold rounded-lg border border-slate-200/80 dark:border-slate-700/50 transition-all duration-200 cursor-default ${tagHovers[idx % 4]}`}>
+                                                    {skill}
+                                                </span>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
                             );
@@ -888,20 +1028,16 @@ const App = () => {
             </Section>
 
             {/* Certificates & Hobbies */}
-            <Section id="certificates" className="py-6">
+            <Section id="certificates" className="section-gap-lg">
                 <div className="grid lg:grid-cols-2 gap-16">
                     {/* Certificates Column */}
-                    <div>
-                        <div className="flex items-center gap-3 mb-8">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-600/20">
-                                <i className="fas fa-award text-white text-lg"></i>
-                            </div>
-                            <div>
-                                <h2 className="text-3xl font-bold dark:text-white">Certificates</h2>
-                                <p className="text-xs text-gray-400 dark:text-slate-500 font-medium uppercase tracking-wider">{content.certificates.length} credentials</p>
-                            </div>
+                    <div className="reveal">
+                        <div className="mb-8">
+                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 mb-3 block">Credentials</span>
+                            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">Certificates</h2>
+                            <p className="text-slate-400 dark:text-slate-600 text-sm font-medium mt-2">{content.certificates.length} certifications earned</p>
                         </div>
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             {(() => {
                                 const certGradients = [
                                     'from-blue-500 to-indigo-500',
@@ -922,32 +1058,29 @@ const App = () => {
                                                     window.open(cert.link, '_blank');
                                                 }
                                             }}
-                                            className={`relative bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 ${
+                                            className={`relative bg-white dark:bg-slate-900 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg dark:hover:shadow-slate-900/50 hover:-translate-y-1 ${
                                                 isClickable ? 'cursor-pointer group' : ''
                                             }`}
                                         >
-                                            {/* Gradient left accent bar */}
-                                            <div className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${grad} rounded-l-xl`}></div>
                                             
-                                            <div className="pl-5 pr-5 py-5 flex items-start gap-4">
-                                                {/* Icon with gradient background */}
-                                                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${grad} flex items-center justify-center shrink-0 shadow-md ${isClickable ? 'group-hover:scale-110 group-hover:shadow-lg' : ''} transition-all`}>
+                                            <div className="p-5 flex items-start gap-4">
+                                                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${grad} flex items-center justify-center shrink-0 shadow-lg ${isClickable ? 'group-hover:scale-110 group-hover:rotate-3' : ''} transition-all duration-300`}>
                                                     <i className={`${cert.icon || 'fas fa-certificate'} text-white text-lg`}></i>
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <div className="flex items-center gap-2 mb-1">
-                                                        <h3 className="font-bold text-gray-900 dark:text-white text-sm leading-tight truncate">
+                                                        <h3 className="font-bold text-slate-900 dark:text-white text-sm leading-tight truncate">
                                                             {cert.name}
                                                         </h3>
                                                         {isClickable && (
-                                                            <i className="fas fa-arrow-up-right-from-square text-[10px] text-gray-300 dark:text-slate-600 group-hover:text-blue-500 transition-colors flex-shrink-0"></i>
+                                                            <i className="fas fa-arrow-up-right-from-square text-[10px] text-slate-300 dark:text-slate-600 group-hover:text-blue-500 transition-colors flex-shrink-0"></i>
                                                         )}
                                                     </div>
                                                     <div className="text-xs text-blue-600 dark:text-blue-400 font-semibold mb-1.5 flex items-center gap-1.5">
                                                         <i className="fas fa-building text-[9px] opacity-60"></i>
                                                         {cert.issuer}
                                                     </div>
-                                                    <p className="text-xs text-gray-500 dark:text-slate-500 leading-relaxed line-clamp-2">{cert.description}</p>
+                                                    <p className="text-xs text-slate-500 dark:text-slate-500 leading-relaxed line-clamp-2">{cert.description}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -958,17 +1091,13 @@ const App = () => {
                     </div>
 
                     {/* Hobbies Column */}
-                    <div id="hobbies" style={{scrollMarginTop: '25px'}}>
-                        <div className="flex items-center gap-3 mb-8">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center shadow-lg shadow-rose-500/20">
-                                <i className="fas fa-heart text-white text-lg"></i>
-                            </div>
-                            <div>
-                                <h2 className="text-3xl font-bold dark:text-white">Interests & Hobbies</h2>
-                                <p className="text-xs text-gray-400 dark:text-slate-500 font-medium uppercase tracking-wider">{content.hobbies.length} passions</p>
-                            </div>
+                    <div id="hobbies" className="reveal" >
+                        <div className="mb-8">
+                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-rose-500 dark:text-rose-400 mb-3 block">Beyond Code</span>
+                            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">Interests & Hobbies</h2>
+                            <p className="text-slate-400 dark:text-slate-600 text-sm font-medium mt-2">{content.hobbies.length} passions</p>
                         </div>
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             {(() => {
                                 const hobbyGradients = [
                                     'from-rose-500 to-pink-500',
@@ -984,28 +1113,25 @@ const App = () => {
                                         <div 
                                             key={i} 
                                             onClick={() => isClickable && setSelectedHobby(hobby)}
-                                            className={`relative bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 ${
+                                            className={`relative bg-white dark:bg-slate-900 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg dark:hover:shadow-slate-900/50 hover:-translate-y-1 ${
                                                 isClickable ? 'cursor-pointer group' : ''
                                             }`}
                                         >
-                                            {/* Gradient left accent bar */}
-                                            <div className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${grad} rounded-l-xl`}></div>
                                             
-                                            <div className="pl-5 pr-5 py-5 flex items-start gap-4">
-                                                {/* Icon with gradient background */}
-                                                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${grad} flex items-center justify-center shrink-0 shadow-md ${isClickable ? 'group-hover:scale-110 group-hover:shadow-lg' : ''} transition-all`}>
+                                            <div className="p-5 flex items-start gap-4">
+                                                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${grad} flex items-center justify-center shrink-0 shadow-lg ${isClickable ? 'group-hover:scale-110 group-hover:rotate-3' : ''} transition-all duration-300`}>
                                                     <i className={`fas ${hobby.icon} text-white text-lg`}></i>
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <div className="flex items-center gap-2 mb-1">
-                                                        <h3 className="font-bold text-gray-900 dark:text-white text-sm leading-tight">
+                                                        <h3 className="font-bold text-slate-900 dark:text-white text-sm leading-tight">
                                                             {hobby.name}
                                                         </h3>
                                                         {isClickable && (
-                                                            <i className="fas fa-arrow-up-right-from-square text-[10px] text-gray-300 dark:text-slate-600 group-hover:text-blue-500 transition-colors flex-shrink-0"></i>
+                                                            <i className="fas fa-arrow-up-right-from-square text-[10px] text-slate-300 dark:text-slate-600 group-hover:text-blue-500 transition-colors flex-shrink-0"></i>
                                                         )}
                                                     </div>
-                                                    <p className="text-xs text-gray-500 dark:text-slate-500 leading-relaxed line-clamp-2">{hobby.description}</p>
+                                                    <p className="text-xs text-slate-500 dark:text-slate-500 leading-relaxed line-clamp-2">{hobby.description}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1018,15 +1144,22 @@ const App = () => {
             </Section>
 
             {/* Footer / Contact */}
-            <Section id="contact" className="py-24 border-t border-slate-200 dark:border-slate-800 text-center">
-                <h2 className="text-4xl font-bold mb-6 dark:text-white">Let's work together.</h2>
-                <p className="text-slate-500 dark:text-slate-400 mb-10 max-w-xl mx-auto">I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!</p>
-                <div className="flex justify-center gap-4 mb-16">
-                    <a href={content.site.socials.linkedin} target="_blank" className="w-12 h-12 rounded-full bg-white dark:bg-slate-900 shadow-sm border border-gray-100 dark:border-slate-800 hover:bg-[#0077b5] hover:text-white hover:border-transparent flex items-center justify-center text-xl transition-all text-slate-600 dark:text-slate-400"><i className="fab fa-linkedin-in"></i></a>
-                    <a href={content.site.socials.github} target="_blank" className="w-12 h-12 rounded-full bg-white dark:bg-slate-900 shadow-sm border border-gray-100 dark:border-slate-800 hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-gray-900 hover:border-transparent flex items-center justify-center text-xl transition-all text-slate-600 dark:text-slate-400"><i className="fab fa-github"></i></a>
-                    <a href={content.site.socials.email} className="w-12 h-12 rounded-full bg-white dark:bg-slate-900 shadow-sm border border-gray-100 dark:border-slate-800 hover:bg-blue-600 hover:text-white hover:border-transparent flex items-center justify-center text-xl transition-all text-slate-600 dark:text-slate-400"><i className="fas fa-envelope"></i></a>
+            <Section id="contact" className="section-gap relative overflow-hidden text-center">
+                {/* Background dot grid */}
+                <div className="absolute inset-0 dot-grid-pattern pointer-events-none"></div>
+
+                <div className="relative reveal">
+                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 mb-3 block">Get In Touch</span>
+                    <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text inline-block leading-relaxed">Let's work together.</h2>
+                    <p className="text-slate-500 dark:text-slate-400 mb-12 max-w-xl mx-auto leading-relaxed">I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!</p>
+                    <div className="flex justify-center gap-5 mb-16">
+                        <a href={content.site.socials.linkedin} target="_blank" className="w-14 h-14 rounded-2xl bg-white dark:bg-slate-900/80 shadow-sm border border-slate-200 dark:border-slate-800 hover:bg-[#0077b5] hover:text-white hover:border-transparent hover:shadow-lg hover:shadow-blue-500/20 hover:-translate-y-1 flex items-center justify-center text-xl transition-all duration-300 text-slate-500 dark:text-slate-400"><i className="fab fa-linkedin-in"></i></a>
+                        <a href={content.site.socials.github} target="_blank" className="w-14 h-14 rounded-2xl bg-white dark:bg-slate-900/80 shadow-sm border border-slate-200 dark:border-slate-800 hover:bg-slate-900 dark:hover:bg-white hover:text-white dark:hover:text-slate-900 hover:border-transparent hover:shadow-lg hover:-translate-y-1 flex items-center justify-center text-xl transition-all duration-300 text-slate-500 dark:text-slate-400"><i className="fab fa-github"></i></a>
+                        <a href={content.site.socials.email} className="w-14 h-14 rounded-2xl bg-white dark:bg-slate-900/80 shadow-sm border border-slate-200 dark:border-slate-800 hover:bg-gradient-to-br hover:from-blue-600 hover:to-indigo-600 hover:text-white hover:border-transparent hover:shadow-lg hover:shadow-indigo-500/20 hover:-translate-y-1 flex items-center justify-center text-xl transition-all duration-300 text-slate-500 dark:text-slate-400"><i className="fas fa-envelope"></i></a>
+                    </div>
+                    <div className="w-16 h-px bg-gradient-to-r from-transparent via-slate-300 dark:via-slate-700 to-transparent mx-auto mb-6"></div>
+                    <p className="text-sm text-slate-400 dark:text-slate-600">&copy; {new Date().getFullYear()} {content.site.title}. All rights reserved.</p>
                 </div>
-                <p className="text-sm text-gray-400 dark:text-slate-600">&copy; {new Date().getFullYear()} {content.site.title}. All rights reserved.</p>
             </Section>
         </div>
     );

@@ -31,7 +31,7 @@
     <script>
         (function() {
             const saved = localStorage.getItem('portfolio-theme');
-            if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            if (saved !== 'light') {
                 document.documentElement.classList.add('dark');
             }
         })();
@@ -238,6 +238,143 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* ============================== */
+        /* SCROLL REVEAL (animation-based)*/
+        /* ============================== */
+        @keyframes revealUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .reveal { opacity: 0; }
+        .reveal.revealed {
+            animation: revealUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        .reveal-done { opacity: 1; }
+
+        /* ============================== */
+        /* GRADIENT MESH HERO BG          */
+        /* ============================== */
+        @keyframes meshFloat1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+        @keyframes meshFloat2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-40px, 30px) scale(1.15); }
+            66% { transform: translate(25px, -35px) scale(0.95); }
+        }
+        @keyframes meshFloat3 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(20px, 40px) scale(1.05); }
+        }
+        .mesh-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+        }
+
+        /* ============================== */
+        /* GRADIENT TEXT                    */
+        /* ============================== */
+        .gradient-text {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding-bottom: 0.1em;
+        }
+
+        /* ============================== */
+        /* TIMELINE PULSE                  */
+        /* ============================== */
+        @keyframes timelinePulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
+        }
+        .timeline-dot-pulse {
+            animation: timelinePulse 2s ease-in-out infinite;
+        }
+
+        /* ============================== */
+        /* DOT GRID PATTERN                */
+        /* ============================== */
+        .dot-grid-pattern {
+            background-image: radial-gradient(circle, rgba(100,116,139,0.12) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .dark .dot-grid-pattern {
+            background-image: radial-gradient(circle, rgba(148,163,184,0.06) 1px, transparent 1px);
+        }
+
+        /* ============================== */
+        /* SHINE ON HOVER                  */
+        /* ============================== */
+        @keyframes shineSlide {
+            0% { left: -100%; }
+            100% { left: 200%; }
+        }
+        .shine-effect { position: relative; overflow: hidden; }
+        .shine-effect::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            pointer-events: none;
+            z-index: 2;
+        }
+        .shine-effect:hover::after { animation: shineSlide 0.6s ease-in-out; }
+
+        /* ============================== */
+        /* FLOATING PARTICLES              */
+        /* ============================== */
+        @keyframes particleDrift {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-500px) translateX(80px); opacity: 0; }
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* ============================== */
+        /* SECTION SPACING                 */
+        /* ============================== */
+        .section-gap {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+        .section-gap-lg {
+            padding-top: 5rem;
+            padding-bottom: 3rem;
+        }
+        @media (min-width: 768px) {
+            .section-gap {
+                padding-top: 3.5rem;
+                padding-bottom: 3.5rem;
+            }
+            .section-gap-lg {
+                padding-top: 6rem;
+                padding-bottom: 3.5rem;
+            }
+        }
+
+        /* ============================== */
+        /* MOBILE MENU OVERLAY             */
+        /* ============================== */
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .mobile-menu-enter {
+            animation: slideDown 0.25s ease-out;
         }
     </style>
 </head>
