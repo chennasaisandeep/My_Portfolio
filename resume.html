@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saisandeep Chenna - Resume</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --text-color: #374151;
+            --heading-color: #111827;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-color);
+            line-height: 1.4;
+            font-size: 12px;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .resume-container {
+            background: white;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            box-sizing: border-box;
+            border-radius: 4px;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            .resume-container {
+                box-shadow: none;
+                width: 100%;
+                min-height: auto;
+                padding: 0;
+                border-radius: 0;
+            }
+            @page {
+                size: A4;
+                margin: 15mm;
+            }
+            /* Ensure links aren't styled weirdly in print */
+            a {
+                text-decoration: none !important;
+                color: var(--text-color) !important;
+            }
+        }
+
+        h1, h2, h3, h4 {
+            margin: 0;
+            color: var(--heading-color);
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }
+
+        .contact-info {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: #4b5563;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .contact-info a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contact-info a:hover {
+            color: var(--accent-color);
+        }
+
+        .section {
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid var(--heading-color);
+            padding-bottom: 2px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            page-break-after: avoid;
+            break-after: avoid;
+        }
+
+        .item {
+            margin-bottom: 10px;
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 2px;
+            page-break-after: avoid;
+            break-after: avoid;
+        }
+
+        .item-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--heading-color);
+        }
+
+        .item-subtitle {
+            font-size: 12px;
+            color: #4b5563;
+            font-style: italic;
+        }
+
+        .item-date {
+            font-size: 11px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .item-desc {
+            margin-top: 2px;
+            font-size: 12px;
+            color: var(--text-color);
+        }
+
+        ul {
+            margin: 4px 0 0 0;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 3px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 6px 15px;
+            font-size: 12px;
+        }
+
+        .skill-category {
+            font-weight: 600;
+            color: var(--heading-color);
+        }
+        .print-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background-color 0.2s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .print-btn:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        @media print {
+            .print-btn {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+        </svg>
+        Download as PDF
+    </button>
+    <div class="resume-container">
+        <header>
+            <h1>CHENNA SAISANDEEP</h1>
+            <div class="contact-info">
+                <span>chennasaisandeep@gmail.com</span>
+                <span>•</span>
+                <a href="https://www.linkedin.com/in/sai-sandeep-chenna-628ab41a7" target="_blank">LinkedIn</a>
+            </div>
+        </header>
+
+        <section class="section">
+            <h2 class="section-title">Profile</h2>
+            <p class="item-desc">Machine Learning Engineer focused on building robust AI systems, agentic workflows, and domain-specific language models. Experienced in designing end-to-end ML pipelines, optimizing inference performance, and deploying intelligent applications. Passionate about solving complex engineering challenges through applied AI.</p>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Education</h2>
+            <div class="item">
+                <div class="item-header">
+                    <div class="item-title">Chennai Mathematical Institute</div>
+                    <div class="item-date">Aug 2023 – Present</div>
+                </div>
+                <div class="item-subtitle">Master’s degree in Data Science</div>
+                <div class="item-desc">Current GPA: 9.22</div>
+            </div>
+            <div class="item">
+                <div class="item-header">
+                    <div class="item-title">Indian Statistical Institute</div>
+                    <div class="item-date">Jul 2019 – May 2022</div>
+                </div>
+                <div class="item-subtitle">Bachelor’s degree in Mathematics (Hons.)</div>
+                <div class="item-desc">Aggregate Percentage: 77% (1st Division with Hons.)</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Experience</h2>
+            <div class="item">
+                <div class="item-header">
+                    <div class="item-title">Shree Cement Ltd. (Kolkata)</div>
+                    <div class="item-date">May 2024 – Jul 2024</div>
+                </div>
+                <div class="item-subtitle">Data Scientist Intern</div>
+                <ul class="item-desc">
+                    <li>Improved solar power generation efficiency by designing a near real-time data-driven anomaly detection system.</li>
+                    <li>Applied machine learning models including Isolation Forest, Local Outlier Factor, DBSCAN, One-Class SVM, and neural networks.</li>
+                    <li>Integrated the application seamlessly with Power BI to enable visual inspection and operational analysis.</li>
+                </ul>
+            </div>
+            <div class="item">
+                <div class="item-header">
+                    <div class="item-title">Cloudcraftz AI (Kolkata)</div>
+                    <div class="item-date">May 2023 – Jul 2023</div>
+                </div>
+                <div class="item-subtitle">Data Scientist Intern</div>
+                <ul class="item-desc">
+                    <li>Evaluated large-scale tabular synthetic data generated by various GAN models using robust statistical metrics.</li>
+                    <li>Leveraged explainable AI (XAI) to interpret complex models such as deep neural networks and ensemble models.</li>
+                    <li>Optimized the BodhiX web application by implementing multiprocessing, significantly reducing computation times.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Projects</h2>
+            <div class="item">
+                <div class="item-header">
+                    <div class="item-title">AgentMesh: Agentic Workflow Orchestrator</div>
+                </div>
+                <div class="item-subtitle">TypeScript, Python, Fastify, React Flow, PostgreSQL, Redis, LangGraph</div>
+                <ul class="item-desc">
+                    <li>Built a graph-native platform for composing, executing, and observing AI-enabled workflows with real-time control loops.</li>
+                    <li>Architected a hybrid system using TypeScript for API/contracts and Python for DAG execution and validation.</li>
+                    <li>Implemented real-time execution telemetry via Redis pub/sub and node-level caching to avoid redundant computation.</li>
+                </ul>
+            </div>
+
+            <div class="item">
+                <div class="item-header">
+                    <div class="item-title">GraphRAG Planning Platform</div>
+                </div>
+                <div class="item-subtitle">Python, FastAPI, TypeScript, Neo4j, Qdrant, LangChain</div>
+                <ul class="item-desc">
+                    <li>Developed an AI-assisted planning platform using a hybrid retrieval strategy (semantic and sparse search) fused with reciprocal rank fusion.</li>
+                    <li>Integrated neural reranking and structural context from a Neo4j graph database to map feature requests to implementation plans.</li>
+                    <li>Delivered a REST API and a VS Code extension with streaming progress updates and durable Redis-backed queue execution.</li>
+                </ul>
+            </div>
+
+            <div class="item">
+                <div class="item-header">
+                    <div class="item-title">Domain-Specific SLM Training Pipeline</div>
+                </div>
+                <div class="item-subtitle">Python, PyTorch, Transformers, TRL, SFT, DPO</div>
+                <ul class="item-desc">
+                    <li>Engineered an end-to-end data and alignment pipeline to specialize a compact language model for embedded firmware domains.</li>
+                    <li>Implemented staged model adaptation (continual pre-training, supervised fine-tuning, and direct preference optimization) handling long contexts.</li>
+                    <li>Created callback-based evaluation tools to compare training checkpoints interactively.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-category">Languages & DBs</div>
+                <div>Python, TypeScript, SQL, PostgreSQL, Neo4j, Qdrant, Redis</div>
+                <div class="skill-category">Machine Learning</div>
+                <div>TensorFlow, PyTorch, Scikit-learn, LangGraph, Transformers, LLM Fine-Tuning, RAG</div>
+                <div class="skill-category">Frameworks & Tools</div>
+                <div>FastAPI, Fastify, React, Docker, Git, VS Code Extensions</div>
+                <div class="skill-category">Data Science</div>
+                <div>Pandas, NumPy, Matplotlib, OpenCV, Statistical Modeling, Outlier Detection</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Achievements & Certifications</h2>
+            <ul class="item-desc">
+                <li><strong>MSQMS (ISI) 2023:</strong> All India Rank 4. Awarded Indian Statistical Institute Student Fellowship.</li>
+                <li><strong>BMath (ISI) 2019:</strong> All India Rank 18. Awarded Indian Statistical Institute Student Fellowship.</li>
+                <li><strong>Certifications:</strong> Google Data Analytics Professional Certificate, Complete Data Science Bootcamp (Udemy).</li>
+            </ul>
+        </section>
+
+    </div>
+</body>
+</html>
