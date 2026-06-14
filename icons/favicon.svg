@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <!-- Dark cosmic background matching portfolio theme -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#020617"/> <!-- slate-950 -->
+      <stop offset="100%" stop-color="#0f172a"/> <!-- slate-900 -->
+    </linearGradient>
+    
+    <!-- Gradient for network lines matching portfolio gradient-text -->
+    <linearGradient id="line-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/> <!-- indigo-500 -->
+      <stop offset="50%" stop-color="#8b5cf6"/> <!-- violet-500 -->
+      <stop offset="100%" stop-color="#3b82f6"/> <!-- blue-500 -->
+    </linearGradient>
+    
+    <!-- Glow filter for nodes -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <!-- Inner node glow -->
+    <filter id="glow-small" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Base container with rounded corners (App Icon Style) -->
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+
+  <!-- Network Connections -->
+  <g stroke="url(#line-grad)" stroke-width="10" stroke-linecap="round" opacity="0.85">
+    <!-- Center to inner ring -->
+    <line x1="256" y1="256" x2="256" y2="136" />
+    <line x1="256" y1="256" x2="360" y2="196" />
+    <line x1="256" y1="256" x2="360" y2="316" />
+    <line x1="256" y1="256" x2="256" y2="376" />
+    <line x1="256" y1="256" x2="152" y2="316" />
+    <line x1="256" y1="256" x2="152" y2="196" />
+    
+    <!-- Inner ring to inner ring (hexagon) -->
+    <line x1="256" y1="136" x2="360" y2="196" />
+    <line x1="360" y1="196" x2="360" y2="316" />
+    <line x1="360" y1="316" x2="256" y2="376" />
+    <line x1="256" y1="376" x2="152" y2="316" />
+    <line x1="152" y1="316" x2="152" y2="196" />
+    <line x1="152" y1="196" x2="256" y2="136" />
+
+    <!-- Outer branches -->
+    <line x1="256" y1="136" x2="256" y2="60" />
+    <line x1="360" y1="196" x2="426" y2="158" />
+    <line x1="360" y1="316" x2="426" y2="354" />
+    <line x1="256" y1="376" x2="256" y2="452" />
+    <line x1="152" y1="316" x2="86" y2="354" />
+    <line x1="152" y1="196" x2="86" y2="158" />
+  </g>
+
+  <!-- Network Nodes -->
+  <g filter="url(#glow-small)">
+    <!-- Outer nodes -->
+    <circle cx="256" cy="60" r="12" fill="#818cf8"/>
+    <circle cx="426" cy="158" r="12" fill="#a78bfa"/>
+    <circle cx="426" cy="354" r="12" fill="#60a5fa"/>
+    <circle cx="256" cy="452" r="12" fill="#818cf8"/>
+    <circle cx="86" cy="354" r="12" fill="#a78bfa"/>
+    <circle cx="86" cy="158" r="12" fill="#60a5fa"/>
+
+    <!-- Inner nodes -->
+    <circle cx="256" cy="136" r="20" fill="#a5b4fc"/>
+    <circle cx="360" cy="196" r="20" fill="#c4b5fd"/>
+    <circle cx="360" cy="316" r="20" fill="#93c5fd"/>
+    <circle cx="256" cy="376" r="20" fill="#a5b4fc"/>
+    <circle cx="152" cy="316" r="20" fill="#c4b5fd"/>
+    <circle cx="152" cy="196" r="20" fill="#93c5fd"/>
+  </g>
+
+  <!-- Center node with larger glow -->
+  <g filter="url(#glow)">
+    <circle cx="256" cy="256" r="32" fill="#ffffff"/>
+  </g>
+</svg>
