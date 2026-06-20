@@ -23,6 +23,14 @@
     
     <!-- 4. Babel (To understand JSX in the browser) -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script>
+        // Force classic JSX runtime to avoid 'import' statements in non-module scripts
+        Babel.registerPreset('classic-react', {
+            presets: [
+                [Babel.availablePresets['react'], { runtime: 'classic' }]
+            ]
+        });
+    </script>
 
     <!-- Custom Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -388,6 +396,6 @@
 
     <!-- Load data first, then app -->
     <script src="scripts/portfolio.js"></script>
-    <script type="text/babel" src="scripts/index.js"></script>
+    <script type="text/babel" data-presets="env,classic-react" src="scripts/index.js"></script>
 </body>
 </html>
